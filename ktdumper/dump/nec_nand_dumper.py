@@ -7,12 +7,13 @@ from util.payload_builder import PayloadBuilder
 
 class NecNandDumper(NecProtocol):
 
-    def __init__(self, size, payload_base=0x10000000, nand_addr=0x04000000, quirks=0):
+    def __init__(self, size, big=0, payload_base=0x10000000, nand_addr=0x04000000, quirks=0):
         super().__init__(quirks)
         assert size % 512 == 0
         self.num_pages = size // 512
         self.payload_base = payload_base
         self.nand_addr = nand_addr
+        self.big = big
 
         self.payload_COMMAND = self.payload_base+0x400
         self.payload_OUTPUT = self.payload_base+0x800
@@ -38,7 +39,7 @@ class NecNandDumper(NecProtocol):
     def execute(self, dev, output):
         super().execute(dev, output)
 
-        payload = PayloadBuilder("nec_dump_nand.c").build(base=self.payload_base, nand=self.nand_addr)
+        payload = PayloadBuilder("nec_dump_nand.c").build(base=self.payload_base, nand=self.nand_addr, big=self.big)
         self.cmd_write(self.payload_base, payload)
 
         print("Dumping NAND")

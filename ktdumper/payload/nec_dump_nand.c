@@ -27,7 +27,9 @@ void start() {
     /* page */
     *NAND_ADDR = page & 0xFF;
     *NAND_ADDR = (page >> 8) & 0xFF;
+#if %big%
     *NAND_ADDR = (page >> 16) & 0xFF;
+#endif
 
     *EMIFS_CONFIG_REG = prev;
 
