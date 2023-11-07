@@ -10,6 +10,14 @@ def MB(x):
 
 
 DEVICES = [
+    Device("n900i", 0x0409, 0x0112, {
+        "dump_nor": NecMemoryDumper("dump_nor.bin", 0x0, MB(32)),
+        "dump_nand": NecNandDumper(size=MB(32)),
+    }),
+    Device("n900is", 0x0409, 0x0144, {
+        "dump_nor": NecMemoryDumper("dump_nor.bin", 0x0, MB(64)),
+        "dump_nand": NecNandDumper(size=MB(32)),
+    }),
     Device("p900iv", 0x0a3c, 0x000d, {
         "dump_nor": NecMemoryDumper("dump_nor.bin", 0x0, MB(32), quirks=SLOW_READ),
         "dump_nand": NecNandDumper(size=MB(32), quirks=SLOW_READ),
