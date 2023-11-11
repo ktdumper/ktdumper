@@ -62,6 +62,8 @@ class NecProtocol:
             resp += self.dev.read(0x87, 64)
             if resp.endswith(b"\xFE"):
                 break
+            elif b"\xFE" in resp:
+                raise RuntimeError("mismatched packet masking")
         return unmask_resp(resp)
 
     def comm_oneway(self, cmd, subcmd=0, variable_payload=None):

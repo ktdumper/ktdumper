@@ -1,5 +1,9 @@
+#include <inttypes.h>
+
 #define BASE %base%
-#define NAND_PHYS %nand%
+#define P_NAND_DATA %nand_data%
+#define P_NAND_CMD %nand_cmd%
+#define P_NAND_ADDR %nand_addr%
 
 void start() {
     unsigned char *command = (void*)(BASE + 0x400);
@@ -7,10 +11,9 @@ void start() {
     unsigned short *data16 = (void*)(BASE + 0x800);
 
     volatile unsigned *EMIFS_CONFIG_REG = (void*)0xFFFECC0C;
-    volatile unsigned char *NAND = (void*)NAND_PHYS;
-    volatile unsigned char *NAND_CMD = NAND+0x800;
-    volatile unsigned char *NAND_ADDR = NAND+0x400;
-    volatile unsigned char *NAND_DATA = NAND;
+    volatile unsigned char *NAND_CMD = (void*)P_NAND_CMD;
+    volatile unsigned char *NAND_ADDR = (void*)P_NAND_ADDR;
+    volatile unsigned char *NAND_DATA = (void*)P_NAND_DATA;
 
     unsigned page = (command[0] << 0) | (command[1] << 8) | (command[2] << 16) | (command[3] << 24);
     unsigned half = command[4];
