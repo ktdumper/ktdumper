@@ -40,6 +40,12 @@ DEVICES = [
        usb_command=0x33ee5198, usb_data=0x33ef51e2, usb_datasz=0x33ef51dc, usb_respfunc=0x519c,
        quirks=SLOW_READ),
 
+    Device("p702i", 0x0a3c, 0x000d, {
+        "dump_rom": NecMemoryDumper(base=0x0, size=0x8000),
+        "dump_nor": NecMemoryDumper(base=0x08000000, size=MB(64)),
+        "dump_nand": NecOnenandDumper(size=MB(128)),
+    }, payload_base=0x80000000, onenand_addr=0x10000000, quirks=SLOW_READ),
+
     Device("p900iv", 0x0a3c, 0x000d, {
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(32)),
         "dump_nand": NecNandDumper(size=MB(32)),
