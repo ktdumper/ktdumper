@@ -2,15 +2,15 @@
 #include <stddef.h>
 
 void start() {
-    uint8_t *command = (void*)0x33ee5198;
-    uint8_t *data = (void*)0x33ef51e2; // comes from cmd_read
-    uint8_t *datasz = (void*)0x33ef51dc; // also from cmd_read
-    uint16_t *scratchbuf16 = (void*)0x30001000;
-    void (*respfunc)() = (void*)0x519c;
+    uint8_t *command = (void*)%usb_command%;
+    uint8_t *data = (void*)%usb_data%; // comes from cmd_read
+    uint8_t *datasz = (void*)%usb_datasz%; // also from cmd_read
+    void (*respfunc)() = (void*)%usb_respfunc%;
+    uint16_t *scratchbuf16 = (void*)(%base%+0x1000);
 
-    volatile uint16_t *nand_cmd = (void*)0x10020000;
-    volatile uint16_t *nand_data = (void*)0x10000000;
-    volatile uint16_t *nand_addr = (void*)0x10040000;
+    volatile uint16_t *nand_cmd = (void*)%nand_cmd%;
+    volatile uint16_t *nand_data = (void*)%nand_data%;
+    volatile uint16_t *nand_addr = (void*)%nand_addr%;
 
     uint8_t subcmd = command[10];
     if (subcmd == 0) {

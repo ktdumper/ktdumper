@@ -36,7 +36,9 @@ DEVICES = [
         "dump_nand": NecNandDumperLp(size=MB(512)),
         "nand_id": NecNandId(),
         "dump_nand_slow": NecNandDumperLpViaPoke(),
-    }, payload_base=0x30000000, nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000, quirks=SLOW_READ),
+    }, payload_base=0x30000000, nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000,
+       usb_command=0x33ee5198, usb_data=0x33ef51e2, usb_datasz=0x33ef51dc, usb_respfunc=0x519c,
+       quirks=SLOW_READ),
 
     Device("p900iv", 0x0a3c, 0x000d, {
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(32)),

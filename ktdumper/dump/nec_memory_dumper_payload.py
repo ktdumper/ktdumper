@@ -1,11 +1,10 @@
 import tqdm
 import struct
 
-from dump.nec_protocol import NecProtocol
-from util.payload_builder import PayloadBuilder
+from dump.nec_direct_usb import NecDirectUsb
 
 
-class NecMemoryDumperPayload(NecProtocol):
+class NecMemoryDumperPayload(NecDirectUsb):
 
     """ A version of NecMemoryDumper that goes through the code exec payload, for phones with delays """
 
@@ -14,7 +13,6 @@ class NecMemoryDumperPayload(NecProtocol):
 
         self.base = opts["base"]
         self.size = opts["size"]
-        self.payload_base = opts["payload_base"]
 
     def execread(self, addr, sz):
         self.comm(3, variable_payload=struct.pack("<BIH", 1, addr, sz))
@@ -26,9 +24,7 @@ class NecMemoryDumperPayload(NecProtocol):
         super().execute(dev, output)
 
         print("!! Restart the phone before running another payload !!")
-
-        payload = PayloadBuilder("memory_read.c").build(base=self.payload_base)
-        self.cmd_write(self.payload_base, payload)
+        self.insert_payload("memory_read.c")
 
         with output.mksuff(".bin") as outf:
             chunk = 0x10

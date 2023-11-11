@@ -2,18 +2,16 @@ import tqdm
 import struct
 import time
 
-from dump.nec_protocol import NecProtocol
-from util.payload_builder import PayloadBuilder
+from dump.nec_direct_usb import NecDirectUsb
 
 
-class NecNandDumperLp(NecProtocol):
+class NecNandDumperLp(NecDirectUsb):
 
     def parse_opts(self, opts):
         super().parse_opts(opts)
 
         assert opts["size"] % 2048 == 0
         self.num_pages = opts["size"] // 2048
-        self.payload_base = opts["payload_base"]
 
         self.nand_data = opts["nand_data"]
         self.nand_cmd = opts["nand_cmd"]
@@ -27,7 +25,7 @@ class NecNandDumperLp(NecProtocol):
 
         # transmit the data back to us
         chunk = 0x10
-        for addr in range(0x30001000, 0x30001000+0x840, chunk):
+        for addr in range(self.payload_base+0x1000, self.payload_base+0x1000+0x840, chunk):
             self.comm(3, variable_payload=struct.pack("<BBIH", 1, 1, addr, chunk))
             data = self.read_resp()
             assert len(data) == chunk + 10
@@ -38,13 +36,10 @@ class NecNandDumperLp(NecProtocol):
     def execute(self, dev, output):
         super().execute(dev, output)
 
-        payload = PayloadBuilder("dump_nand_lp_and_send.c").build(
-            base=self.payload_base,
+        self.insert_payload("dump_nand_lp_and_send.c",
             nand_data=self.nand_data,
             nand_cmd=self.nand_cmd,
-            nand_addr=self.nand_addr,
-        )
-        self.cmd_write(self.payload_base, payload)
+            nand_addr=self.nand_addr)
 
         print("Dumping NAND & OOB")
         with output.mkfile("nand.bin") as nand_bin:

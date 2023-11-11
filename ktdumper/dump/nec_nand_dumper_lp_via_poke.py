@@ -38,21 +38,8 @@ class NecNandDumperLpViaPoke(NecRwAccess):
             out += struct.pack("<H", data)
         return out
 
-    def gpio_out(self, num, val):
-        goe = 0x10000 << num
-        gos = (1 << num) if val else 0
-        self.writew(goe | gos, 0xc0050008)
-
     def execute(self, dev, output):
         super().execute(dev, output)
 
-        # self.writeb(NAND_CMD_READID, self.nand_cmd)
-        # self.writeb(0, self.nand_addr)
-
-        # print("flash id: 0x{:X} 0x{:X} 0x{:X} 0x{:X} 0x{:X}".format(
-        #     self.readh(self.nand_data), self.readh(self.nand_data), self.readh(self.nand_data), self.readh(self.nand_data), self.readh(self.nand_data)))
-
-        # self.gpio_out(0xF, 1)
-
-        for page in range(1024, 2048):
+        for page in range(0, 2 ** 32):
             print(self.nand_dump_page(page).hex())
