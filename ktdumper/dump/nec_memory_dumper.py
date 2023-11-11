@@ -8,14 +8,13 @@ class NecMemoryDumper(NecProtocol):
     def parse_opts(self, opts):
         super().parse_opts(opts)
 
-        self.name = opts["name"]
         self.base = opts["base"]
         self.size = opts["size"]
 
     def execute(self, dev, output):
         super().execute(dev, output)
 
-        with output.mkfile(self.name) as outf:
+        with output.mksuff(".bin") as outf:
             chunk = 0x1000
             end = self.base + self.size
             with tqdm.tqdm(total=self.size, unit='B', unit_scale=True, unit_divisor=1024) as bar:

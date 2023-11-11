@@ -12,7 +12,6 @@ class NecMemoryDumperPayload(NecProtocol):
     def parse_opts(self, opts):
         super().parse_opts(opts)
 
-        self.name = opts["name"]
         self.base = opts["base"]
         self.size = opts["size"]
         self.payload_base = opts["payload_base"]
@@ -31,7 +30,7 @@ class NecMemoryDumperPayload(NecProtocol):
         payload = PayloadBuilder("memory_read.c").build(base=self.payload_base)
         self.cmd_write(self.payload_base, payload)
 
-        with output.mkfile(self.name) as outf:
+        with output.mksuff(".bin") as outf:
             chunk = 0x10
             end = self.base + self.size
             with tqdm.tqdm(total=self.size, unit='B', unit_scale=True, unit_divisor=1024) as bar:
