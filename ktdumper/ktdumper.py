@@ -14,6 +14,8 @@ def main():
         if dev.name == args.phone:
             return dev.execute(args)
 
+    usage()
+    print("")
     raise RuntimeError("Could not locate {} in supported devices list".format(args.phone))
 
 
