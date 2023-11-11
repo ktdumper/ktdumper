@@ -5,11 +5,12 @@ from dump.nec_protocol import NecProtocol
 
 class NecMemoryDumper(NecProtocol):
 
-    def __init__(self, name, base, size, quirks=0):
-        super().__init__(quirks)
-        self.name = name
-        self.base = base
-        self.size = size
+    def parse_opts(self, opts):
+        super().parse_opts(opts)
+
+        self.name = opts["name"]
+        self.base = opts["base"]
+        self.size = opts["size"]
 
     def execute(self, dev, output):
         super().execute(dev, output)

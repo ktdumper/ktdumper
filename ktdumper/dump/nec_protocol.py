@@ -1,5 +1,7 @@
 import struct
 
+from dump.dumper import Dumper
+
 
 SLOW_READ = 1
 
@@ -48,10 +50,12 @@ def unmask_resp(resp):
     return bytearray(out)
 
 
-class NecProtocol:
+class NecProtocol(Dumper):
 
-    def __init__(self, quirks):
-        if quirks & SLOW_READ:
+    def parse_opts(self, opts):
+        super().parse_opts(opts)
+
+        if opts.get("quirks", 0) & SLOW_READ:
             self.chunk = 0x10
         else:
             self.chunk = 0x100

@@ -9,12 +9,13 @@ class NecMemoryDumperPayload(NecProtocol):
 
     """ A version of NecMemoryDumper that goes through the code exec payload, for phones with delays """
 
-    def __init__(self, name, base, size, payload_base=0x30000000, quirks=0):
-        super().__init__(quirks)
-        self.name = name
-        self.base = base
-        self.size = size
-        self.payload_base = payload_base
+    def parse_opts(self, opts):
+        super().parse_opts(opts)
+
+        self.name = opts["name"]
+        self.base = opts["base"]
+        self.size = opts["size"]
+        self.payload_base = opts["payload_base"]
 
     def execread(self, addr, sz):
         self.comm(3, variable_payload=struct.pack("<BIH", 1, addr, sz))

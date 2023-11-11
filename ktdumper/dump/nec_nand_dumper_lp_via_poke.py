@@ -10,12 +10,12 @@ NAND_CMD_READID = 0x90
 
 class NecNandDumperLpViaPoke(NecRwAccess):
 
-    def __init__(self, payload_base, nand_data, nand_addr, nand_cmd, quirks=0):
-        super().__init__(payload_base, quirks)
+    def parse_opts(self, opts):
+        super().parse_opts(opts)
 
-        self.nand_data = nand_data
-        self.nand_addr = nand_addr
-        self.nand_cmd = nand_cmd
+        self.nand_data = opts["nand_data"]
+        self.nand_addr = opts["nand_addr"]
+        self.nand_cmd = opts["nand_cmd"]
 
     def nand_dump_page(self, page):
         # READ0

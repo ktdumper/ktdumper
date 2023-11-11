@@ -6,9 +6,10 @@ from util.payload_builder import PayloadBuilder
 
 class NecRwAccess(NecProtocol):
 
-    def __init__(self, payload_base, quirks=0):
-        super().__init__(quirks)
-        self.payload_base = payload_base
+    def parse_opts(self, opts):
+        super().parse_opts(opts)
+
+        self.payload_base = opts["payload_base"]
         self.payload_COMMAND = self.payload_base+0x400
         self.payload_OUTPUT = self.payload_base+0x800
 

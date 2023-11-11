@@ -7,24 +7,25 @@ from util.payload_builder import PayloadBuilder
 
 class NecOnenandDumper(NecProtocol):
 
-    def __init__(self, size, payload_base=0x80000000, onenand_addr=0x10000000, quirks=0):
-        super().__init__(quirks)
-        assert size % 2048 == 0
-        self.num_pages = size // 2048
-        self.payload_base = payload_base
-        self.onenand_addr = onenand_addr
+    def parse_opts(self, opts):
+        super().parse_opts(opts)
+
+        assert opts["size"] % 2048 == 0
+        self.num_pages = opts["size"] // 2048
+        self.payload_base = opts["payload_base"]
+        self.onenand_addr = opts["onenand_addr"]
 
         self.payload_COMMAND = self.payload_base+0x400
         self.payload_OUTPUT = self.payload_base+0x800
 
-        self.onenand_REG_START_ADDRESS1 = onenand_addr + 2*0xF100
-        self.onenand_REG_START_ADDRESS2 = onenand_addr + 2*0xF101
-        self.onenand_REG_START_ADDRESS8 = onenand_addr + 2*0xF107
-        self.onenand_REG_START_BUFFER = onenand_addr + 2*0xF200
-        self.onenand_REG_INTERRUPT = onenand_addr + 2*0xF241
-        self.onenand_REG_COMMAND = onenand_addr + 2*0xF220
-        self.onenand_DATARAM = onenand_addr + 2*0x200
-        self.onenand_SPARERAM = onenand_addr + 2*0x8010
+        self.onenand_REG_START_ADDRESS1 = self.onenand_addr + 2*0xF100
+        self.onenand_REG_START_ADDRESS2 = self.onenand_addr + 2*0xF101
+        self.onenand_REG_START_ADDRESS8 = self.onenand_addr + 2*0xF107
+        self.onenand_REG_START_BUFFER = self.onenand_addr + 2*0xF200
+        self.onenand_REG_INTERRUPT = self.onenand_addr + 2*0xF241
+        self.onenand_REG_COMMAND = self.onenand_addr + 2*0xF220
+        self.onenand_DATARAM = self.onenand_addr + 2*0x200
+        self.onenand_SPARERAM = self.onenand_addr + 2*0x8010
 
     def rw_addr(self, is_wr, size, addr, val=0):
         cmd = struct.pack("<BBII", is_wr, size, addr, val)
