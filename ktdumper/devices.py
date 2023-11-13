@@ -15,6 +15,11 @@ def MB(x):
 
 
 DEVICES = [
+    Device("n701i", 0x0409, 0x0142, {
+        "dump_nor": NecMemoryDumper(base=0x0, size=MB(128)),
+        "dump_nand": NecOnenandDumper(size=MB(64), quirks=SLOW_READ),
+    }, payload_base=0x10000000, onenand_addr=0x06000000),
+
     Device("n900i", 0x0409, 0x0112, {
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(32)),
         "dump_nand": NecNandDumper(size=MB(32), quirks=SLOW_READ),
