@@ -8,6 +8,7 @@ from dump.nec_memory_dumper_payload import NecMemoryDumperPayload
 from dump.nec_nand_id import NecNandId
 from dump.nec_nand_dumper_lp import NecNandDumperLp
 from dump.nec_nand_dumper_lp_via_poke import NecNandDumperLpViaPoke
+from dump.pipl_exploit_memory_dumper import PiplExploitMemoryDumper
 
 
 def MB(x):
@@ -84,4 +85,8 @@ DEVICES = [
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(128)),
         "dump_nand": NecOnenandDumper(size=MB(128)),
     }, payload_base=0x90000000, onenand_addr=0x08000000),
+
+    Device("p-06c", 0x04da, 0x216b, {
+        "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
+    }),
 ]
