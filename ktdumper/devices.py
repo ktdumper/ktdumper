@@ -86,11 +86,39 @@ DEVICES = [
         "dump_nand": NecOnenandDumper(size=MB(128)),
     }, payload_base=0x90000000, onenand_addr=0x08000000),
 
+    Device("p-04a", 0x04da, 0x216b, {
+        "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
+    }, exploit_flavor="A"),
+
+    Device("p-10a", 0x04da, 0x216b, {
+        "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
+    }, exploit_flavor="A"),
+
     Device("p-02b", 0x04da, 0x216b, {
         "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
     }, exploit_flavor="B"),
 
+    Device("p-03b", 0x04da, 0x216b, {
+        "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
+    }, exploit_flavor="B"),
+
+    Device("p-07b", 0x04da, 0x216b, {
+        "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
+    }, exploit_flavor="B"),
+
     Device("p-06c", 0x04da, 0x216b, {
+        "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
+    }, exploit_flavor="C"),
+
+    Device("p-01f", 0x04da, 0x216b, {
+        "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
+    }, exploit_flavor="C"),
+
+    Device("p-01g", 0x04da, 0x216b, {
+        "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
+    }, exploit_flavor="C"),
+
+    Device("p-01h", 0x04da, 0x216b, {
         "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
     }, exploit_flavor="C"),
 ]
