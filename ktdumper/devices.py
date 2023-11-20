@@ -86,7 +86,11 @@ DEVICES = [
         "dump_nand": NecOnenandDumper(size=MB(128)),
     }, payload_base=0x90000000, onenand_addr=0x08000000),
 
+    Device("p-02b", 0x04da, 0x216b, {
+        "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
+    }, exploit_flavor="B"),
+
     Device("p-06c", 0x04da, 0x216b, {
         "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
-    }),
+    }, exploit_flavor="C"),
 ]
