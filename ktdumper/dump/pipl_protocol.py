@@ -88,3 +88,14 @@ class PiplProtocol(Dumper):
                 chunk = end - addr
             data += self.cmd_read(addr, chunk)
         return data
+
+    def cmd_write(self, addr, data):
+        self.comm_oneway(4, variable_payload=struct.pack("<IH", addr, len(data)) + data)
+
+    def cmd_exec(self):
+        self.comm(3, variable_payload=b"\x01")
+
+    def write(self, addr, data):
+        if len(data) % 2 == 1:
+            data += b"\x00"
+        self.cmd_write(addr, data)

@@ -2,13 +2,13 @@ import tqdm
 import struct
 
 from dump.nec_protocol import NecProtocol
-from dump.nec_rw_access import NecRwAccess
+from dump.common_rw_access import CommonRwAccess
 
 
 NAND_CMD_READID = 0x90
 
 
-class NecNandDumperLpViaPoke(NecRwAccess):
+class NecNandDumperLpViaPoke(CommonRwAccess, NecProtocol):
 
     def parse_opts(self, opts):
         super().parse_opts(opts)

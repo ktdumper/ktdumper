@@ -1,10 +1,9 @@
 import struct
 
-from dump.nec_protocol import NecProtocol
 from util.payload_builder import PayloadBuilder
 
 
-class NecRwAccess(NecProtocol):
+class CommonRwAccess:
 
     def parse_opts(self, opts):
         super().parse_opts(opts)
