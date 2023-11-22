@@ -34,22 +34,9 @@ class CommonOnenandFast:
         return data[9:-1]
 
     def _onenand_read(self, page):
-        data = b""
-
-        # load the page to the onenand buffer and retrieve its first 256 bytes
+        # load the page to the onenand buffer and retrieve it + spare area
         self.comm(3, variable_payload=struct.pack("<BBI", 1, 0, page))
-        data += self.unwrap_read(self.read_resp(), 256)
-
-        # retrieve the remainder of the page through the read memory command
-        for off in range(256, self.page_size, 256):
-            self.comm(3, variable_payload=struct.pack("<BBIH", 1, 1, self.onenand_DATARAM+off, 256))
-            data += self.unwrap_read(self.read_resp(), 256)
-
-        # retrieve the oob data
-        self.comm(3, variable_payload=struct.pack("<BBIH", 1, 1, self.onenand_SPARERAM, self.oob_size))
-        data += self.unwrap_read(self.read_resp(), self.oob_size)
-
-        return data
+        return self.unwrap_read(self.read_resp(), 4096+128)
 
     def onenand_read_page(self, page):
         # if it fails even once, re-validate the re-read attempt

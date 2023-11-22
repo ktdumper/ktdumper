@@ -17,6 +17,7 @@ void start() {
     volatile uint16_t *onenand_REG_INTERRUPT = (volatile uint16_t *)(ONENAND + 2*0xF241);
     volatile uint16_t *onenand_REG_COMMAND = (volatile uint16_t *)(ONENAND + 2*0xF220);
     volatile uint16_t *onenand_DATARAM = (volatile uint16_t *)(ONENAND + 2*0x200);
+    volatile uint16_t *onenand_SPARERAM = (volatile uint16_t *)(ONENAND + 2*0x8010);
 
     /* assume 4k page size, 128b oob size, 64 pages per block */
 
@@ -38,11 +39,14 @@ void start() {
         {}
 
         /* now transfer the first 256 bytes back to the client */
-        for (size_t i = 0; i < 128; ++i)
+        for (size_t i = 0; i < 4096/2; ++i)
             data16[i] = onenand_DATARAM[i];
+        for (size_t i = 0; i < 128/2; ++i)
+            data16[4096/2+i] = onenand_SPARERAM[i];
 
-        datasz[0] = 0x05;
-        datasz[1] = 0x01;
+        uint16_t sz = 4096 + 128 + 5;
+        datasz[0] = sz;
+        datasz[1] = sz >> 8;
 
         respfunc(0xd, 0x0);
     } else {
