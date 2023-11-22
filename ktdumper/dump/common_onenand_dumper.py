@@ -18,9 +18,11 @@ class CommonOnenandDumper(CommonRwAccess):
         if opts.get("has_4k_pages", False):
             self.page_size = 4096
             self.oob_size = 128
+            self.inline_spare = True
         else:
             self.page_size = 2048
             self.oob_size = 64
+            self.inline_spare = False
 
         self.pages_per_block = 64
 
@@ -49,7 +51,10 @@ class CommonOnenandDumper(CommonRwAccess):
 
         # NOTE: not listening for the interrupt/read to complete, assume usb is slow enough it's not needed
 
-        return self.read(read_ptr, read_sz)
+        if self.inline_spare:
+            return self.read(self.onenand_DATARAM, self.page_size) + self.read(self.onenand_SPARERAM, self.oob_size)
+        else:
+            return self.read(read_ptr, read_sz)
 
     def _onenand_read_retry(self, page, cmd, read_ptr, read_sz):
         # if it fails even once, re-validate the re-read attempt
@@ -80,16 +85,36 @@ class CommonOnenandDumper(CommonRwAccess):
     def execute(self, dev, output):
         super().execute(dev, output)
 
-        print("Dumping OneNAND")
-        with output.mkfile("onenand.bin") as outf:
-            with tqdm.tqdm(total=self.page_size*self.num_pages, unit='B', unit_scale=True, unit_divisor=1024) as bar:
-                for page in range(self.num_pages):
-                    outf.write(self.onenand_read_page(page))
-                    bar.update(self.page_size)
+        # devices with 4K pages will read OOB together with the data page
+        if self.inline_spare:
+            print("Dumping OneNAND & OOB")
+            with output.mkfile("onenand.bin") as onenand_bin:
+                with output.mkfile("onenand.oob") as onenand_oob:
+                    chunk = self.page_size + self.oob_size
+                    with tqdm.tqdm(total=chunk*self.num_pages, unit='B', unit_scale=True, unit_divisor=1024) as bar:
+                        for page in range(self.num_pages):
+                            full = self.onenand_read_page(page)
 
-        print("Dumping OOB")
-        with output.mkfile("onenand.oob") as outf:
-            with tqdm.tqdm(total=self.oob_size*self.num_pages, unit='B', unit_scale=True, unit_divisor=1024) as bar:
-                for page in range(self.num_pages):
-                    outf.write(self.onenand_read_oob(page))
-                    bar.update(self.oob_size)
+                            data = full[0:self.page_size]
+                            spare = full[self.page_size:]
+                            assert len(data) == self.page_size
+                            assert len(spare) == self.oob_size
+
+                            onenand_bin.write(data)
+                            onenand_oob.write(spare)
+
+                            bar.update(chunk)
+        else:
+            print("Dumping OneNAND")
+            with output.mkfile("onenand.bin") as outf:
+                with tqdm.tqdm(total=self.page_size*self.num_pages, unit='B', unit_scale=True, unit_divisor=1024) as bar:
+                    for page in range(self.num_pages):
+                        outf.write(self.onenand_read_page(page))
+                        bar.update(self.page_size)
+
+            print("Dumping OOB")
+            with output.mkfile("onenand.oob") as outf:
+                with tqdm.tqdm(total=self.oob_size*self.num_pages, unit='B', unit_scale=True, unit_divisor=1024) as bar:
+                    for page in range(self.num_pages):
+                        outf.write(self.onenand_read_oob(page))
+                        bar.update(self.oob_size)
