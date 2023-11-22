@@ -102,7 +102,7 @@ DEVICES = [
     }, exploit_flavor="A"),
 
     Device("p-10a", 0x04da, 0x216b, {
-        "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
+        "dump_nor": PiplExploitMemoryDumper(base=0x0, size=MB(128)),
     }, exploit_flavor="A"),
 
     Device("p-01b", 0x04da, 0x216b, {
