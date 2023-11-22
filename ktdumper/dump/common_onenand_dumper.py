@@ -49,7 +49,8 @@ class CommonOnenandDumper(CommonRwAccess):
         self.writeh(0, self.onenand_REG_INTERRUPT)
         self.writeh(cmd, self.onenand_REG_COMMAND)
 
-        # NOTE: not listening for the interrupt/read to complete, assume usb is slow enough it's not needed
+        # read complete
+        assert (self.readh(self.onenand_REG_INTERRUPT) & 0x80) == 0x80
 
         if self.inline_spare:
             return self.read(self.onenand_DATARAM, self.page_size) + self.read(self.onenand_SPARERAM, self.oob_size)
