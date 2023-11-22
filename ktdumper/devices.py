@@ -11,6 +11,7 @@ from dump.nec_nand_dumper_lp_via_poke import NecNandDumperLpViaPoke
 from dump.pipl_exploit_memory_dumper import PiplExploitMemoryDumper
 from dump.pipl_onenand_dumper import PiplOnenandDumper
 from dump.pipl_onenand_id import PiplOnenandId
+from dump.pipl_onenand_fast import PiplOnenandFast
 
 
 def MB(x):
@@ -128,9 +129,11 @@ DEVICES = [
 
     Device("p-06c", 0x04da, 0x216b, {
         "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
-        "dump_nand": PiplOnenandDumper(has_4k_pages=True, size=MB(1024)),
+        "dump_nand_peek_poke": PiplOnenandDumper(has_4k_pages=True, size=MB(1024)),
+        "dump_nand": PiplOnenandFast(size=MB(1024)),
         "onenand_id": PiplOnenandId(),
-    }, exploit_flavor="C", payload_base=0x83800000, onenand_addr=0x0C000000),
+    }, exploit_flavor="C", payload_base=0x83800000, onenand_addr=0x0C000000,
+       usb_command=0x8115a960, usb_data=0x8115a54a, usb_datasz=0x8115a544, usb_respfunc=0x80027f6c),
 
     Device("p-01f", 0x04da, 0x216b, {
         "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
