@@ -4,14 +4,28 @@ import struct
 from dump.common_rw_access import CommonRwAccess
 from util.payload_builder import PayloadBuilder
 
+import usb.core
+
+
+RETRIES = 8
+
 
 class CommonOnenandDumper(CommonRwAccess):
 
     def parse_opts(self, opts):
         super().parse_opts(opts)
 
-        assert opts["size"] % 2048 == 0
-        self.num_pages = opts["size"] // 2048
+        if opts.get("has_4k_pages", False):
+            self.page_size = 4096
+            self.oob_size = 128
+        else:
+            self.page_size = 2048
+            self.oob_size = 64
+
+        self.pages_per_block = 64
+
+        assert opts["size"] % self.page_size == 0
+        self.num_pages = opts["size"] // self.page_size
         self.onenand_addr = opts["onenand_addr"]
 
         self.onenand_REG_START_ADDRESS1 = self.onenand_addr + 2*0xF100
@@ -24,9 +38,9 @@ class CommonOnenandDumper(CommonRwAccess):
         self.onenand_SPARERAM = self.onenand_addr + 2*0x8010
 
     def _onenand_read(self, page, cmd, read_ptr, read_sz):
-        self.writeh(page // 64, self.onenand_REG_START_ADDRESS1)
+        self.writeh(page // self.pages_per_block, self.onenand_REG_START_ADDRESS1)
         self.writeh(0, self.onenand_REG_START_ADDRESS2)
-        self.writeh((page % 64) << 2, self.onenand_REG_START_ADDRESS8)
+        self.writeh((page % self.pages_per_block) << 2, self.onenand_REG_START_ADDRESS8)
 
         self.writeh((1 << 3) << 8, self.onenand_REG_START_BUFFER)
 
@@ -37,25 +51,45 @@ class CommonOnenandDumper(CommonRwAccess):
 
         return self.read(read_ptr, read_sz)
 
+    def _onenand_read_retry(self, page, cmd, read_ptr, read_sz):
+        # if it fails even once, re-validate the re-read attempt
+        validation = False
+
+        for x in range(RETRIES):
+            try:
+                first = self._onenand_read(page, cmd, read_ptr, read_sz)
+                if validation:
+                    second = self._onenand_read(page, cmd, read_ptr, read_sz)
+                    third = self._onenand_read(page, cmd, read_ptr, read_sz)
+                    assert first == second
+                    assert first == third
+                return first
+            except usb.core.USBTimeoutError:
+                print("_onenand_read(page=0x{:X}) failed, retrying {} times".format(page, x+1))
+                self.dev.reset()
+                validation = True
+
+        raise RuntimeError("unable to read page=0x{:X}".format(page))
+
     def onenand_read_page(self, page):
-        return self._onenand_read(page, 0x00, self.onenand_DATARAM, 0x800)
+        return self._onenand_read_retry(page, 0x00, self.onenand_DATARAM, self.page_size)
 
     def onenand_read_oob(self, page):
-        return self._onenand_read(page, 0x13, self.onenand_SPARERAM, 64)
+        return self._onenand_read_retry(page, 0x13, self.onenand_SPARERAM, self.oob_size)
 
     def execute(self, dev, output):
         super().execute(dev, output)
 
         print("Dumping OneNAND")
         with output.mkfile("onenand.bin") as outf:
-            with tqdm.tqdm(total=2048*self.num_pages, unit='B', unit_scale=True, unit_divisor=1024) as bar:
+            with tqdm.tqdm(total=self.page_size*self.num_pages, unit='B', unit_scale=True, unit_divisor=1024) as bar:
                 for page in range(self.num_pages):
                     outf.write(self.onenand_read_page(page))
-                    bar.update(2048)
+                    bar.update(self.page_size)
 
         print("Dumping OOB")
         with output.mkfile("onenand.oob") as outf:
-            with tqdm.tqdm(total=64*self.num_pages, unit='B', unit_scale=True, unit_divisor=1024) as bar:
+            with tqdm.tqdm(total=self.oob_size*self.num_pages, unit='B', unit_scale=True, unit_divisor=1024) as bar:
                 for page in range(self.num_pages):
                     outf.write(self.onenand_read_oob(page))
-                    bar.update(64)
+                    bar.update(self.oob_size)
