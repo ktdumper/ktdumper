@@ -155,4 +155,10 @@ DEVICES = [
     Device("p-01h", 0x04da, 0x216b, {
         "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
     }, exploit_flavor="C"),
+
+    Device("942p", 0x04da, 0x216b, {
+        "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
+        "dump_nand_1": PiplOnenandDumper(onenand_addr=0x0C000000, size=MB(256)),
+        "dump_nand_2": PiplOnenandDumper(onenand_addr=0x18000000, size=MB(256)),
+    }, exploit_flavor="B", payload_base=0x83800000),
 ]
