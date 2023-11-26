@@ -25,6 +25,7 @@ class CommonOnenandDumper(CommonRwAccess):
             self.inline_spare = False
 
         self.pages_per_block = 64
+        self.ddp = opts.get("ddp", 0)
 
         assert opts["size"] % self.page_size == 0
         self.num_pages = opts["size"] // self.page_size
@@ -39,9 +40,14 @@ class CommonOnenandDumper(CommonRwAccess):
         self.onenand_DATARAM = self.onenand_addr + 2*0x200
         self.onenand_SPARERAM = self.onenand_addr + 2*0x8010
 
+    def with_ddp(self, x):
+        if self.ddp:
+            return (1 << 15) | x
+        return x
+
     def _onenand_read(self, page, cmd, read_ptr, read_sz):
-        self.writeh(page // self.pages_per_block, self.onenand_REG_START_ADDRESS1)
-        self.writeh(0, self.onenand_REG_START_ADDRESS2)
+        self.writeh(self.with_ddp(page // self.pages_per_block), self.onenand_REG_START_ADDRESS1)
+        self.writeh(self.with_ddp(0), self.onenand_REG_START_ADDRESS2)
         self.writeh((page % self.pages_per_block) << 2, self.onenand_REG_START_ADDRESS8)
 
         self.writeh((1 << 3) << 8, self.onenand_REG_START_BUFFER)
