@@ -51,7 +51,7 @@ class PiplEmmcDumper(PiplExploit):
             except usb.core.USBTimeoutError:
                 print("_emmc_read_page(page=0x{:X}) failed, retrying {} times".format(page, x+1))
                 self.dev.reset()
-                self.dev = usb.core.find(idVendor=self.dev.idVendor, idProduct=self.idProduct)
+                self.dev = usb.core.find(idVendor=self.dev.idVendor, idProduct=self.dev.idProduct)
                 validation = True
 
         raise RuntimeError("unable to read page=0x{:X}".format(page))
