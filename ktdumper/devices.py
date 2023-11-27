@@ -12,6 +12,7 @@ from dump.pipl_exploit_memory_dumper import PiplExploitMemoryDumper
 from dump.pipl_onenand_dumper import PiplOnenandDumper
 from dump.pipl_onenand_id import PiplOnenandId
 from dump.pipl_onenand_fast import PiplOnenandFast
+from dump.pipl_emmc_dumper import PiplEmmcDumper
 
 
 def MB(x):
@@ -166,7 +167,9 @@ DEVICES = [
 
     Device("p-01h", 0x04da, 0x216b, {
         "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
-    }, exploit_flavor="C"),
+        "dump_emmc": PiplEmmcDumper(size=MB(2048)),
+    }, exploit_flavor="C", payload_base=0x83800000, emmc_read_and_dcache=0x8000dbf4,
+       usb_command=0x8115a960, usb_data=0x8115a54a, usb_datasz=0x8115a544, usb_respfunc=0x80010a68),
 
     Device("942p", 0x04da, 0x216b, {
         "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),

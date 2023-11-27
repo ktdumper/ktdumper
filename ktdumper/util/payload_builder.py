@@ -19,7 +19,7 @@ SECTIONS
 }
 """
 
-COMPILE = ["arm-none-eabi-gcc", "-c", "-Os", "-march=armv4", "-fno-builtin-printf", "-fno-strict-aliasing", "-fno-builtin-memcpy", "-fno-builtin-memset"]
+COMPILE = ["arm-none-eabi-gcc", "-c", "-Os", "-march=armv4", "-fno-builtin-printf", "-fno-strict-aliasing", "-fno-builtin-memcpy", "-fno-builtin-memset", "-fno-builtin"]
 LINK = ["arm-none-eabi-gcc", "-nodefaultlibs", "-nostdlib"]
 OBJCOPY = ["arm-none-eabi-objcopy", "-O", "binary"]
 
