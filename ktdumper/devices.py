@@ -193,4 +193,11 @@ DEVICES = [
         "dump_emmc": PiplEmmcDumper(size=MB(2048)),
     }, exploit_flavor="C", payload_base=0x83800000, emmc_read_and_dcache=0x8000c528,
        usb_command=0x8115a960, usb_data=0x8115a54a, usb_datasz=0x8115a544, usb_respfunc=0x8000f39c),
+
+    Device("930ca", 0x1967, 0x2004, {
+        "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),
+        "dump_nand": NecNandDumperLp(size=MB(512)),
+    }, payload_base=0x30000000, nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000,
+       usb_command=0x33ee51a8, usb_data=0x33ef51f2, usb_datasz=0x33ef51ec, usb_respfunc=0x50a8,
+       quirks=SLOW_READ),
 ]
