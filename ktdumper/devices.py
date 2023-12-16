@@ -13,6 +13,7 @@ from dump.pipl_onenand_dumper import PiplOnenandDumper
 from dump.pipl_onenand_id import PiplOnenandId
 from dump.pipl_onenand_fast import PiplOnenandFast
 from dump.pipl_emmc_dumper import PiplEmmcDumper
+from dump.sh_exploit import ShExploit
 
 
 def MB(x):
@@ -200,4 +201,8 @@ DEVICES = [
     }, payload_base=0x30000000, nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000,
        usb_command=0x33ee51a8, usb_data=0x33ef51f2, usb_datasz=0x33ef51ec, usb_respfunc=0x50a8,
        quirks=SLOW_READ),
+
+    Device("sh-07f", 0x04dd, 0x9464, {
+        "jump_symbian": ShExploit(jump_dst=0x50803630),
+    }),
 ]
