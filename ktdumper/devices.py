@@ -31,6 +31,11 @@ DEVICES = [
         "dump_nand": NecNandDumper(size=MB(32), quirks=SLOW_READ),
     }, payload_base=0x10000000, nand_data=0x04000000, nand_cmd=0x04000800, nand_addr=0x04000400),
 
+    Device("p900i", 0x0a3c, 0x000d, {
+        "dump_nor": NecMemoryDumper(base=0x0, size=MB(32)),
+        "dump_nand": NecNandDumper(size=MB(32)),
+    }, payload_base=0x10000000, nand_data=0x04000000, nand_cmd=0x04000800, nand_addr=0x04000400, quirks=SLOW_READ),
+
     Device("p900iv", 0x0a3c, 0x000d, {
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(32)),
         "dump_nand": NecNandDumper(size=MB(32)),
