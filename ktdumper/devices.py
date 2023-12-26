@@ -216,6 +216,13 @@ DEVICES = [
     }, payload_base=0x30000000, nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000,
        usb_command=0x33ee51a8, usb_data=0x33ef51f2, usb_datasz=0x33ef51ec, usb_respfunc=0x50a8,
        quirks=SLOW_READ),
+    
+    Device("940p", 0x04da, 0x216b, {
+        "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
+        "dump_nand_1": PiplOnenandDumper(onenand_addr=0x0C000000, size=MB(256)),
+        "dump_nand_2": PiplOnenandDumper(onenand_addr=0x0C000000, ddp=1, size=MB(256)),
+        "dump_nand_3": PiplOnenandDumper(onenand_addr=0x18000000, size=MB(256)),
+    }, exploit_flavor="B", payload_base=0x83800000),
 
     Device("sh-07f", 0x04dd, 0x9464, {
         "jump_symbian": ShExploit(jump_dst=0x50803630),
