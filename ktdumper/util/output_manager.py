@@ -15,7 +15,9 @@ class OutputManager:
 
     def mkfile(self, name):
         self._ensure_output()
-        return open(os.path.join(self.directory, name), "wb")
+        full_path = os.path.join(self.directory, name)
+        pathlib.Path(full_path).parent.mkdir(parents=True, exist_ok=True)
+        return open(full_path, "wb")
 
     def mksuff(self, suff):
         self._ensure_output()
