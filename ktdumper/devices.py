@@ -240,6 +240,10 @@ DEVICES = [
     Device("f902i", 0x04c5, 0x10ce, {"dump_java": FujitsuJavaDumper()}),
     Device("f905i", 0x04c5, 0x1128, {"dump_java": FujitsuJavaDumper()}),
     Device("f906i", 0x04c5, 0x115d, {"dump_java": FujitsuJavaDumper()}),
+    Device("f884ies", 0x04c5, 0x1199, {"dump_java": FujitsuJavaDumper()}),  
+    Device("f-04a", 0x04c5, 0x115e, {"dump_java": FujitsuJavaDumper()}),    
+    Device("f-07a", 0x04c5, 0x115f, {"dump_java": FujitsuJavaDumper()}), 
+    Device("f-10a", 0x04c5, 0x1162, {"dump_java": FujitsuJavaDumper()}),
 
     Device("d702i", 0x06d3, 0x2100, {"dump_java": FujitsuJavaDumper()}),
     Device("d704i", 0x06d3, 0x21a0, {"dump_java": FujitsuJavaDumper()}),
