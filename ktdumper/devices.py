@@ -77,7 +77,7 @@ DEVICES = [
 
     Device("n703id", 0x0409, 0x01aa, {
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(128)),
-    }, payload_base=0x80000000, quirks=SLOW_READ),
+    }, payload_base=0x30000000, quirks=SLOW_READ),
 
     Device("p903i", 0x0a3c, 0x000d, {
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(128)),
