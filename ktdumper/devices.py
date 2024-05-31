@@ -51,7 +51,7 @@ DEVICES = [
         "dump_rom": NecMemoryDumper(base=0x0, size=0x8000),
         "dump_nor": NecMemoryDumper(base=0x08000000, size=MB(128)),
         "dump_nand": NecOnenandDumper(size=MB(128)),
-    }, payload_base=0x80000000, onenand_addr=0x06000000),
+    }, payload_base=0x80000000, onenand_addr=0x06000000, quirks=SLOW_READ),
     
     Device("n-01a", 0x0409, 0x0240, {
         "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),
@@ -96,6 +96,13 @@ DEVICES = [
         "dump_nand": NecNandDumperLp(size=MB(512)),
     }, payload_base=0x30000000, nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000,
        usb_command=0x33ee5198, usb_data=0x33ef51e2, usb_datasz=0x33ef51dc, usb_respfunc=0x50d8,
+       quirks=SLOW_READ),
+    
+    Device("930n", 0x0409, 0x027c, {
+        "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),
+        "dump_nand": NecNandDumperLp(size=MB(512)),
+    }, payload_base=0x30000000, nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000,
+       usb_command=0x33ee5190, usb_data=0x33ef51da, usb_datasz=0x33ef51d4, usb_respfunc=0x50d4,
        quirks=SLOW_READ),
 
     ################################################################################################
@@ -287,6 +294,7 @@ DEVICES = [
     ################################################################################################
 
     Device("f902i", 0x04c5, 0x10ce, {"dump_java": FujitsuJavaDumper()}),
+    Device("f904i", 0x04c5, 0x1122, {"dump_java": FujitsuJavaDumper()}),
     Device("f905i", 0x04c5, 0x1128, {"dump_java": FujitsuJavaDumper()}),
     Device("f906i", 0x04c5, 0x115d, {"dump_java": FujitsuJavaDumper()}),
     Device("f884ies", 0x04c5, 0x1199, {"dump_java": FujitsuJavaDumper()}),  
@@ -295,7 +303,7 @@ DEVICES = [
     Device("f-10a", 0x04c5, 0x1162, {"dump_java": FujitsuJavaDumper()}),
     Device("f702id", 0x04c5, 0x10d9, {"dump_java": FujitsuJavaDumper()}),
     Device("f902is", 0x04c5, 0x10db, {"dump_java": FujitsuJavaDumper()}),
-    Device("f-05a", 0x04c5, 0x1167, {"dump_java": FujitsuJavaDumper()}), 
+    Device("f-05a", 0x04c5, 0x1167, {"dump_java": FujitsuJavaDumper()}),
 
     ################################################################################################
     # Mistubishi
