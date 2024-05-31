@@ -147,6 +147,12 @@ DEVICES = [
         "dump_nand": NecOnenandDumper(size=MB(128)),
     }, payload_base=0x80000000, onenand_addr=0x10000000, quirks=SLOW_READ),
 
+    Device("p902is", 0x0a3c, 0x000d, {
+        "dump_rom": NecMemoryDumper(base=0x0, size=0x8000),
+        "dump_nor": NecMemoryDumper(base=0x08000000, size=MB(64)),
+        "dump_nand": NecOnenandDumper(size=MB(128)),
+    }, payload_base=0x80000000, onenand_addr=0x10000000, quirks=SLOW_READ),
+
     Device("p903i", 0x0a3c, 0x000d, {
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(128)),
         "dump_nand": NecOnenandDumper(size=MB(128)),
@@ -304,6 +310,7 @@ DEVICES = [
     Device("f702id", 0x04c5, 0x10d9, {"dump_java": FujitsuJavaDumper()}),
     Device("f902is", 0x04c5, 0x10db, {"dump_java": FujitsuJavaDumper()}),
     Device("f-05a", 0x04c5, 0x1167, {"dump_java": FujitsuJavaDumper()}),
+    Device("f903ix",0x04c5, 0x113f, {"dump_java": FujitsuJavaDumper()}),
 
     ################################################################################################
     # Mistubishi
