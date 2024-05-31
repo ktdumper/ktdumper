@@ -302,6 +302,7 @@ DEVICES = [
     Device("f702id", 0x04c5, 0x10d9, {"dump_java": FujitsuJavaDumper()}),
     Device("f902is", 0x04c5, 0x10db, {"dump_java": FujitsuJavaDumper()}),
     Device("f-05a", 0x04c5, 0x1167, {"dump_java": FujitsuJavaDumper()}), 
+    Device("f903ix",0x04c5, 0x113f, {"dump_java": FujitsuJavaDumper()}),
 
     ################################################################################################
     # Mistubishi
