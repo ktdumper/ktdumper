@@ -26,6 +26,16 @@ DEVICES = [
     ################################################################################################
     # NEC
     ################################################################################################
+
+    Device("n701i", 0x0409, 0x0142, {
+        "dump_nor": NecMemoryDumper(base=0x0, size=MB(128)),
+        "dump_nand": NecOnenandDumper(size=MB(64), quirks=SLOW_READ),
+    }, payload_base=0x10000000, onenand_addr=0x06000000),
+    
+    Device("n702id", 0x0409, 0x0168, {
+        "dump_nor": NecMemoryDumper(base=0x0, size=MB(128)),
+        "dump_nand": NecOnenandDumper(size=MB(64), quirks=SLOW_READ),
+    }, payload_base=0x10000000, onenand_addr=0x06000000),
     
     Device("n900i", 0x0409, 0x0112, {
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(32)),
@@ -37,10 +47,10 @@ DEVICES = [
         "dump_nand": NecNandDumper(size=MB(32), quirks=SLOW_READ),
     }, payload_base=0x10000000, nand_data=0x04000000, nand_cmd=0x04000800, nand_addr=0x04000400),
 
-    Device("n701i", 0x0409, 0x0142, {
-        "dump_nor": NecMemoryDumper(base=0x0, size=MB(128)),
-        "dump_nand": NecOnenandDumper(size=MB(64), quirks=SLOW_READ),
-    }, payload_base=0x10000000, onenand_addr=0x06000000),
+    Device("n901ic", 0x0409, 0x0129, {
+        "dump_nor": NecMemoryDumper(base=0x04000000, size=MB(64)),
+        "dump_nand": NecNandDumper(size=MB(64), big=1),
+    }, payload_base=0x10000000, nand_data=0x04000000, nand_cmd=0x04000800, nand_addr=0x04000400, quirks=SLOW_READ),
 
     Device("n901is", 0x0409, 0x0144, {
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(64)),
@@ -84,6 +94,13 @@ DEVICES = [
        usb_command=0x33ee5198, usb_data=0x33ef51e2, usb_datasz=0x33ef51dc, usb_respfunc=0x50e8,
        quirks=SLOW_READ),
 
+    Device("n-07a", 0x0409, 0x0280, {
+        "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),
+        "dump_nand": NecNandDumperLp(size=MB(512)),
+    }, payload_base=0x30000000, nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000,
+       usb_command=0x33ee5198, usb_data=0x33ef51e2, usb_datasz=0x33ef51dc, usb_respfunc=0x50e8,
+       quirks=SLOW_READ),
+
     Device("n-08a", 0x0409, 0x026c, {
         "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),
         "dump_nand": NecNandDumperLp(size=MB(512)),
@@ -109,10 +126,33 @@ DEVICES = [
     # Panasonic
     ################################################################################################
 
+    Device("p700i", 0x0a3c, 0x000d, {
+        "dump_rom": NecMemoryDumper(base=0x0, size=0x8000),
+        "dump_nor": NecMemoryDumper(base=0x0C000000, size=MB(64)),
+        "dump_nand": NecNandDumper(size=MB(64), big=1),
+    }, payload_base=0x10000000, nand_data=0x04000000, nand_cmd=0x04000800, nand_addr=0x04000400, quirks=SLOW_READ),
+    
+    Device("p702i", 0x0a3c, 0x000d, {
+        "dump_rom": NecMemoryDumper(base=0x0, size=0x8000),
+        "dump_nor": NecMemoryDumper(base=0x08000000, size=MB(64)),
+        "dump_nand": NecOnenandDumper(size=MB(128)),
+    }, payload_base=0x80000000, onenand_addr=0x10000000, quirks=SLOW_READ),
+
+    Device("p702id", 0x0a3c, 0x000d, {
+        "dump_rom": NecMemoryDumper(base=0x0, size=0x8000),
+        "dump_nor": NecMemoryDumper(base=0x08000000, size=MB(64)),
+        "dump_nand": NecOnenandDumper(size=MB(128)),
+    }, payload_base=0x80000000, onenand_addr=0x10000000, quirks=SLOW_READ),
+    
     Device("p704i", 0x0a3c, 0x000d, {
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(96)),
         "dump_nand": NecOnenandDumper(size=MB(128)),
     }, payload_base=0x90000000, onenand_addr=0x08000000),
+
+    Device("p851i", 0x0a3c, 0x000d, {
+        "dump_nor": NecMemoryDumper(base=0x0, size=MB(64)),
+        "dump_nand": NecNandDumper(size=MB(32), big=1),
+    }, payload_base=0x10000000, nand_data=0x04000000, nand_cmd=0x04000800, nand_addr=0x04000400, quirks=SLOW_READ),
 
     Device("p900i", 0x0a3c, 0x000d, {
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(32)),
@@ -124,9 +164,10 @@ DEVICES = [
         "dump_nand": NecNandDumper(size=MB(32)),
     }, payload_base=0x10000000, nand_data=0x04000000, nand_cmd=0x04000800, nand_addr=0x04000400, quirks=SLOW_READ),
 
-    Device("p851i", 0x0a3c, 0x000d, {
-        "dump_nor": NecMemoryDumper(base=0x0, size=MB(64)),
-        "dump_nand": NecNandDumper(size=MB(32), big=1),
+    Device("p901i", 0x0a3c, 0x000d, {
+        "dump_rom": NecMemoryDumper(base=0x0, size=0x8000),
+        "dump_nor": NecMemoryDumper(base=0x0C000000, size=MB(64)),
+        "dump_nand": NecNandDumper(size=MB(64), big=1),
     }, payload_base=0x10000000, nand_data=0x04000000, nand_cmd=0x04000800, nand_addr=0x04000400, quirks=SLOW_READ),
 
     Device("p901is", 0x0a3c, 0x000d, {
@@ -135,11 +176,11 @@ DEVICES = [
         "dump_nand": NecNandDumper(size=MB(64), big=1),
     }, payload_base=0x10000000, nand_data=0x04000000, nand_cmd=0x04000800, nand_addr=0x04000400, quirks=SLOW_READ),
 
-    Device("p702i", 0x0a3c, 0x000d, {
+    Device("p901itv", 0x0a3c, 0x000d, {
         "dump_rom": NecMemoryDumper(base=0x0, size=0x8000),
-        "dump_nor": NecMemoryDumper(base=0x08000000, size=MB(64)),
+        "dump_nor": NecMemoryDumper(base=0x0, size=MB(64)),
         "dump_nand": NecOnenandDumper(size=MB(128)),
-    }, payload_base=0x80000000, onenand_addr=0x10000000, quirks=SLOW_READ),
+    }, payload_base=0x90000000, onenand_addr=0x08000000, quirks=SLOW_READ),
 
     Device("p902i", 0x0a3c, 0x000d, {
         "dump_rom": NecMemoryDumper(base=0x0, size=0x8000),
@@ -162,11 +203,6 @@ DEVICES = [
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(128)),
         "dump_nand": NecOnenandDumper(size=MB(256)),
     }, payload_base=0x90000000, onenand_addr=0x0C000000),
-
-    Device("p903itv", 0x0a3c, 0x000d, {
-        "dump_nor": NecMemoryDumper(base=0x0, size=MB(128)),
-        "dump_nand": NecOnenandDumper(size=MB(256)),
-    }, payload_base=0x90040000, onenand_addr=0x0C000000),
 
     Device("p-01a", 0x04da, 0x216b, {
         "dump_nor": PiplExploitMemoryDumper(base=0x0, size=MB(128)),
@@ -250,26 +286,26 @@ DEVICES = [
     }, exploit_flavor="C", payload_base=0x83800000, emmc_read_and_dcache=0x8000dbf4,
        usb_command=0x8115a960, usb_data=0x8115a54a, usb_datasz=0x8115a544, usb_respfunc=0x80010a68),
 
-    Device("942p", 0x04da, 0x216b, {
-        "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
-        "dump_nand_1": PiplOnenandDumper(onenand_addr=0x0C000000, size=MB(256)),
-        "dump_nand_2": PiplOnenandDumper(onenand_addr=0x0C000000, ddp=1, size=MB(256)),
-        "dump_nand_3": PiplOnenandDumper(onenand_addr=0x18000000, size=MB(256)),
-    }, exploit_flavor="B", payload_base=0x83800000),
+    Device("301p", 0x04da, 0x216b, {
+        "dump_rom": PiplExploitMemoryDumper(base=0x00000000, size=0x8000),
+        "dump_emmc": PiplEmmcDumper(size=MB(2048)),
+    }, exploit_flavor="C", payload_base=0x83800000, emmc_read_and_dcache=0x8000c528,
+       usb_command=0x8115a960, usb_data=0x8115a54a, usb_datasz=0x8115a544, usb_respfunc=0x8000f39c),
     
     Device('930p', 0x04da, 0x216b, {
         'dump_rom': PiplExploitMemoryDumper(base=0x0, size=0x8000),
         'dump_nand_1': PiplOnenandDumper(onenand_addr=0x0C000000, size=MB(256)),
         'dump_nand_2': PiplOnenandDumper(onenand_addr=0x0C000000, ddp=1, size=MB(256)),
     }, exploit_flavor="A", payload_base=0x8009c000),
-
-    Device("301p", 0x04da, 0x216b, {
-        "dump_rom": PiplExploitMemoryDumper(base=0x00000000, size=0x8000),
-        "dump_emmc": PiplEmmcDumper(size=MB(2048)),
-    }, exploit_flavor="C", payload_base=0x83800000, emmc_read_and_dcache=0x8000c528,
-       usb_command=0x8115a960, usb_data=0x8115a54a, usb_datasz=0x8115a544, usb_respfunc=0x8000f39c),
-
+    
     Device("940p", 0x04da, 0x216b, {
+        "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
+        "dump_nand_1": PiplOnenandDumper(onenand_addr=0x0C000000, size=MB(256)),
+        "dump_nand_2": PiplOnenandDumper(onenand_addr=0x0C000000, ddp=1, size=MB(256)),
+        "dump_nand_3": PiplOnenandDumper(onenand_addr=0x18000000, size=MB(256)),
+    }, exploit_flavor="B", payload_base=0x83800000),
+
+    Device("942p", 0x04da, 0x216b, {
         "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
         "dump_nand_1": PiplOnenandDumper(onenand_addr=0x0C000000, size=MB(256)),
         "dump_nand_2": PiplOnenandDumper(onenand_addr=0x0C000000, ddp=1, size=MB(256)),
@@ -299,18 +335,19 @@ DEVICES = [
     # Fujitsu
     ################################################################################################
 
+    Device("f702id", 0x04c5, 0x10d9, {"dump_java": FujitsuJavaDumper()}),
+    Device("f884ies", 0x04c5, 0x1199, {"dump_java": FujitsuJavaDumper()}),  
     Device("f902i", 0x04c5, 0x10ce, {"dump_java": FujitsuJavaDumper()}),
+    Device("f902is", 0x04c5, 0x10db, {"dump_java": FujitsuJavaDumper()}),
+    Device("f903ix",0x04c5, 0x113f, {"dump_java": FujitsuJavaDumper()}),
     Device("f904i", 0x04c5, 0x1122, {"dump_java": FujitsuJavaDumper()}),
     Device("f905i", 0x04c5, 0x1128, {"dump_java": FujitsuJavaDumper()}),
     Device("f906i", 0x04c5, 0x115d, {"dump_java": FujitsuJavaDumper()}),
-    Device("f884ies", 0x04c5, 0x1199, {"dump_java": FujitsuJavaDumper()}),  
-    Device("f-04a", 0x04c5, 0x115e, {"dump_java": FujitsuJavaDumper()}),    
+    Device("f-04a", 0x04c5, 0x115e, {"dump_java": FujitsuJavaDumper()}),
+    Device("f-05a", 0x04c5, 0x1167, {"dump_java": FujitsuJavaDumper()}),
     Device("f-07a", 0x04c5, 0x115f, {"dump_java": FujitsuJavaDumper()}), 
     Device("f-10a", 0x04c5, 0x1162, {"dump_java": FujitsuJavaDumper()}),
-    Device("f702id", 0x04c5, 0x10d9, {"dump_java": FujitsuJavaDumper()}),
-    Device("f902is", 0x04c5, 0x10db, {"dump_java": FujitsuJavaDumper()}),
-    Device("f-05a", 0x04c5, 0x1167, {"dump_java": FujitsuJavaDumper()}),
-    Device("f903ix",0x04c5, 0x113f, {"dump_java": FujitsuJavaDumper()}),
+    
 
     ################################################################################################
     # Mistubishi
@@ -322,7 +359,8 @@ DEVICES = [
     Device("d705i", 0x06d3, 0x21d0, {"dump_java": FujitsuJavaDumper()}),
     Device("d705iu", 0x06d3, 0x21c0, {"dump_java": FujitsuJavaDumper()}),
     Device("d902i", 0x06d3, 0x20b0, {"dump_java": FujitsuJavaDumper()}),
-    Device("d903itv", 0x06d3, 0x2170, {"dump_java": FujitsuJavaDumper()}),
-    Device("d905i", 0x06d3, 0x21b0, {"dump_java": FujitsuJavaDumper()}),
     Device("d902is", 0x06d3, 0x2120, {"dump_java": FujitsuJavaDumper()}),
+    Device("d903itv", 0x06d3, 0x2170, {"dump_java": FujitsuJavaDumper()}),
+    Device("d904i", 0x06d3, 0x2190, {"dump_java": FujitsuJavaDumper()}),
+    Device("d905i", 0x06d3, 0x21b0, {"dump_java": FujitsuJavaDumper()}),
 ]
