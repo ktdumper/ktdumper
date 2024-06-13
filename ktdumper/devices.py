@@ -142,7 +142,8 @@ DEVICES = [
     Device("p-01a", 0x04da, 0x216b, {
         "dump_nor": PiplExploitMemoryDumper(base=0x0, size=MB(128)),
         "onenand_id": PiplOnenandId(),
-        "dump_nand": PiplOnenandDumper(size=MB(256)),
+        "dump_nand_1": PiplOnenandDumper(size=MB(256)),
+        "dump_nand_2": PiplOnenandDumper(ddp=1, size=MB(256)),
     }, exploit_flavor="A", payload_base=0x8009c000, onenand_addr=0x0C000000),
 
     Device("p-03a", 0x04da, 0x216b, {
