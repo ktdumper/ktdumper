@@ -173,6 +173,8 @@ DEVICES = [
 
     Device("p-02b", 0x04da, 0x216b, {
         "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
+        "onenand_id_a": PiplOnenandId(onenand_addr=0x0C000000),
+        "onenand_id_b": PiplOnenandId(onenand_addr=0x18000000),
         "dump_nand_1": PiplOnenandDumper(onenand_addr=0x0C000000, size=MB(256)),
         "dump_nand_2": PiplOnenandDumper(onenand_addr=0x0C000000, ddp=1, size=MB(256)),
         "dump_nand_3": PiplOnenandDumper(onenand_addr=0x18000000, size=MB(256)),
@@ -194,6 +196,7 @@ DEVICES = [
     Device("p-07b", 0x04da, 0x216b, {
         "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
         "dump_nand": PiplOnenandDumper(size=MB(512)),
+        "onenand_id": PiplOnenandId(),
     }, exploit_flavor="B", payload_base=0x83800000, onenand_addr=0x0C000000),
 
     Device("p-06c", 0x04da, 0x216b, {
