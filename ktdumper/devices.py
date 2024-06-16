@@ -228,7 +228,7 @@ DEVICES = [
         "dump_nand_2": PiplOnenandDumper(onenand_addr=0x0C000000, ddp=1, size=MB(256)),
         "dump_nand_3": PiplOnenandDumper(onenand_addr=0x18000000, size=MB(256)),
     }, exploit_flavor="B", payload_base=0x83800000),
-    
+
     Device('930p', 0x04da, 0x216b, {
         'dump_rom': PiplExploitMemoryDumper(base=0x0, size=0x8000),
         'dump_nand_1': PiplOnenandDumper(onenand_addr=0x0C000000, size=MB(256)),
@@ -262,9 +262,9 @@ DEVICES = [
     Device("f902i", 0x04c5, 0x10ce, {"dump_java": FujitsuJavaDumper()}),
     Device("f905i", 0x04c5, 0x1128, {"dump_java": FujitsuJavaDumper()}),
     Device("f906i", 0x04c5, 0x115d, {"dump_java": FujitsuJavaDumper()}),
-    Device("f884ies", 0x04c5, 0x1199, {"dump_java": FujitsuJavaDumper()}),  
-    Device("f-04a", 0x04c5, 0x115e, {"dump_java": FujitsuJavaDumper()}),    
-    Device("f-07a", 0x04c5, 0x115f, {"dump_java": FujitsuJavaDumper()}), 
+    Device("f884ies", 0x04c5, 0x1199, {"dump_java": FujitsuJavaDumper()}),
+    Device("f-04a", 0x04c5, 0x115e, {"dump_java": FujitsuJavaDumper()}),
+    Device("f-07a", 0x04c5, 0x115f, {"dump_java": FujitsuJavaDumper()}),
     Device("f-10a", 0x04c5, 0x1162, {"dump_java": FujitsuJavaDumper()}),
 
     Device("d702i", 0x06d3, 0x2100, {"dump_java": FujitsuJavaDumper()}),
