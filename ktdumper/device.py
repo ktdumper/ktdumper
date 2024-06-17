@@ -20,7 +20,6 @@ class Device:
                 raise RuntimeError("Cannot find '{}' (vid=0x{:04X} pid=0x{:04X}), is the phone connected?".format(self.name, self.vid, self.pid))
             directory = "KTdumper_{}_{}_{}".format(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S"), self.name, args.module)
             output = OutputManager(directory, args.module)
-            print("Writing output to {}".format(directory))
             dumper = self.commands[args.module]
             dumper.set_device_opts(self.device_opts)
             dumper.execute(dev, output)
