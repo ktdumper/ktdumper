@@ -86,9 +86,9 @@ DEVICES = [
         "dump_nand": NecOnenandDumper(size=MB(256)),
     }, payload_base=0x90000000, onenand_addr=0x0C000000),
 
-    Device("p903itv", 0x0a3c, 0x000d, {
+    Device("p904i", 0x0a3c, 0x000d, {
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(128)),
-        "dump_nand": NecOnenandDumper(size=MB(256)),
+        "dump_nand": NecOnenandDumper(size=MB(512), has_ddp=True),
     }, payload_base=0x90040000, onenand_addr=0x0C000000),
 
     Device("n904i", 0x0409, 0x0200, {
