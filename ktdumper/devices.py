@@ -15,6 +15,7 @@ from dump.pipl_onenand_fast import PiplOnenandFast
 from dump.pipl_emmc_dumper import PiplEmmcDumper
 from dump.sh_exploit import ShExploit
 from dump.fujitsu_java_dumper import FujitsuJavaDumper
+from dump.pipl_emmc_fuse import PiplEmmcFuse
 
 
 def MB(x):
@@ -462,14 +463,14 @@ DEVICES = [
         "dump_nand_a": PiplOnenandDumper(onenand_addr=0x0C000000, size=MB(512), has_ddp=True),
         "dump_nand_b": PiplOnenandDumper(onenand_addr=0x18000000, size=MB(256)),
     }, exploit_flavor="B", payload_base=0x83800000),
-    
+  
     # 301P
     Device("301p", 0x04da, 0x216b, {
         "dump_rom": PiplExploitMemoryDumper(base=0x00000000, size=0x8000),
         "dump_emmc": PiplEmmcDumper(size=MB(2048)),
     }, exploit_flavor="C", payload_base=0x83800000, emmc_read_and_dcache=0x8000c528,
        usb_command=0x8115a960, usb_data=0x8115a54a, usb_datasz=0x8115a544, usb_respfunc=0x8000f39c),
-    
+
     ################################################################################################
     # SHARP
     ################################################################################################

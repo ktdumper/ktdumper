@@ -25,7 +25,7 @@ class CommonOnenandDumper(CommonRwAccess):
             self.inline_spare = False
 
         self.pages_per_block = 64
-        self.ddp = opts.get("ddp", 0)
+        self.has_ddp = opts.get("has_ddp", False)
 
         assert opts["size"] % self.page_size == 0
         self.num_pages = opts["size"] // self.page_size
@@ -40,14 +40,14 @@ class CommonOnenandDumper(CommonRwAccess):
         self.onenand_DATARAM = self.onenand_addr + 2*0x200
         self.onenand_SPARERAM = self.onenand_addr + 2*0x8010
 
-    def with_ddp(self, x):
-        if self.ddp:
+    def _with_ddp(self, x, ddp):
+        if ddp:
             return (1 << 15) | x
         return x
 
-    def _onenand_read(self, page, cmd, read_ptr, read_sz):
-        self.writeh(self.with_ddp(page // self.pages_per_block), self.onenand_REG_START_ADDRESS1)
-        self.writeh(self.with_ddp(0), self.onenand_REG_START_ADDRESS2)
+    def _onenand_read(self, page, cmd, read_ptr, read_sz, ddp):
+        self.writeh(self._with_ddp(page // self.pages_per_block, ddp), self.onenand_REG_START_ADDRESS1)
+        self.writeh(self._with_ddp(0, ddp), self.onenand_REG_START_ADDRESS2)
         self.writeh((page % self.pages_per_block) << 2, self.onenand_REG_START_ADDRESS8)
 
         self.writeh((1 << 3) << 8, self.onenand_REG_START_BUFFER)
@@ -63,16 +63,16 @@ class CommonOnenandDumper(CommonRwAccess):
         else:
             return self.read(read_ptr, read_sz)
 
-    def _onenand_read_retry(self, page, cmd, read_ptr, read_sz):
+    def _onenand_read_retry(self, page, cmd, read_ptr, read_sz, ddp):
         # if it fails even once, re-validate the re-read attempt
         validation = False
 
         for x in range(RETRIES):
             try:
-                first = self._onenand_read(page, cmd, read_ptr, read_sz)
+                first = self._onenand_read(page, cmd, read_ptr, read_sz, ddp)
                 if validation:
-                    second = self._onenand_read(page, cmd, read_ptr, read_sz)
-                    third = self._onenand_read(page, cmd, read_ptr, read_sz)
+                    second = self._onenand_read(page, cmd, read_ptr, read_sz, ddp)
+                    third = self._onenand_read(page, cmd, read_ptr, read_sz, ddp)
                     assert first == second
                     assert first == third
                 return first
@@ -83,11 +83,11 @@ class CommonOnenandDumper(CommonRwAccess):
 
         raise RuntimeError("unable to read page=0x{:X}".format(page))
 
-    def onenand_read_page(self, page):
-        return self._onenand_read_retry(page, 0x00, self.onenand_DATARAM, self.page_size)
+    def onenand_read_page(self, page, ddp=False):
+        return self._onenand_read_retry(page, 0x00, self.onenand_DATARAM, self.page_size, ddp)
 
-    def onenand_read_oob(self, page):
-        return self._onenand_read_retry(page, 0x13, self.onenand_SPARERAM, self.oob_size)
+    def onenand_read_oob(self, page, ddp=False):
+        return self._onenand_read_retry(page, 0x13, self.onenand_SPARERAM, self.oob_size, ddp)
 
     def execute(self, dev, output):
         super().execute(dev, output)
@@ -116,12 +116,12 @@ class CommonOnenandDumper(CommonRwAccess):
             with output.mkfile("onenand.bin") as outf:
                 with tqdm.tqdm(total=self.page_size*self.num_pages, unit='B', unit_scale=True, unit_divisor=1024) as bar:
                     for page in range(self.num_pages):
-                        outf.write(self.onenand_read_page(page))
+                        outf.write(self.onenand_read_page(page, ddp=self.has_ddp and page >= self.num_pages // 2))
                         bar.update(self.page_size)
 
             print("Dumping OOB")
             with output.mkfile("onenand.oob") as outf:
                 with tqdm.tqdm(total=self.oob_size*self.num_pages, unit='B', unit_scale=True, unit_divisor=1024) as bar:
                     for page in range(self.num_pages):
-                        outf.write(self.onenand_read_oob(page))
+                        outf.write(self.onenand_read_oob(page, ddp=self.has_ddp and page >= self.num_pages // 2))
                         bar.update(self.oob_size)

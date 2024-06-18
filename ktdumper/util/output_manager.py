@@ -9,8 +9,12 @@ class OutputManager:
             raise RuntimeError("Directory {} already exists, please move it out of the way".format(directory))
         self.directory = directory
         self.prefix = prefix
+        self.print_once = True
 
     def _ensure_output(self):
+        if self.print_once:
+            print("Writing output to {}".format(self.directory))
+            self.print_once = False
         pathlib.Path(self.directory).mkdir(parents=True, exist_ok=True)
 
     def mkfile(self, name):
