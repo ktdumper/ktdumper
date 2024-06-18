@@ -190,7 +190,7 @@ class PiplEmmcFuse(PiplExploit):
         print("- For read-only access:  `sudo mount -o loop,ro,noload {} /mnt`".format(PATH))
         print("- For read-write access: `sudo mount -o loop {} /mnt`".format(PATH))
         print("")
-        print("Don't forget to unmount it with `sudo unmount /mnt` before terminating ktdumper!")
+        print("Don't forget to unmount it with `sudo umount /mnt` before terminating ktdumper!")
         print("")
 
         FUSE(EmmcMounter(self.size, self.read_cb, self.write_cb), PATH, nothreads=True, foreground=True, allow_other=True)
