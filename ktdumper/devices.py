@@ -120,7 +120,6 @@ DEVICES = [
        usb_command=0x33ee50d0, usb_data=0x33ef511a, usb_datasz=0x33ef5114, usb_respfunc=0x5520,
        quirks=SLOW_READ),
 
-
     Device("n-01a", 0x0409, 0x0240, {
         "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),
         "dump_nand": NecNandDumperLp(size=MB(512)),
@@ -189,7 +188,7 @@ DEVICES = [
        usb_command=0x33eec3f8, usb_data=0x33efc442, usb_datasz=0x33efc43c, usb_respfunc=0x4f58,
        quirks=SLOW_READ),
 
-     Device("930n", 0x0409, 0x027c, {
+    Device("930n", 0x0409, 0x027c, {
         "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),
         "dump_nand": NecNandDumperLp(size=MB(512)),
     }, payload_base=0x30000000, nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000,
@@ -230,13 +229,11 @@ DEVICES = [
         "dump_nand": NecNandDumper(size=MB(64), big=1),
     }, payload_base=0x10000000, nand_data=0x04000000, nand_cmd=0x04000800, nand_addr=0x04000400, quirks=SLOW_READ),
 
-
     Device("p901is", 0x0a3c, 0x000d, {
         "dump_rom": NecMemoryDumper(base=0x0, size=0x8000),
         "dump_nor": NecMemoryDumper(base=0x0C000000, size=MB(64)),
         "dump_nand": NecNandDumper(size=MB(64), big=1),
     }, payload_base=0x10000000, nand_data=0x04000000, nand_cmd=0x04000800, nand_addr=0x04000400, quirks=SLOW_READ),
-
 
     Device("p901itv", 0x0a3c, 0x000d, {
         "dump_rom": NecMemoryDumper(base=0x0, size=0x8000),
@@ -310,7 +307,6 @@ DEVICES = [
         "onenand_id": PiplOnenandId(),
         "dump_nand": PiplOnenandDumper(size=MB(256)),
     }, exploit_flavor="A", payload_base=0x8009c000, onenand_addr=0x0C000000),
-
 
     Device("p-10a", 0x04da, 0x216b, {
         "dump_nor": PiplExploitMemoryDumper(base=0x0, size=MB(128)),
