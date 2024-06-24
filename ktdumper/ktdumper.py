@@ -16,7 +16,35 @@ def main():
 
     usage()
     print("")
-    raise RuntimeError("Could not locate {} in supported devices list".format(args.phone))
+    raise RuntimeError(
+        "Could not locate {} in supported devices list".format(args.phone))
+
+
+def supported_devices():
+    print('[', end="")
+    first = True
+    for dev in DEVICES:
+        if not first:
+            print(',', end="")
+
+        print('{', end="")
+        print('"name": "{}",'.format(dev.name), end="")
+        print('"vid": "{:04x}",'.format(dev.vid), end="")
+        print('"pid": "{:04x}",'.format(dev.pid), end="")
+        print('"commands": [', end="")
+        first_command = True
+        for cmd in sorted(dev.commands.keys()):
+            if not first_command:
+                print(',', end="")
+
+            print('"{}"'.format(cmd), end="")
+
+            first_command = False
+        print(']', end="")
+        print('}', end="")
+
+        first = False
+    print(']', "\n")
 
 
 def usage():
@@ -31,6 +59,9 @@ def usage():
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        usage()
+        if sys.argv[1] == "--supported":
+            supported_devices()
+        else:
+            usage()
     else:
         main()
