@@ -54,7 +54,7 @@ class FujitsuProtocol(Dumper):
 
             try:
                 payload = b"\xC6\x13\x00" + b"z:\\does_not_exist"
-                pkt = mask_packet(b"\x55\x56\x42\x00" + len(payload).to_bytes(1, byteorder="little") + payload)
+                pkt = mask_packet(b"\x55\x56\x42" + len(payload).to_bytes(2, byteorder="big") + payload)
                 self.dev.write(3, pkt)
                 data = unmask_resp(bytearray(self.dev.read(0x82, 4096)))
             except Exception as e:
@@ -69,8 +69,8 @@ class FujitsuProtocol(Dumper):
 
     def retrieve_file(self, device_path):
         payload = b"\xC6\x13\x00" + device_path.encode("ascii")
-        assert len(payload) < 256
-        pkt = mask_packet(b"\x55\x56\x42\x00" + len(payload).to_bytes(1, byteorder="little") + payload)
+        assert len(payload) < 2 ** 16
+        pkt = mask_packet(b"\x55\x56\x42" + len(payload).to_bytes(2, byteorder="big") + payload)
         self.dev.write(3, pkt)
 
         output = b""
@@ -90,7 +90,7 @@ class FujitsuProtocol(Dumper):
                 break
 
             payload = b"\xC6\x13\x20"
-            pkt = mask_packet(b"\x55\x56\x42\x00" + bytes([len(payload)]) + payload)
+            pkt = mask_packet(b"\x55\x56\x42" + len(payload).to_bytes(2, byteorder="big") + payload)
             self.dev.write(3, pkt)
         return output
 
