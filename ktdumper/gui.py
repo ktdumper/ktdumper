@@ -111,6 +111,7 @@ class Window(QMainWindow):
         system_layout = QHBoxLayout()
         lsusb_group = QGroupBox("lsusb")
         l = QHBoxLayout()
+        os.environ["TERM"] = "xterm"
         l.addWidget(ReadonlyTerminal("watch", ["-n", "1", "-c", "-t",
             "cyme", "--encoding", "utf8", "--hide-buses", "--hide-hubs", "-b", "vendor-id", "-b", "product-id", "-b", "name", "-b", "bcd-usb"]))
         lsusb_group.setLayout(l)
