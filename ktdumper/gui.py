@@ -135,8 +135,6 @@ class Window(QMainWindow):
 
         self.update_devices()
 
-        self.show()
-
     def valid_device_payload(self, device, payload):
         for dev in DEVICES:
             if dev.name == device:
@@ -202,7 +200,7 @@ class Window(QMainWindow):
 def main():
     app = QApplication(sys.argv)
     window = Window()
-    window.show()
+    window.showMaximized()
     app.exec()
 
 
