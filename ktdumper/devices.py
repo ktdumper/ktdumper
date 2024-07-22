@@ -16,6 +16,7 @@ from dump.pipl_emmc_dumper import PiplEmmcDumper
 from dump.sh_exploit import ShExploit
 from dump.fujitsu_java_dumper import FujitsuJavaDumper
 from dump.pipl_emmc_fuse import PiplEmmcFuse
+from dump.sh_srec_exploit_mlba_dumper import ShSrecExploitMlbaDumper
 
 
 def MB(x):
@@ -402,6 +403,10 @@ DEVICES = [
     ################################################################################################
     # SHARP
     ################################################################################################
+
+    Device("sh-06b", 0x04dd, 0x9302, {
+        "dump_nand": ShSrecExploitMlbaDumper(),
+    }),
 
     Device("sh-07f", 0x04dd, 0x9464, {
         "jump_symbian": ShExploit(jump_dst=0x50803630),
