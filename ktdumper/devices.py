@@ -18,6 +18,7 @@ from dump.fujitsu_java_dumper import FujitsuJavaDumper
 from dump.pipl_emmc_fuse import PiplEmmcFuse
 from dump.sh_srec_exploit_mlba_dumper import ShSrecExploitMlbaDumper
 from dump.sh_srec_exploit_memory_dumper import ShSrecExploitMemoryDumper
+from dump.sh_srec_exploit_nand_id import ShSrecExploitNandId
 
 
 def MB(x):
@@ -407,6 +408,7 @@ DEVICES = [
 
     Device("sh-06b", 0x04dd, 0x9302, {
         "dump_nand": ShSrecExploitMlbaDumper(),
+        "nand_id": ShSrecExploitNandId(nand_data=0x16000000, nand_addr=0x16000010, nand_cmd=0x16000020),
     }, payload_base=0xE55B0000, fatal_err=0x60c048dc, usb_interrupt=0x60c02000, usb_getch=0x60c03fa8, usb_send=0x60c041ac, usb_send_commit=0x60c03b28),
 
     Device("sh-07f", 0x04dd, 0x9464, {

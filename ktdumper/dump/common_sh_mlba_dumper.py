@@ -9,27 +9,6 @@ NAND_CMD = 0x16000020
 
 class CommonShMlbaDumper:
 
-    def readb(self, addr):
-        self.dev.write(3, struct.pack("<BI", 0x10, addr))
-        return struct.unpack("B", self.dev.read(0x82, 1))[0]
-
-    def readh(self, addr):
-        self.dev.write(3, struct.pack("<BI", 0x11, addr))
-        return struct.unpack("<H", self.dev.read(0x82, 2))[0]
-
-    def readw(self, addr):
-        self.dev.write(3, struct.pack("<BI", 0x12, addr))
-        return struct.unpack("<I", self.dev.read(0x82, 4))[0]
-
-    def writeb(self, val, addr):
-        self.dev.write(3, struct.pack("<BIB", 0x20, addr, val))
-
-    def writeh(self, val, addr):
-        self.dev.write(3, struct.pack("<BIH", 0x21, addr, val))
-
-    def writew(self, val, addr):
-        self.dev.write(3, struct.pack("<BII", 0x22, addr, val))
-
     def read_id(self):
         self.writeb(0x90, NAND_CMD)
         self.writeb(0x00, NAND_ADDR)
