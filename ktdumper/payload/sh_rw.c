@@ -18,9 +18,9 @@ int main(void) {
     __asm__ volatile ("MCR p15, 0, %0, c7, c5, 0\n" :: "r" (0) : "memory");
 }
 
-volatile uint16_t *NAND_DATA = (void*)0x16000000;
-volatile uint8_t *NAND_ADDR = (void*)0x16000010;
-volatile uint8_t *NAND_CMD = (void*)0x16000020;
+volatile uint16_t *NAND_DATA = (void*)%nand_data%;
+volatile uint8_t *NAND_ADDR = (void*)%nand_addr%;
+volatile uint8_t *NAND_CMD = (void*)%nand_cmd%;
 
 int nand_wait() {
 	while (1) {
@@ -81,10 +81,41 @@ int nand_read_sda(uint32_t page, void *dst) {
     return ret;
 }
 
+int nand_read(uint32_t page, void *dst) {
+    *NAND_CMD = 0x00;
+
+    *NAND_ADDR = 0x00;
+    *NAND_ADDR = 0x00;
+    *NAND_ADDR = page & 0xFF;
+    *NAND_ADDR = (page >> 8) & 0xFF;
+    *NAND_ADDR = (page >> 16) & 0xFF;
+
+    *NAND_CMD = 0x30;
+
+    int ret = nand_wait();
+
+    *NAND_CMD = 0x00;
+
+    uint16_t *scratchbuf16 = dst;
+    for (int i = 0; i < 0x420; ++i)
+        scratchbuf16[i] = *NAND_DATA;
+
+    return ret;
+}
+
+int (*usb_getch)() = (void*)%usb_getch%;
+int (*usb_send)() = (void*)%usb_send%;
+int (*usb_send_commit)() = (void*)%usb_send_commit%;
+
+static uint32_t recvaddr(void) {
+    uint8_t addrb[4];
+    for (int i = 0; i < 4; ++i)
+        addrb[i] = usb_getch();
+    return addrb[0] | (addrb[1] << 8) | (addrb[2] << 16) | (addrb[3] << 24);
+}
+
 void runner(void) {
-    int (*usb_getch)() = (void*)%usb_getch%;
-    int (*usb_send)() = (void*)%usb_send%;
-    int (*usb_send_commit)() = (void*)%usb_send_commit%;
+    static uint8_t nandbuf[2112];
 
     while (1) {
         uint8_t ch = usb_getch();
@@ -95,11 +126,7 @@ void runner(void) {
             usb_send_commit();
         } else if (ch == 0x10 || ch == 0x11 || ch == 0x12) {
             /* read */
-            uint8_t addrb[4];
-            for (int i = 0; i < 4; ++i)
-                addrb[i] = usb_getch();
-
-            uint32_t addr = addrb[0] | (addrb[1] << 8) | (addrb[2] << 16) | (addrb[3] << 24);
+            uint32_t addr = recvaddr();
             uint32_t resp, resplen;
 
             switch (ch) {
@@ -121,12 +148,10 @@ void runner(void) {
             usb_send_commit();
         } else if (ch == 0x20 || ch == 0x21 || ch == 0x22) {
             /* write */
-            uint8_t addrb[4], datab[4] = { 0 };
-            for (int i = 0; i < 4; ++i)
-                addrb[i] = usb_getch();
-            uint32_t addr = addrb[0] | (addrb[1] << 8) | (addrb[2] << 16) | (addrb[3] << 24);
+            uint32_t addr = recvaddr();
 
             int wlen = 1 << (ch & 0xF);
+            uint8_t datab[4] = { 0 };
             for (int i = 0; i < wlen; ++i)
                 datab[i] = usb_getch();
             uint32_t data = datab[0] | (datab[1] << 8) | (datab[2] << 16) | (datab[3] << 24);
@@ -144,10 +169,7 @@ void runner(void) {
             }
         } else if (ch == 0x50) {
             /* nand_read_mda */
-            uint8_t pageb[4];
-            for (int i = 0; i < 4; ++i)
-                pageb[i] = usb_getch();
-            uint32_t page = pageb[0] | (pageb[1] << 8) | (pageb[2] << 16) | (pageb[3] << 24);
+            uint32_t page = recvaddr();
 
             uint8_t buf[528];
             uint8_t ret = nand_read_mda(page, buf);
@@ -159,10 +181,7 @@ void runner(void) {
             usb_send_commit();
         } else if (ch == 0x51) {
             /* nand_read_sda */
-            uint8_t pageb[4];
-            for (int i = 0; i < 4; ++i)
-                pageb[i] = usb_getch();
-            uint32_t page = pageb[0] | (pageb[1] << 8) | (pageb[2] << 16) | (pageb[3] << 24);
+            uint32_t page = recvaddr();
 
             uint8_t buf[528];
             uint8_t ret = nand_read_sda(page, buf);
@@ -172,13 +191,22 @@ void runner(void) {
             usb_getch();
             usb_send(&buf[264], 264);
             usb_send_commit();
+        } else if (ch == 0x52) {
+            /* nand_LP_read */
+            uint32_t page = recvaddr();
+
+            uint8_t ret = nand_read(page, nandbuf);
+            usb_send(&ret, 1);
+            usb_send_commit();
+
+            for (int off = 0; off < 2112; off += 64) {
+                usb_getch();
+                usb_send(&nandbuf[off], 64);
+                usb_send_commit();
+            }
         } else if (ch == 0x60) {
             /* read 64 bytes */
-            uint8_t addrb[4], datab[4] = { 0 };
-            for (int i = 0; i < 4; ++i)
-                addrb[i] = usb_getch();
-            uint32_t addr = addrb[0] | (addrb[1] << 8) | (addrb[2] << 16) | (addrb[3] << 24);
-
+            uint32_t addr = recvaddr();
             usb_send(addr, 64);
             usb_send_commit();
         }
