@@ -1,9 +1,9 @@
 import tqdm
 import struct
 
-CHUNK = 64
+class CommonMemoryDumper:
 
-class CommonShMemoryDumper:
+    mem_chunk = 0x1000
 
     def parse_opts(self, opts):
         super().parse_opts(opts)
@@ -11,20 +11,11 @@ class CommonShMemoryDumper:
         self.base = opts["base"]
         self.size = opts["size"]
 
-    def read(self, addr, chunk):
-        assert chunk == CHUNK
-        self.dev.write(3, struct.pack("<BI", 0x60, addr))
-        data = b""
-        while len(data) != CHUNK:
-            data += self.dev.read(0x82, 512)
-        assert len(data) == CHUNK
-        return data
-
     def execute(self, dev, output):
         super().execute(dev, output)
 
         with output.mksuff(".bin") as outf:
-            chunk = CHUNK
+            chunk = self.mem_chunk
 
             assert self.base % chunk == 0
             assert self.size % chunk == 0
