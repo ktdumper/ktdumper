@@ -1,7 +1,7 @@
 from dump.common_onenand_id import CommonOnenandId
 from dump.pipl_exploit import PiplExploit
-from dump.common_rw_access import CommonRwAccess
+from dump.nec_pipl_rw_access import NecPiplRwAccess
 
 
-class PiplOnenandId(CommonOnenandId, CommonRwAccess, PiplExploit):
+class PiplOnenandId(CommonOnenandId, NecPiplRwAccess, PiplExploit):
     pass

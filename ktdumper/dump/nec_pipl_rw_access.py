@@ -3,7 +3,7 @@ import struct
 from util.payload_builder import PayloadBuilder
 
 
-class CommonRwAccess:
+class NecPiplRwAccess:
 
     def parse_opts(self, opts):
         super().parse_opts(opts)
