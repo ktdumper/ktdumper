@@ -20,6 +20,8 @@ from dump.sh_srec_exploit_mlba_dumper import ShSrecExploitMlbaDumper
 from dump.sh_srec_exploit_memory_dumper import ShSrecExploitMemoryDumper
 from dump.sh_srec_exploit_nand_id import ShSrecExploitNandId
 from dump.sh_srec_exploit_nand_dumper import ShSrecExploitNandDumper
+from dump.sh_srec_exploit_onenand_id import ShSrecExploitOnenandId
+from dump.sh_srec_exploit_onenand_dumper import ShSrecExploitOnenandDumper
 
 
 def MB(x):
@@ -434,6 +436,12 @@ DEVICES = [
     Device("f-07a", 0x04c5, 0x115f, {"dump_java": FujitsuJavaDumper()}),
     Device("f-10a", 0x04c5, 0x1162, {"dump_java": FujitsuJavaDumper()}),
 
+    Device("f-08c", 0x04c5, 0x122f, {
+        "onenand_id": ShSrecExploitOnenandId(),
+        "dump_nand": ShSrecExploitOnenandDumper(size=MB(512), has_4k_pages=True),
+    }, payload_base=0xE55B0000, fatal_err=0x60c048a8, usb_interrupt=0x60C02000, usb_getch=0x60c03f74, usb_send=0x60c04178, usb_send_commit=0x60c03af4,
+        onenand_addr=0x30000000),
+
     ################################################################################################
     # MITSUBISHI
     ################################################################################################
@@ -445,6 +453,7 @@ DEVICES = [
     Device("d903itv", 0x06d3, 0x2170, {"dump_java": FujitsuJavaDumper()}),
     Device("d904i", 0x06d3, 0x2190, {"dump_java": FujitsuJavaDumper()}),
     Device("d704i", 0x06d3, 0x21a0, {"dump_java": FujitsuJavaDumper()}),
+
     Device("d905i", 0x06d3, 0x21b0, {
         "dump_java": FujitsuJavaDumper(),
         "dump_nor": ShSrecExploitMemoryDumper(base=0x30000000, size=MB(128)),
@@ -452,6 +461,7 @@ DEVICES = [
         "dump_nand": ShSrecExploitNandDumper(size=MB(256)),
     }, payload_base=0x64000000, fatal_err=0x64606890, usb_interrupt=0x64601000, usb_getch=0x6460380c, usb_send=0x64603a80, usb_send_commit=0x6460339c,
         nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),
+
     Device("d705i", 0x06d3, 0x21d0, {"dump_java": FujitsuJavaDumper()}),
     Device("d705iu", 0x06d3, 0x21c0, {"dump_java": FujitsuJavaDumper()}),
 ]

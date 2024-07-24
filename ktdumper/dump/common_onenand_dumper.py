@@ -1,7 +1,6 @@
 import tqdm
 import struct
 
-from dump.common_rw_access import CommonRwAccess
 from util.payload_builder import PayloadBuilder
 
 import usb.core
@@ -10,7 +9,7 @@ import usb.core
 RETRIES = 8
 
 
-class CommonOnenandDumper(CommonRwAccess):
+class CommonOnenandDumper:
 
     def parse_opts(self, opts):
         super().parse_opts(opts)
@@ -55,8 +54,15 @@ class CommonOnenandDumper(CommonRwAccess):
         self.writeh(0, self.onenand_REG_INTERRUPT)
         self.writeh(cmd, self.onenand_REG_COMMAND)
 
-        # read complete
-        assert (self.readh(self.onenand_REG_INTERRUPT) & 0x80) == 0x80
+        # wait for the read to complete
+        while True:
+            intr = self.readh(self.onenand_REG_INTERRUPT)
+            if intr & 0x8000:
+                break
+
+        if intr & 0x80 != 0x80:
+            print("_onenand_read(page=0x{:X}, cmd=0x{:X}, ddp=0x{:X}) failed with intr=0x{:X}".format(
+                page, cmd, ddp, intr))
 
         if self.inline_spare:
             return self.read(self.onenand_DATARAM, self.page_size) + self.read(self.onenand_SPARERAM, self.oob_size)

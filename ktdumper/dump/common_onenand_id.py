@@ -1,6 +1,3 @@
-from dump.common_rw_access import CommonRwAccess
-
-
 deviceid_vcc = {
     0: "1.8V",
     1: "3.3V",
@@ -30,7 +27,7 @@ deviceid_density = {
 }
 
 
-class CommonOnenandId(CommonRwAccess):
+class CommonOnenandId:
 
     def parse_opts(self, opts):
         super().parse_opts(opts)

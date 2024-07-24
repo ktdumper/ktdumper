@@ -209,6 +209,11 @@ void runner(void) {
             uint32_t addr = recvaddr();
             usb_send(addr, 64);
             usb_send_commit();
+        } else if (ch == 0x61) {
+            /* read 512 bytes */
+            uint32_t addr = recvaddr();
+            usb_send(addr, 512);
+            usb_send_commit();
         }
     }
 }
@@ -224,7 +229,7 @@ __asm__(
     // clean data cache and flush icache before jumping to rest of payload
     // hopefully increase stability bc we only need 1-2 cache lines to hit
 "    ldr r0, =%base%\n"
-"    ldr r1, =%base%+0x1000\n"
+"    ldr r1, =%base%+0x10000\n"
 "loop:\n"
 "    mcr p15, 0, r0, c7, c10, 1\n"
 "    add r0, r0, #32\n"
