@@ -1,4 +1,4 @@
-class CommonShNandId:
+class CommonNandId:
 
     def parse_opts(self, opts):
         super().parse_opts(opts)
@@ -29,6 +29,6 @@ class CommonShNandId:
         super().execute(dev, output)
 
         print("=" * 80)
-        print("NAND ID: {}".format(self.read_id().hex()))
-        print("ONFI: {}".format(self.read_onfi().hex()))
+        print("NAND ID : {}".format(self.read_id().hex()))
+        print("ONFI    : {}".format(self.read_onfi().hex()))
         print("=" * 80)
