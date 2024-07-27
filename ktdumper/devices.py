@@ -409,12 +409,25 @@ DEVICES = [
     # SHARP
     ################################################################################################
 
+    Device("sh706i", 0x04dd, 0x91f1, {
+        "dump_nor": ShSrecExploitMemoryDumper(base=0x30000000, size=MB(128)),
+        "nand_id": ShSrecExploitNandId(),
+        "dump_nand": ShSrecExploitNandDumper(size=MB(256)),
+    }, payload_base=0x64000000, fatal_err=0x646069f4, usb_interrupt=0x64601000, usb_getch=0x6460396c, usb_send=0x64603be4, usb_send_commit=0x646034c0,
+        nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),
+    
     Device("sh-02a", 0x04dd, 0x925f, {
         "dump_nor": ShSrecExploitMemoryDumper(base=0x30000000, size=MB(128)),
         "nand_id": ShSrecExploitNandId(),
         "dump_nand": ShSrecExploitNandDumper(size=MB(256)),
     }, payload_base=0x64000000, fatal_err=0x646069f4, usb_interrupt=0x64601000, usb_getch=0x6460396c, usb_send=0x64603be4, usb_send_commit=0x646034c0,
         nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),
+
+    Device("sh-02b", 0x04dd, 0x92d6, {
+        "dump_nand": ShSrecExploitMlbaDumper(),
+        "nand_id": ShSrecExploitNandId(),
+    }, payload_base=0xE55B0000, fatal_err=0x60c048dc, usb_interrupt=0x60c02000, usb_getch=0x60c03fa8, usb_send=0x60c041ac, usb_send_commit=0x60c03b28,
+        nand_data=0x16000000, nand_addr=0x16000010, nand_cmd=0x16000020),
 
     Device("sh-06b", 0x04dd, 0x9302, {
         "dump_nand": ShSrecExploitMlbaDumper(),
@@ -457,6 +470,12 @@ DEVICES = [
     Device("f-05a", 0x04c5, 0x1167, {"dump_java": FujitsuJavaDumper()}),
     Device("f-07a", 0x04c5, 0x115f, {"dump_java": FujitsuJavaDumper()}),
     Device("f-10a", 0x04c5, 0x1162, {"dump_java": FujitsuJavaDumper()}),
+
+    Device("f-02b", 0x04c5, 0x11d2, {
+        "onenand_id": ShSrecExploitOnenandId(),
+        "dump_nand": ShSrecExploitOnenandDumper(size=MB(512), has_4k_pages=True),
+    }, payload_base=0xE55B0000, fatal_err=0x60c04848, usb_interrupt=0x60C02000, usb_getch=0x60c03f14, usb_send=0x60c04118, usb_send_commit=0x60c03a94,
+        onenand_addr=0x30000000),
 
     Device("f-03b", 0x04c5, 0x11d8, {
         "onenand_id": ShSrecExploitOnenandId(),
