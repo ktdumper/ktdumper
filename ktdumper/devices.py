@@ -113,11 +113,8 @@ DEVICES = [
        quirks=SLOW_READ),
 
     Device("n706ie", 0x0409, 0x024a, {
-        "dump_rom": NecMemoryDumper(base=0x0, size=0x8000),
-        "dump_nor": NecMemoryDumper(base=0x00000000, size=MB(128)),
-    }, payload_base=0x30000000, nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000,
-       usb_command=0x33ee50d0, usb_data=0x33ef511a, usb_datasz=0x33ef5114, usb_respfunc=0x582c,
-       quirks=SLOW_READ),
+        "dump_nor": NecMemoryDumper(base=0x0, size=MB(128)),
+    }, quirks=SLOW_READ),
 
     Device("n706i2", 0x0409, 0x0224, {
         "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),
@@ -415,7 +412,7 @@ DEVICES = [
         "dump_nand": ShSrecExploitNandDumper(size=MB(256)),
     }, payload_base=0x64000000, fatal_err=0x646069f4, usb_interrupt=0x64601000, usb_getch=0x6460396c, usb_send=0x64603be4, usb_send_commit=0x646034c0,
         nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),
-    
+
     Device("sh-02a", 0x04dd, 0x925f, {
         "dump_nor": ShSrecExploitMemoryDumper(base=0x30000000, size=MB(128)),
         "nand_id": ShSrecExploitNandId(),
@@ -434,7 +431,7 @@ DEVICES = [
         "nand_id": ShSrecExploitNandId(),
     }, payload_base=0xE55B0000, fatal_err=0x60c048dc, usb_interrupt=0x60c02000, usb_getch=0x60c03fa8, usb_send=0x60c041ac, usb_send_commit=0x60c03b28,
         nand_data=0x16000000, nand_addr=0x16000010, nand_cmd=0x16000020),
-    
+
     Device("sh-01c", 0x04dd, 0x936c, {
         "dump_nand": ShSrecExploitMlbaDumper(),
         "nand_id": ShSrecExploitNandId(),
@@ -446,7 +443,7 @@ DEVICES = [
         "nand_id": ShSrecExploitNandId(),
     }, payload_base=0xE55B0000, fatal_err=0x60c045fc, usb_interrupt=0x60c02000, usb_getch=0x60c03d28, usb_send=0x60c03f00, usb_send_commit=0x60c038fc,
         nand_data=0x16000000, nand_addr=0x16000010, nand_cmd=0x16000020),
-        
+
     Device("sh-10c", 0x04dd, 0x940b, {
         "dump_nand": ShSrecExploitMlbaDumper(),
         "nand_id": ShSrecExploitNandId(),
