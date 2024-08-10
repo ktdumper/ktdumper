@@ -45,6 +45,7 @@ class PiplProtocol(Dumper):
         super().parse_opts(opts)
 
         self.chunk = 0x100
+        self.secret = None
 
     def read_resp(self):
         resp = b""

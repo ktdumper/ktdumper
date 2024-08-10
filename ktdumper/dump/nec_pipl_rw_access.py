@@ -81,7 +81,8 @@ class NecPiplRwAccess:
         super().execute(dev, output)
 
         kwargs = {
-            "base": self.payload_base
+            "base": self.payload_base,
+            "patch": 0,
         }
 
         # later NEC phones don't have the read memory command anymore so instead we make our payload send data out
