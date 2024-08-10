@@ -50,15 +50,28 @@ def unmask_resp(resp):
     return bytearray(out)
 
 
+def checksum2(data):
+    s = 0
+    for x in range(0, len(data), 2):
+        s += struct.unpack("<H", data[x:x+2])[0]
+    return struct.pack("<H", (-s) & 0xFFFF)
+
+
 class NecProtocol(Dumper):
 
     def parse_opts(self, opts):
         super().parse_opts(opts)
 
+        self.secret = opts.get("secret")
+        if self.secret is not None:
+            self.secret = bytes.fromhex(self.secret)
+
         if opts.get("quirks", 0) & SLOW_READ:
             self.chunk = 0x10
         else:
             self.chunk = 0x100
+
+        self.patch = opts.get("patch", 0)
 
     def read_resp(self):
         resp = b""
@@ -82,9 +95,18 @@ class NecProtocol(Dumper):
         # go into serial comms mode => turns green led on for some, display on
         self.dev.ctrl_transfer(0x41, 0x60, 0x60, 2)
         self.dev.read(0x86, 64)
-        self.comm(3, variable_payload=b"\x00")
+
+        if self.secret is not None:
+            user_buffer = self.secret + checksum2(self.secret) + b"\x00" * 0x20
+            self.comm_oneway(0x13, subcmd=2, variable_payload=user_buffer)
+            self.comm(3, variable_payload=b"\x22")
+        else:
+            self.comm(3, variable_payload=b"\x00")
 
     def cmd_read(self, addr, sz):
+        if self.patch:
+            raise RuntimeError("this device does not support cmd_read")
+
         data = self.comm(6, 0, variable_payload=struct.pack("<IH", addr, sz))
         assert len(data) == sz + 10
         return data[9:-1]

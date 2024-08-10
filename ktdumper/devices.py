@@ -8,14 +8,18 @@ from dump.nec_memory_dumper_payload import NecMemoryDumperPayload
 from dump.nec_nand_id import NecNandId
 from dump.nec_nand_dumper_lp import NecNandDumperLp
 from dump.nec_nand_dumper_lp_via_poke import NecNandDumperLpViaPoke
+from dump.nec_onenand_id import NecOnenandId
+
 from dump.pipl_exploit_memory_dumper import PiplExploitMemoryDumper
 from dump.pipl_onenand_dumper import PiplOnenandDumper
 from dump.pipl_onenand_id import PiplOnenandId
 from dump.pipl_onenand_fast import PiplOnenandFast
 from dump.pipl_emmc_dumper import PiplEmmcDumper
+from dump.pipl_emmc_fuse import PiplEmmcFuse
+
 from dump.sh_exploit import ShExploit
 from dump.fujitsu_java_dumper import FujitsuJavaDumper
-from dump.pipl_emmc_fuse import PiplEmmcFuse
+
 from dump.sh_srec_exploit_mlba_dumper import ShSrecExploitMlbaDumper
 from dump.sh_srec_exploit_memory_dumper import ShSrecExploitMemoryDumper
 from dump.sh_srec_exploit_nand_id import ShSrecExploitNandId
@@ -181,6 +185,13 @@ DEVICES = [
     }, payload_base=0x30000000, nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000,
        usb_command=0x33ee5198, usb_data=0x33ef51e2, usb_datasz=0x33ef51dc, usb_respfunc=0x50d8,
        quirks=SLOW_READ),
+
+    Device("n-05c", 0x0409, 0x02f8, {
+        "onenand_id": NecOnenandId(),
+        "dump_nand": NecOnenandDumper(has_4k_pages=True, size=MB(1024)),
+    }, secret="3e339064397c56f5e8f1284218add4777b13243f", payload_base=0x80000000, patch=0x80b888c4,
+       usb_command=0x80be506c, usb_data=0x80c060f6, usb_datasz=0x80c060f0, usb_respfunc=0x80b86200,
+       onenand_addr=0x08000000),
 
     # SOFTBANK
 

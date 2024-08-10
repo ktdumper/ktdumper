@@ -1,6 +1,15 @@
+#include <inttypes.h>
+#include <stddef.h>
+
+#include "nec_usb_sender.h"
+
 #define BASE %base%
 
 void start() {
+#if %patch%
+    #include "nec_smc_patcher.inc"
+#endif
+
     unsigned char *command = (void*)(BASE + 0x400);
     unsigned *data = (void*)(BASE + 0x800);
 
@@ -8,7 +17,7 @@ void start() {
     unsigned size = command[1];
     unsigned addr = (command[2] << 0) | (command[3] << 8) | (command[4] << 16) | (command[5] << 24);
     unsigned val = (command[6] << 0) | (command[7] << 8) | (command[8] << 16) | (command[9] << 24);
-    if (is_wr) {
+    if (is_wr == 1) {
         switch(size) {
         case 1:
             *(volatile unsigned char*)addr = val;
@@ -20,7 +29,7 @@ void start() {
             *(volatile unsigned*)addr = val;
             break;
         }
-    } else {
+    } else if (is_wr == 0) {
         switch(size) {
         case 1:
             *data = *(volatile unsigned char*)addr;
@@ -32,5 +41,14 @@ void start() {
             *data = *(volatile unsigned*)addr;
             break;
         }
+
+#if %patch%
+        USB_SEND(data, 4);
+#endif
     }
+#if %patch%
+    else if (is_wr == 2) {
+        USB_SEND(addr, 64);
+    }
+#endif
 }

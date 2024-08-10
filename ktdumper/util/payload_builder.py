@@ -19,7 +19,8 @@ SECTIONS
 }
 """
 
-COMPILE = ["arm-none-eabi-gcc", "-c", "-Os", "-march=armv4", "-fno-builtin-printf", "-fno-strict-aliasing", "-fno-builtin-memcpy", "-fno-builtin-memset", "-fno-builtin"]
+COMPILE = ["arm-none-eabi-gcc", "-c", "-Os", "-march=armv4", "-fno-builtin-printf", "-fno-strict-aliasing", "-fno-builtin-memcpy", "-fno-builtin-memset", "-fno-builtin",
+    "-I", PAYLOAD_PATH]
 LINK = ["arm-none-eabi-gcc", "-nodefaultlibs", "-nostdlib"]
 OBJCOPY = ["arm-none-eabi-objcopy", "-O", "binary"]
 
@@ -33,8 +34,11 @@ class PayloadBuilder:
     def build(self, **kwargs):
         base = kwargs["base"]
         src = self.src
+
+        defs = []
         for arg, replacement in kwargs.items():
             src = src.replace("%{}%".format(arg), str(replacement))
+            defs += ["-DKT_{}={}".format(arg, str(replacement))]
 
         with tempfile.TemporaryDirectory() as tmp:
             p_linker_x = os.path.join(tmp, "linker.x")
@@ -47,9 +51,12 @@ class PayloadBuilder:
                 outf.write(LINKER.replace("BASE", hex(base)))
             with open(p_payload_c, "w") as outf:
                 outf.write(src)
-            subprocess.check_output(COMPILE + ["-o", p_payload_o, p_payload_c])
+            subprocess.check_output(COMPILE + defs + ["-o", p_payload_o, p_payload_c])
             subprocess.check_output(LINK + ["-T", p_linker_x, "-o", p_payload, p_payload_o])
             subprocess.check_output(OBJCOPY + [p_payload, p_payload_bin])
             with open(p_payload_bin, "rb") as inf:
                 payload = inf.read()
+        while len(payload) % 4 != 0:
+            payload += b"\x00"
+        payload += b"\x00" * 0x100
         return payload

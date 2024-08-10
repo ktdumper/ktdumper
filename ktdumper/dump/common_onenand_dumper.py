@@ -4,6 +4,7 @@ import struct
 from util.payload_builder import PayloadBuilder
 
 import usb.core
+import time
 
 
 RETRIES = 8
@@ -84,7 +85,26 @@ class CommonOnenandDumper:
                 return first
             except usb.core.USBTimeoutError:
                 print("_onenand_read(page=0x{:X}) failed, retrying {} times".format(page, x+1))
-                self.dev.reset()
+                try:
+                    self.dev.reset()
+                except usb.core.USBError:
+                    vid = self.dev.idVendor
+                    pid = self.dev.idProduct
+                    while True:
+                        print("Waiting for device...")
+                        time.sleep(1)
+                        self.dev = usb.core.find(idVendor=vid, idProduct=pid)
+                        if self.dev is not None:
+                            break
+                    # re-execute exploit
+                    time.sleep(1)
+                    super().execute(self.dev, None)
+
+                    print("Skipping page 0x{:X}".format(page))
+                    if self.inline_spare:
+                        return b"\x00" * (self.page_size + self.oob_size)
+                    else:
+                        return b"\x00" * read_sz
                 validation = True
 
         raise RuntimeError("unable to read page=0x{:X}".format(page))

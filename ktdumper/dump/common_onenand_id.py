@@ -63,3 +63,6 @@ class CommonOnenandId:
         print("Data Buffer Size: {:04X}".format(self.readh(self.onenand_DATA_BUFFER_SIZE)))
         print("Boot Buffer Size: {:04X}".format(self.readh(self.onenand_BOOT_BUFFER_SIZE)))
         print("Amount of Buffers: {:04X}".format(self.readh(self.onenand_AMOUNT_OF_BUFFERS)))
+
+        print("")
+        print("System Configuration 1: {:04X}".format(self.readh(self.onenand_addr + 2*0xF221)))
