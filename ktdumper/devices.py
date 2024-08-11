@@ -16,6 +16,7 @@ from dump.pipl_onenand_id import PiplOnenandId
 from dump.pipl_onenand_fast import PiplOnenandFast
 from dump.pipl_emmc_dumper import PiplEmmcDumper
 from dump.pipl_emmc_fuse import PiplEmmcFuse
+from dump.pipl_exploit_nor_probe import PiplExploitNorProbe
 
 from dump.sh_exploit import ShExploit
 from dump.fujitsu_java_dumper import FujitsuJavaDumper
@@ -305,6 +306,13 @@ DEVICES = [
     }, payload_base=0x90000000, onenand_addr=0x08000000),
 
     Device("p-01a", 0x04da, 0x216b, {
+        "dump_nor": PiplExploitMemoryDumper(base=0x0, size=MB(128)),
+        "onenand_id": PiplOnenandId(),
+        "dump_nand": PiplOnenandDumper(size=MB(512), has_ddp=True),
+    }, exploit_flavor="A", payload_base=0x8009c000, onenand_addr=0x0C000000),
+
+    Device("p-02a", 0x04da, 0x216b, {
+        "probe_nor": PiplExploitNorProbe(base=0x0),
         "dump_nor": PiplExploitMemoryDumper(base=0x0, size=MB(128)),
         "onenand_id": PiplOnenandId(),
         "dump_nand": PiplOnenandDumper(size=MB(512), has_ddp=True),
