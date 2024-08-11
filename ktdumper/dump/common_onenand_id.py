@@ -44,7 +44,8 @@ class CommonOnenandId:
     def execute(self, dev, output):
         super().execute(dev, output)
 
-        print("Manufacturer ID: {:04X}".format(self.readh(self.onenand_MANU_ID)))
+        manu_id = self.readh(self.onenand_MANU_ID)
+        print("Manufacturer ID: {:04X}".format(manu_id))
         print("")
 
         device_id = self.readh(self.onenand_DEVICE_ID)
@@ -66,3 +67,6 @@ class CommonOnenandId:
 
         print("")
         print("System Configuration 1: {:04X}".format(self.readh(self.onenand_addr + 2*0xF221)))
+
+        if manu_id != 0xEC:
+            raise RuntimeError("OneNAND manufacturer ID isn't 00ECh")
