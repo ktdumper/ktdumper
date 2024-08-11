@@ -343,6 +343,13 @@ DEVICES = [
         "dump_nand": PiplOnenandDumper(size=MB(512), has_ddp=True),
     }, exploit_flavor="A", payload_base=0x8009c000, onenand_addr=0x0C000000),
 
+    Device("p-09a", 0x04da, 0x216b, {
+        "probe_nor": PiplExploitNorProbe(base=0x0),
+        "dump_nor": PiplExploitMemoryDumper(base=0x0, size=MB(128)),
+        "onenand_id": PiplOnenandId(),
+        "dump_nand": PiplOnenandDumper(size=MB(512), has_ddp=True),
+    }, exploit_flavor="A", payload_base=0x8009c000, onenand_addr=0x0C000000),
+
     Device("p-10a", 0x04da, 0x216b, {
         "dump_nor": PiplExploitMemoryDumper(base=0x0, size=MB(128)),
         "onenand_id": PiplOnenandId(),
