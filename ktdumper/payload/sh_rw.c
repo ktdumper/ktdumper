@@ -107,6 +107,19 @@ int (*usb_getch)() = (void*)%usb_getch%;
 int (*usb_send)() = (void*)%usb_send%;
 int (*usb_send_commit)() = (void*)%usb_send_commit%;
 
+void dis_int();
+void ena_int();
+
+/* something is busted with our gcc config */
+__asm__(
+".global dis_int\n"
+"dis_int:\n"
+".word 0xe10f0000, 0xe1a01000, 0xe3811080, 0xe12ff001, 0xe1a0f00e\n"
+".global ena_int\n"
+"ena_int:\n"
+".word 0xe10f0000, 0xe3c00080, 0xe12ff000, 0xe1a0f00e\n"
+);
+
 static uint32_t recvaddr(void) {
     uint8_t addrb[4];
     for (int i = 0; i < 4; ++i)
@@ -122,7 +135,9 @@ void runner(void) {
         if (ch == 0x42) {
             /* handshake */
             uint8_t resp = 0x43;
+            dis_int();
             usb_send(&resp, 1);
+            ena_int();
             usb_send_commit();
         } else if (ch == 0x10 || ch == 0x11 || ch == 0x12) {
             /* read */
@@ -144,7 +159,9 @@ void runner(void) {
                 break;
             }
 
+            dis_int();
             usb_send(&resp, resplen);
+            ena_int();
             usb_send_commit();
         } else if (ch == 0x20 || ch == 0x21 || ch == 0x22) {
             /* write */
@@ -173,11 +190,15 @@ void runner(void) {
 
             uint8_t buf[528];
             uint8_t ret = nand_read_mda(page, buf);
+            dis_int();
             usb_send(&ret, 1);
             usb_send(&buf[0], 264);
+            ena_int();
             usb_send_commit();
             usb_getch();
+            dis_int();
             usb_send(&buf[264], 264);
+            ena_int();
             usb_send_commit();
         } else if (ch == 0x51) {
             /* nand_read_sda */
@@ -185,34 +206,47 @@ void runner(void) {
 
             uint8_t buf[528];
             uint8_t ret = nand_read_sda(page, buf);
+            dis_int();
             usb_send(&ret, 1);
             usb_send(&buf[0], 264);
+            ena_int();
             usb_send_commit();
             usb_getch();
+            dis_int();
             usb_send(&buf[264], 264);
+            ena_int();
             usb_send_commit();
         } else if (ch == 0x52) {
             /* nand_LP_read */
             uint32_t page = recvaddr();
 
             uint8_t ret = nand_read(page, nandbuf);
+            dis_int();
             usb_send(&ret, 1);
+            ena_int();
             usb_send_commit();
 
             for (int off = 0; off < 2112; off += 64) {
                 usb_getch();
+                dis_int();
                 usb_send(&nandbuf[off], 64);
+                ena_int();
                 usb_send_commit();
             }
+
         } else if (ch == 0x60) {
             /* read 64 bytes */
             uint32_t addr = recvaddr();
+            dis_int();
             usb_send(addr, 64);
+            ena_int();
             usb_send_commit();
         } else if (ch == 0x61) {
             /* read 512 bytes */
             uint32_t addr = recvaddr();
+            dis_int();
             usb_send(addr, 512);
+            ena_int();
             usb_send_commit();
         }
     }
