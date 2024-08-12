@@ -550,6 +550,12 @@ DEVICES = [
     }, payload_base=0xE55B0000, fatal_err=0x60c048a8, usb_interrupt=0x60C02000, usb_getch=0x60c03f74, usb_send=0x60c04178, usb_send_commit=0x60c03af4,
         onenand_addr=0x30000000),
 
+    Device("f-11c", 0x04c5, 0x1231, {
+        "onenand_id": ShSrecExploitOnenandId(),
+        "dump_nand": ShSrecExploitOnenandDumper(size=MB(512), has_4k_pages=True),
+    }, payload_base=0xE55B0000, fatal_err=0x60c04848, usb_interrupt=0x60C02000, usb_getch=0x60c03f14, usb_send=0x60c04118, usb_send_commit=0x60c03a94,
+        onenand_addr=0x30000000),
+
     ################################################################################################
     # MITSUBISHI
     ################################################################################################
