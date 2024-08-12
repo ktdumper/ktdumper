@@ -28,7 +28,17 @@ class CommonOnenandDumper:
         self.has_ddp = opts.get("has_ddp", False)
 
         assert opts["size"] % self.page_size == 0
-        self.num_pages = opts["size"] // self.page_size
+
+        if opts.get("flex", True):
+            # TODO: currently only support unpartitioned, i.e. SLC=1 block, MLC=rest
+            self.num_slc_pages = 64
+            self.num_mlc_pages = opts["size"] // self.page_size - 2 * self.num_slc_pages
+        else:
+            self.num_slc_pages = opts["size"] // self.page_size
+            self.num_mlc_pages = 0
+
+        self.num_pages = self.num_slc_pages + self.num_mlc_pages
+
         self.onenand_addr = opts["onenand_addr"]
 
         self.onenand_REG_START_ADDRESS1 = self.onenand_addr + 2*0xF100
@@ -46,9 +56,19 @@ class CommonOnenandDumper:
         return x
 
     def _onenand_read(self, page, cmd, read_ptr, read_sz, ddp):
-        self.writeh(self._with_ddp(page // self.pages_per_block, ddp), self.onenand_REG_START_ADDRESS1)
+        orig_page = page
+
+        pages_per_block = self.pages_per_block
+        block_offset = 0
+        if page >= self.num_slc_pages:
+            # it's an MLC page, do some remappings
+            block_offset = self.num_slc_pages // pages_per_block
+            page -= self.num_slc_pages
+            pages_per_block *= 2
+
+        self.writeh(self._with_ddp(block_offset + page // pages_per_block, ddp), self.onenand_REG_START_ADDRESS1)
         self.writeh(self._with_ddp(0, ddp), self.onenand_REG_START_ADDRESS2)
-        self.writeh((page % self.pages_per_block) << 2, self.onenand_REG_START_ADDRESS8)
+        self.writeh((page % pages_per_block) << 2, self.onenand_REG_START_ADDRESS8)
 
         self.writeh((1 << 3) << 8, self.onenand_REG_START_BUFFER)
 
@@ -63,7 +83,7 @@ class CommonOnenandDumper:
 
         if intr & 0x80 != 0x80:
             print("_onenand_read(page=0x{:X}, cmd=0x{:X}, ddp=0x{:X}) failed with intr=0x{:X}".format(
-                page, cmd, ddp, intr))
+                orig_page, cmd, ddp, intr))
 
         if self.inline_spare:
             return self.read(self.onenand_DATARAM, self.page_size) + self.read(self.onenand_SPARERAM, self.oob_size)

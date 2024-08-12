@@ -544,6 +544,12 @@ DEVICES = [
     }, payload_base=0xE55B0000, fatal_err=0x60c04848, usb_interrupt=0x60C02000, usb_getch=0x60c03f14, usb_send=0x60c04118, usb_send_commit=0x60c03a94,
         onenand_addr=0x30000000),
 
+    Device("f-01c", 0x04c5, 0x11e8, {
+        "onenand_id": ShSrecExploitOnenandId(),
+        "dump_nand": ShSrecExploitOnenandDumper(size=MB(1024), has_4k_pages=True, flex=True),
+    }, payload_base=0xE55B0000, fatal_err=0x60c04570, usb_interrupt=0x60C02000, usb_getch=0x60c03cb0, usb_send=0x60c03e88, usb_send_commit=0x60c03884,
+        onenand_addr=0x30000000),
+
     Device("f-08c", 0x04c5, 0x122f, {
         "onenand_id": ShSrecExploitOnenandId(),
         "dump_nand": ShSrecExploitOnenandDumper(size=MB(512), has_4k_pages=True),
