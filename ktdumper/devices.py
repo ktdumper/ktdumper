@@ -467,6 +467,14 @@ DEVICES = [
     }, payload_base=0x64000000, fatal_err=0x646069f4, usb_interrupt=0x64601000, usb_getch=0x6460396c, usb_send=0x64603be4, usb_send_commit=0x646034c0,
         nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),
 
+    Device("sh-03a", 0x04dd, 0x9262, {
+        "probe_nor": ShSrecExploitProbeNor(base=0x30000000),
+        "dump_nor": ShSrecExploitMemoryDumper(base=0x30000000, size=MB(128)),
+        "nand_id": ShSrecExploitNandId(),
+        "dump_nand": ShSrecExploitNandDumper(size=MB(256)),
+    }, payload_base=0xE55B0000, fatal_err=0x60605084, usb_interrupt=0x60601000, usb_getch=0x6060474c, usb_send=0x606049dc, usb_send_commit=0x6060420c,
+        nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),
+
     Device("sh-05a", 0x04dd, 0x9287, {
         "probe_nor": ShSrecExploitProbeNor(base=0x30000000),
         "dump_nor": ShSrecExploitMemoryDumper(base=0x30000000, size=MB(128)),
