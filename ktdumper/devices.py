@@ -395,6 +395,13 @@ DEVICES = [
     }, exploit_flavor="C", payload_base=0x83800000, onenand_addr=0x0C000000,
        usb_command=0x8115a960, usb_data=0x8115a54a, usb_datasz=0x8115a544, usb_respfunc=0x80027f6c),
 
+    Device("p-01e", 0x04da, 0x216b, {
+        "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
+        "onenand_id": PiplOnenandId(),
+        "dump_nand": PiplOnenandFast(size=MB(1024)),
+    }, exploit_flavor="C", payload_base=0x83800000, onenand_addr=0x0C000000,
+       usb_command=0x8115a960, usb_data=0x8115a54a, usb_datasz=0x8115a544, usb_respfunc=0x80027f70),
+
     Device("p-01f", 0x04da, 0x216b, {
         "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
         "dump_emmc": PiplEmmcDumper(size=MB(2048)),
