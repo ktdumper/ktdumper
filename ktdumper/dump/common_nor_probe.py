@@ -1,5 +1,5 @@
 SIZES = [0, 32, 64, 96, 128, 256]
-OFFSETS = [0, 0x100, 0x9000, 0x17000, 0x23000]
+OFFSETS = [0, 0x100, 0x9000, 0x17000, 0x23000, 0x46000]
 
 
 class CommonNorProbe:
