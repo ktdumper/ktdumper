@@ -555,6 +555,12 @@ DEVICES = [
     }, payload_base=0x64000000, fatal_err=0x64606700, usb_interrupt=0x64601000, usb_getch=0x646036cc, usb_send=0x64603940, usb_send_commit=0x6460325c,
         onenand_addr=0x10000000),
 
+    Device("f-03a", 0x04c5, 0x1166, {
+        "onenand_id": ShSrecExploitOnenandId(),
+        "dump_nand": ShSrecExploitOnenandDumper(size=MB(512), has_ddp=True),
+    }, payload_base=0xE55B0000, fatal_err=0x60c06d64, usb_interrupt=0x60C02000, usb_getch=0x60c06428, usb_send=0x60c0662c, usb_send_commit=0x60c05fa8,
+        onenand_addr=0x30000000),
+
     Device("f-04a", 0x04c5, 0x115e, {"dump_java": FujitsuJavaDumper()}),
     Device("f-05a", 0x04c5, 0x1167, {"dump_java": FujitsuJavaDumper()}),
     Device("f-07a", 0x04c5, 0x115f, {"dump_java": FujitsuJavaDumper()}),
