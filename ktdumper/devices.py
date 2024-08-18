@@ -212,6 +212,13 @@ DEVICES = [
        usb_command=0x80be503c, usb_data=0x80c060c6, usb_datasz=0x80c060c0, usb_respfunc=0x80b86178,
        onenand_addr=0x08000000),
 
+    Device("n-01f", 0x0409, 0x047a, {
+        "onenand_id": NecOnenandId(),
+        "dump_nand": NecOnenandFast(size=MB(1024)),
+    }, secret="ec0b6bf9edcb97ee1c9bb7f006507cf2ab68eb7f", payload_base=0x80000000, patch=0x80b888c4,
+       usb_command=0x80be503c, usb_data=0x80c060c6, usb_datasz=0x80c060c0, usb_respfunc=0x80b86200,
+       onenand_addr=0x08000000),
+
     # SOFTBANK
 
     Device("820n", 0x0409, 0x0250, {
