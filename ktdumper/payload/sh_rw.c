@@ -1,5 +1,7 @@
 #include <stdint.h>
 
+#define DISABLE_INTERRUPTS
+
 void runner(void);
 
 int main(void) {
@@ -117,7 +119,11 @@ __asm__(
 ".word 0xe10f0000, 0xe1a01000, 0xe3811080, 0xe12ff001, 0xe1a0f00e\n"
 ".global ena_int\n"
 "ena_int:\n"
+#ifdef DISABLE_INTERRUPTS
+"bx lr\n"
+#else
 ".word 0xe10f0000, 0xe3c00080, 0xe12ff000, 0xe1a0f00e\n"
+#endif
 );
 
 static uint32_t recvaddr(void) {
@@ -129,6 +135,10 @@ static uint32_t recvaddr(void) {
 
 void runner(void) {
     static uint8_t nandbuf[2112];
+
+#ifdef DISABLE_INTERRUPTS
+    dis_int();
+#endif
 
     while (1) {
         uint8_t ch = usb_getch();
