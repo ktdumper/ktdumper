@@ -1,14 +1,18 @@
 #include <inttypes.h>
 #include <stddef.h>
 
-#define ONENAND (%onenand_addr%)
+#define ONENAND (KT_onenand_addr)
 
 void start() {
-    uint8_t *command = (void*)%usb_command%;
-    uint8_t *data = (void*)%usb_data%; // comes from cmd_read
-    uint16_t *data16 = (void*)%usb_data%;
-    uint8_t *datasz = (void*)%usb_datasz%; // also from cmd_read
-    void (*respfunc)() = (void*)%usb_respfunc%;
+#if KT_patch
+    #include "nec_smc_patcher.inc"
+#endif
+
+    uint8_t *command = (void*)KT_usb_command;
+    uint8_t *data = (void*)KT_usb_data; // comes from cmd_read
+    uint16_t *data16 = (void*)KT_usb_data;
+    uint8_t *datasz = (void*)KT_usb_datasz; // also from cmd_read
+    void (*respfunc)() = (void*)KT_usb_respfunc;
 
     volatile uint16_t *onenand_REG_START_ADDRESS1 = (volatile uint16_t *)(ONENAND + 2*0xF100);
     volatile uint16_t *onenand_REG_START_ADDRESS2 = (volatile uint16_t *)(ONENAND + 2*0xF101);
