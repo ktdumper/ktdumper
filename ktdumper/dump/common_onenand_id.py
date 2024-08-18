@@ -150,8 +150,8 @@ class CommonOnenandId:
         print("System Configuration 1: {:04X}".format(self.readh(self.onenand_SYSCFG1)))
         print("")
 
-        if manu_id != 0xEC:
-            raise RuntimeError("OneNAND manufacturer ID isn't 00ECh")
+        if manu_id not in [0xEC, 0x20]:
+            raise RuntimeError("OneNAND manufacturer ID isn't 00ECh or 0020h")
 
         if separation == 2:
             print("=" * 80)
