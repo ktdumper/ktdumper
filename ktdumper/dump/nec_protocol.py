@@ -1,4 +1,6 @@
 import struct
+import time
+import usb.core
 
 from dump.dumper import Dumper
 
@@ -95,6 +97,8 @@ class NecProtocol(Dumper):
         # go into serial comms mode => turns green led on for some, display on
         self.dev.ctrl_transfer(0x41, 0x60, 0x60, 2)
         self.dev.read(0x86, 64)
+        time.sleep(3)
+        self.dev = usb.core.find(idVendor=self.dev.idVendor, idProduct=self.dev.idProduct)
 
         if self.secret is not None:
             user_buffer = self.secret + checksum2(self.secret) + b"\x00" * 0x20

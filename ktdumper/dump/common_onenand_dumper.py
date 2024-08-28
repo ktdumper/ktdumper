@@ -29,9 +29,14 @@ class CommonOnenandDumper:
 
         assert opts["size"] % self.page_size == 0
 
-        if opts.get("flex", True):
-            # TODO: currently only support unpartitioned, i.e. SLC=1 block, MLC=rest
-            self.num_slc_pages = 64
+        if opts.get("flex"):
+            # currently only support flex with 4k pages
+            assert self.inline_spare
+            assert self.page_size == 4096
+            assert isinstance(opts["flex"], int)
+
+            boundary_address = opts["flex"] & 0b1111111111
+            self.num_slc_pages = 64 * (1 + boundary_address)
             self.num_mlc_pages = opts["size"] // self.page_size - 2 * self.num_slc_pages
         else:
             self.num_slc_pages = opts["size"] // self.page_size
@@ -140,23 +145,60 @@ class CommonOnenandDumper:
 
         # devices with 4K pages will read OOB together with the data page
         if self.inline_spare:
-            print("Dumping OneNAND & OOB")
-            with output.mkfile("onenand.bin") as onenand_bin:
-                with output.mkfile("onenand.oob") as onenand_oob:
-                    chunk = self.page_size + self.oob_size
-                    with tqdm.tqdm(total=chunk*self.num_pages, unit='B', unit_scale=True, unit_divisor=1024) as bar:
-                        for page in range(self.num_pages):
-                            full = self.onenand_read_page(page)
+            if self.num_mlc_pages == 0:
+                print("Dumping OneNAND & OOB")
+                with output.mkfile("onenand.bin") as onenand_bin:
+                    with output.mkfile("onenand.oob") as onenand_oob:
+                        chunk = self.page_size + self.oob_size
+                        with tqdm.tqdm(total=chunk*self.num_pages, unit='B', unit_scale=True, unit_divisor=1024) as bar:
+                            for page in range(self.num_pages):
+                                full = self.onenand_read_page(page)
 
-                            data = full[0:self.page_size]
-                            spare = full[self.page_size:]
-                            assert len(data) == self.page_size
-                            assert len(spare) == self.oob_size
+                                data = full[0:self.page_size]
+                                spare = full[self.page_size:]
+                                assert len(data) == self.page_size
+                                assert len(spare) == self.oob_size
 
-                            onenand_bin.write(data)
-                            onenand_oob.write(spare)
+                                onenand_bin.write(data)
+                                onenand_oob.write(spare)
 
-                            bar.update(chunk)
+                                bar.update(chunk)
+            else:
+                print("Dumping OneNAND & OOB [SLC]")
+                with output.mkfile("onenand_slc.bin") as onenand_bin:
+                    with output.mkfile("onenand_slc.oob") as onenand_oob:
+                        chunk = self.page_size + self.oob_size
+                        with tqdm.tqdm(total=chunk*self.num_slc_pages, unit='B', unit_scale=True, unit_divisor=1024) as bar:
+                            for page in range(self.num_slc_pages):
+                                full = self.onenand_read_page(page)
+
+                                data = full[0:self.page_size]
+                                spare = full[self.page_size:]
+                                assert len(data) == self.page_size
+                                assert len(spare) == self.oob_size
+
+                                onenand_bin.write(data)
+                                onenand_oob.write(spare)
+
+                                bar.update(chunk)
+
+                print("Dumping OneNAND & OOB [MLC]")
+                with output.mkfile("onenand_mlc.bin") as onenand_bin:
+                    with output.mkfile("onenand_mlc.oob") as onenand_oob:
+                        chunk = self.page_size + self.oob_size
+                        with tqdm.tqdm(total=chunk*self.num_mlc_pages, unit='B', unit_scale=True, unit_divisor=1024) as bar:
+                            for page in range(self.num_mlc_pages):
+                                full = self.onenand_read_page(self.num_slc_pages + page)
+
+                                data = full[0:self.page_size]
+                                spare = full[self.page_size:]
+                                assert len(data) == self.page_size
+                                assert len(spare) == self.oob_size
+
+                                onenand_bin.write(data)
+                                onenand_oob.write(spare)
+
+                                bar.update(chunk)
         else:
             print("Dumping OneNAND")
             with output.mkfile("onenand.bin") as outf:
