@@ -67,6 +67,7 @@ class NecProtocol(Dumper):
         self.secret = opts.get("secret")
         if self.secret is not None:
             self.secret = bytes.fromhex(self.secret)
+        self.keep_mmu = int(opts.get("keep_mmu", False))
 
         if opts.get("quirks", 0) & SLOW_READ:
             self.chunk = 0x10

@@ -71,6 +71,7 @@ class NecPiplOnenandFast:
         )
         if self.secret:
             kwargs["patch"] = self.patch
+            kwargs["keep_mmu"] = self.keep_mmu
 
         payload = PayloadBuilder("onenand_fast.c").build(**kwargs)
         self.cmd_write(self.payload_base, payload)

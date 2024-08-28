@@ -27,6 +27,7 @@ class NecDirectUsb(NecProtocol):
             usb_datasz=self.usb_datasz,
             usb_respfunc=self.usb_respfunc,
             patch=self.patch,
+            keep_mmu=self.keep_mmu,
         )
 
     def insert_payload(self, name, **kwargs):

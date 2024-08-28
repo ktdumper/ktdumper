@@ -93,6 +93,7 @@ class NecPiplRwAccess:
                 usb_datasz=self.usb_datasz,
                 usb_respfunc=self.usb_respfunc,
                 patch=self.patch,
+                keep_mmu=self.keep_mmu,
             ))
 
         payload = PayloadBuilder("peek_poke.c").build(**kwargs)

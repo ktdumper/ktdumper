@@ -5,6 +5,7 @@ if (!once) {
     once = 1;
 
     int reg;
+#if !KT_keep_mmu
     __asm__ volatile(
         /* disable mmu which got enabled by the jumper */
         "mrc p15, 0, %0, c1, c0, 0\n"
@@ -12,6 +13,7 @@ if (!once) {
         "mcr p15, 0, %0, c1, c0, 0\n"
         : "=r"(reg)
     );
+#endif
 
     *(uint32_t*)KT_patch = 0;
     __asm__ volatile("mcr p15, 0, %0, c7, c10, 1" :: "r"(KT_patch));
