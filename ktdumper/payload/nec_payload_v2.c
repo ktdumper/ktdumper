@@ -67,9 +67,81 @@ static void send_msg(const void *addr, size_t len) {
     respfunc_send_ep(resp_sz, resp);
 }
 
+typedef struct {
+    volatile uint16_t bootm[1024/2];
+    volatile uint16_t datam[4096/2];
+    uint8_t _main[59 * 1024];
+    volatile uint16_t boots[32/2];
+    volatile uint16_t datas[128/2];
+    uint8_t _spare[8032];
+    uint8_t _rsvd1[24 * 1024];
+    uint8_t _rsvd2[8 * 1024];
+    uint8_t _rsvd3[16 * 1024];
+
+    /* registers */
+    volatile uint16_t manufacturer_id;
+    volatile uint16_t device_id;
+    volatile uint16_t version_id;
+    volatile uint16_t data_buffer_size;
+    volatile uint16_t boot_buffer_size;
+    volatile uint16_t amount_of_buffers;
+    volatile uint16_t technology;
+    uint16_t _rsvd4[249];
+    volatile uint16_t start_address_1;
+    volatile uint16_t start_address_2;
+    uint16_t _rsvd5[5];
+    volatile uint16_t start_address_8;
+    uint16_t _rsvd6[248];
+    volatile uint16_t start_buffer;
+    uint16_t _rsvd7[31];
+    volatile uint16_t command;
+    volatile uint16_t system_configuration_1;
+    uint16_t _rsvd8[14];
+    uint16_t _rsvd9[16];
+    volatile uint16_t controller_status;
+    volatile uint16_t interrupt;
+    uint16_t _rsvd10[10];
+    volatile uint16_t start_block_address;
+    uint16_t _rsvd11;
+    volatile uint16_t write_protection_status;
+    uint16_t _rsvd12[3249];
+    volatile uint16_t ecc_status_register_1;
+    volatile uint16_t ecc_status_register_2;
+    volatile uint16_t ecc_status_register_3;
+    volatile uint16_t ecc_status_register_4;
+} onenand_t;
+
+onenand_t *onenand;
+
+static void onenand_read(uint32_t block, uint32_t page, uint16_t *data16) {
+    onenand->start_address_1 = block;
+    onenand->start_address_2 = 0;
+    onenand->start_address_8 = page << 2;
+
+    onenand->start_buffer = (1 << 3) << 8;
+
+    onenand->interrupt = 0;
+    onenand->command = 0; // READ
+
+    while ((onenand->interrupt & 0x80) != 0x80)
+    {}
+
+    // data16[0] = onenand->ecc_status_register_1;
+    // data16[0] = onenand->ecc_status_register_2;
+    // data16[0] = onenand->ecc_status_register_3;
+    // data16[0] = onenand->ecc_status_register_4;
+
+    for (size_t i = 0; i < 4096/2; ++i)
+        data16[i] = onenand->datam[i];
+    for (size_t i = 0; i < 128/2; ++i)
+        data16[4096/2+i] = onenand->datas[i];
+}
+
 #define XADDR(_arr, _off) ((_arr[_off]) | (_arr[_off+1] << 8) | (_arr[_off+2] << 16) | (_arr[_off+3] << 24))
 
 void main(void) {
+    static uint16_t onenand_buf[(4096+128)/2];
+
     while (1) {
         receive_msg();
 
@@ -124,6 +196,16 @@ void main(void) {
             /* read 64 bytes */
             uint32_t addr = XADDR(payload, 1);
             send_msg((void*)addr, 64);
+        } else if (ch == 0x70) {
+            /* set onenand base */
+            onenand = (void*)XADDR(payload, 1);
+        } else if (ch == 0x71) {
+            /* read onenand 4096b page + 128b oob */
+            uint32_t block = XADDR(payload, 1);
+            uint32_t page = XADDR(payload, 5);
+
+            onenand_read(block, page, onenand_buf);
+            send_msg(onenand_buf, sizeof(onenand_buf));
         }
     }
 }

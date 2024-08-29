@@ -37,7 +37,7 @@ deviceid_separation = {
 }
 
 
-class CommonOnenandId:
+class CommonOnenandIdMixin:
 
     def parse_opts(self, opts):
         super().parse_opts(opts)
@@ -110,15 +110,21 @@ class CommonOnenandId:
 
         return page
 
-    def print_pi(self, ddp):
+    def read_pi(self, ddp):
         pi = b""
         for page in range(64):
             pi += self._read_pi_page(ddp, page)
 
         assert pi[2:len(pi)] == b"\xFF" * (len(pi) - 2)
         alloc = struct.unpack("<H", pi[0:2])[0]
-        print("DDP {} : Allocation 0x{:04X}".format(ddp, alloc))
-        # datasheet default: 0xFC00, seen: 0xF800 (same behavior?)
+        return alloc
+
+
+class CommonOnenandId(CommonOnenandIdMixin):
+
+    def print_pi(self, ddp):
+        print("DDP {} : Allocation 0x{:04X}".format(ddp, self.read_pi(ddp)))
+        # datasheet default: 0xFC00, seen: 0xF800 (same behavior?), 0xFFFF (n-06b)
 
     def execute(self, dev, output):
         super().execute(dev, output)

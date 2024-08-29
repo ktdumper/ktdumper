@@ -12,6 +12,7 @@ from dump.nec_nand_dumper_lp_via_poke import NecNandDumperLpViaPoke
 from dump.nec_onenand_id import NecOnenandId
 from dump.nec_onenand_id_v2 import NecOnenandId_v2
 from dump.nec_onenand_fast import NecOnenandFast
+from dump.nec_onenand_fast_v2 import NecOnenandFast_v2
 from dump.nec_gpmc import NecGpmc
 
 from dump.pipl_exploit_memory_dumper import PiplExploitMemoryDumper
@@ -204,7 +205,7 @@ DEVICES = [
 
     Device("n-06b", 0x0409, 0x02c0, {
         "onenand_id": NecOnenandId_v2(),
-        "dump_nand": NecOnenandDumper_v2(size=MB(1024), has_4k_pages=True, flex=0xFFFF),
+        "dump_nand": NecOnenandFast_v2(),
     }, secret="170d4f68c40a4e9c9d3cfbe11d4a4d0baba935a9",
        payload_base=0x30000000, usb_receive=0x35d4ae1c, usb_send=0x35d4b780,
        onenand_addr=0x0),
