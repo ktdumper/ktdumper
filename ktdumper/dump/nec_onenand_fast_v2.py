@@ -19,8 +19,8 @@ raw_sizes = {
     7: 2 * 1024 * 1024 * 1024,
 }
 
-SLC_PAGES = 64
-MLC_PAGES = 128
+SLC_PAGES_PER_BLOCK = 64
+MLC_PAGES_PER_BLOCK = 128
 
 class NecOnenandFast_v2(CommonOnenandIdMixin, NecRwAccess_v2, NecProtocol_v2):
 
@@ -38,46 +38,33 @@ class NecOnenandFast_v2(CommonOnenandIdMixin, NecRwAccess_v2, NecProtocol_v2):
         assert len(data) == self.page_size + self.oob_size
         return data
 
+    def _dump_blocks_pages(self, prefixname, num_blocks, blocks_offset, num_pages_per_block):
+        with self.output.mkfile(prefixname + ".bin") as onenand_bin:
+            with self.output.mkfile(prefixname + ".oob") as onenand_oob:
+                chunk = self.page_size + self.oob_size
+                with tqdm.tqdm(total=chunk*num_pages_per_block*num_blocks, unit='B', unit_scale=True, unit_divisor=1024) as bar:
+                    for block in range(num_blocks):
+                        for page in range(num_pages_per_block):
+                            full = self.read_page_and_oob(blocks_offset + block, page)
+
+                            data = full[0:self.page_size]
+                            spare = full[self.page_size:]
+                            assert len(data) == self.page_size
+                            assert len(spare) == self.oob_size
+
+                            onenand_bin.write(data)
+                            onenand_oob.write(spare)
+
+                            bar.update(chunk)
+
     def dump_flexnand(self):
         if self.slc_blocks > 0:
             print("Dumping OneNAND & OOB [SLC]")
-            with self.output.mkfile("onenand_slc.bin") as onenand_bin:
-                with self.output.mkfile("onenand_slc.oob") as onenand_oob:
-                    chunk = self.page_size + self.oob_size
-                    with tqdm.tqdm(total=chunk*SLC_PAGES*self.slc_blocks, unit='B', unit_scale=True, unit_divisor=1024) as bar:
-                        for block in range(self.slc_blocks):
-                            for page in range(SLC_PAGES):
-                                full = self.read_page_and_oob(block, page)
-
-                                data = full[0:self.page_size]
-                                spare = full[self.page_size:]
-                                assert len(data) == self.page_size
-                                assert len(spare) == self.oob_size
-
-                                onenand_bin.write(data)
-                                onenand_oob.write(spare)
-
-                                bar.update(chunk)
+            self._dump_blocks_pages("onenand_slc", self.slc_blocks, 0, SLC_PAGES_PER_BLOCK)
 
         if self.mlc_blocks > 0:
             print("Dumping OneNAND & OOB [MLC]")
-            with self.output.mkfile("onenand_mlc.bin") as onenand_bin:
-                with self.output.mkfile("onenand_mlc.oob") as onenand_oob:
-                    chunk = self.page_size + self.oob_size
-                    with tqdm.tqdm(total=chunk*MLC_PAGES*self.mlc_blocks, unit='B', unit_scale=True, unit_divisor=1024) as bar:
-                        for block in range(self.mlc_blocks):
-                            for page in range(MLC_PAGES):
-                                full = self.read_page_and_oob(self.slc_blocks + block, page)
-
-                                data = full[0:self.page_size]
-                                spare = full[self.page_size:]
-                                assert len(data) == self.page_size
-                                assert len(spare) == self.oob_size
-
-                                onenand_bin.write(data)
-                                onenand_oob.write(spare)
-
-                                bar.update(chunk)
+            self._dump_blocks_pages("onenand_mlc", self.mlc_blocks, self.slc_blocks, MLC_PAGES_PER_BLOCK)
 
     def execute(self, dev, output):
         super().execute(dev, output)
@@ -115,7 +102,7 @@ class NecOnenandFast_v2(CommonOnenandIdMixin, NecRwAccess_v2, NecProtocol_v2):
                 pi = -1
                 boundary_address = -1
                 self.mlc_blocks = 0
-                self.slc_blocks = usable_raw_size // (MLC_PAGES * self.page_size)
+                self.slc_blocks = usable_raw_size // (MLC_PAGES_PER_BLOCK * self.page_size)
             else:
                 print("Readout Partition Information...")
                 pi = self.read_pi(0)
@@ -124,12 +111,12 @@ class NecOnenandFast_v2(CommonOnenandIdMixin, NecRwAccess_v2, NecProtocol_v2):
 
                 self.slc_blocks = boundary_address + 1
                 # calculate mlc blocks as taking whole device as mlc then subtract the slc blocks
-                self.mlc_blocks = usable_raw_size // (MLC_PAGES * self.page_size) - self.slc_blocks
+                self.mlc_blocks = usable_raw_size // (MLC_PAGES_PER_BLOCK * self.page_size) - self.slc_blocks
 
             print("Partition Information: 0x{:04X} | Boundary Address: 0x{:X} | SLC blocks: 0x{:X} ({} MiB) | MLC blocks: 0x{:X} ({} MiB)".format(
                 pi, boundary_address,
-                self.slc_blocks, SLC_PAGES*self.page_size*self.slc_blocks//1024//1024,
-                self.mlc_blocks, MLC_PAGES*self.page_size*self.mlc_blocks//1024//1024))
+                self.slc_blocks, SLC_PAGES_PER_BLOCK*self.page_size*self.slc_blocks//1024//1024,
+                self.mlc_blocks, MLC_PAGES_PER_BLOCK*self.page_size*self.mlc_blocks//1024//1024))
             self.dump_flexnand()
         else:
             raise RuntimeError("unsupported configuration for NecOnenandFast_v2")
