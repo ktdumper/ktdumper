@@ -111,7 +111,7 @@ typedef struct {
     volatile uint16_t ecc_status_register_4;
 } onenand_t;
 
-onenand_t *onenand;
+onenand_t *onenand = (void*)KT_onenand_addr;
 
 static void onenand_read(uint32_t block, uint32_t page, uint16_t *data16) {
     onenand->start_address_1 = block;
@@ -199,9 +199,6 @@ void main(void) {
             uint32_t addr = XADDR(payload, 1);
             send_msg((void*)addr, 64);
         } else if (ch == 0x70) {
-            /* set onenand base */
-            onenand = (void*)XADDR(payload, 1);
-        } else if (ch == 0x71) {
             /* read onenand 4096b page + 128b oob */
             uint32_t block = XADDR(payload, 1);
             uint32_t page = XADDR(payload, 5);

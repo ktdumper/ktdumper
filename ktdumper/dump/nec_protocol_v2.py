@@ -37,7 +37,11 @@ class NecProtocol_v2(NecProtocol):
         super().execute(dev, output)
 
         payload = PayloadBuilder("nec_payload_v2.c").build(
-            base=self.payload_base, usb_receive=self.f_usb_receive, usb_send=self.f_usb_send)
+            base=self.payload_base,
+            usb_receive=self.f_usb_receive,
+            usb_send=self.f_usb_send,
+            onenand_addr=self.opts.get("onenand_addr", -1),
+        )
 
         self.cmd_write(self.payload_base, payload)
         self.cmd_exec()

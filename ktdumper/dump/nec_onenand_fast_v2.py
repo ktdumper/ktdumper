@@ -26,7 +26,7 @@ class NecOnenandFast_v2(CommonOnenandIdMixin, NecRwAccess_v2, NecProtocol_v2):
 
     def read_page_and_oob(self, block, page):
         try:
-            self.usb_send(struct.pack("<BII", 0x71, block, page))
+            self.usb_send(struct.pack("<BII", 0x70, block, page))
             data = b""
             # TODO: configurable chunking
             for x in range((4096+128)//64):
@@ -68,8 +68,6 @@ class NecOnenandFast_v2(CommonOnenandIdMixin, NecRwAccess_v2, NecProtocol_v2):
 
     def execute(self, dev, output):
         super().execute(dev, output)
-
-        self.usb_send(struct.pack("<BI", 0x70, self.onenand_addr))
 
         self.output = output
 
