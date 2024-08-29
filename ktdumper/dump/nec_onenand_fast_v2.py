@@ -27,7 +27,10 @@ class NecOnenandFast_v2(CommonOnenandIdMixin, NecRwAccess_v2, NecProtocol_v2):
     def read_page_and_oob(self, block, page):
         try:
             self.usb_send(struct.pack("<BII", 0x71, block, page))
-            data = self.usb_receive()
+            data = b""
+            # TODO: configurable chunking
+            for x in range((4096+128)//64):
+                data += self.usb_receive()
         except Exception:
             print("exception reading block=0x{:X} page=0x{:X}".format(block, page))
             raise
@@ -36,46 +39,45 @@ class NecOnenandFast_v2(CommonOnenandIdMixin, NecRwAccess_v2, NecProtocol_v2):
         return data
 
     def dump_flexnand(self):
-        assert self.slc_blocks > 0
-        assert self.mlc_blocks > 0
+        if self.slc_blocks > 0:
+            print("Dumping OneNAND & OOB [SLC]")
+            with self.output.mkfile("onenand_slc.bin") as onenand_bin:
+                with self.output.mkfile("onenand_slc.oob") as onenand_oob:
+                    chunk = self.page_size + self.oob_size
+                    with tqdm.tqdm(total=chunk*SLC_PAGES*self.slc_blocks, unit='B', unit_scale=True, unit_divisor=1024) as bar:
+                        for block in range(self.slc_blocks):
+                            for page in range(SLC_PAGES):
+                                full = self.read_page_and_oob(block, page)
 
-        print("Dumping OneNAND & OOB [SLC]")
-        with self.output.mkfile("onenand_slc.bin") as onenand_bin:
-            with self.output.mkfile("onenand_slc.oob") as onenand_oob:
-                chunk = self.page_size + self.oob_size
-                with tqdm.tqdm(total=chunk*SLC_PAGES*self.slc_blocks, unit='B', unit_scale=True, unit_divisor=1024) as bar:
-                    for block in range(self.slc_blocks):
-                        for page in range(SLC_PAGES):
-                            full = self.read_page_and_oob(block, page)
+                                data = full[0:self.page_size]
+                                spare = full[self.page_size:]
+                                assert len(data) == self.page_size
+                                assert len(spare) == self.oob_size
 
-                            data = full[0:self.page_size]
-                            spare = full[self.page_size:]
-                            assert len(data) == self.page_size
-                            assert len(spare) == self.oob_size
+                                onenand_bin.write(data)
+                                onenand_oob.write(spare)
 
-                            onenand_bin.write(data)
-                            onenand_oob.write(spare)
+                                bar.update(chunk)
 
-                            bar.update(chunk)
+        if self.mlc_blocks > 0:
+            print("Dumping OneNAND & OOB [MLC]")
+            with self.output.mkfile("onenand_mlc.bin") as onenand_bin:
+                with self.output.mkfile("onenand_mlc.oob") as onenand_oob:
+                    chunk = self.page_size + self.oob_size
+                    with tqdm.tqdm(total=chunk*MLC_PAGES*self.mlc_blocks, unit='B', unit_scale=True, unit_divisor=1024) as bar:
+                        for block in range(self.mlc_blocks):
+                            for page in range(MLC_PAGES):
+                                full = self.read_page_and_oob(self.slc_blocks + block, page)
 
-        print("Dumping OneNAND & OOB [MLC]")
-        with self.output.mkfile("onenand_mlc.bin") as onenand_bin:
-            with self.output.mkfile("onenand_mlc.oob") as onenand_oob:
-                chunk = self.page_size + self.oob_size
-                with tqdm.tqdm(total=chunk*MLC_PAGES*self.mlc_blocks, unit='B', unit_scale=True, unit_divisor=1024) as bar:
-                    for block in range(self.mlc_blocks):
-                        for page in range(MLC_PAGES):
-                            full = self.read_page_and_oob(self.slc_blocks + block, page)
+                                data = full[0:self.page_size]
+                                spare = full[self.page_size:]
+                                assert len(data) == self.page_size
+                                assert len(spare) == self.oob_size
 
-                            data = full[0:self.page_size]
-                            spare = full[self.page_size:]
-                            assert len(data) == self.page_size
-                            assert len(spare) == self.oob_size
+                                onenand_bin.write(data)
+                                onenand_oob.write(spare)
 
-                            onenand_bin.write(data)
-                            onenand_oob.write(spare)
-
-                            bar.update(chunk)
+                                bar.update(chunk)
 
     def execute(self, dev, output):
         super().execute(dev, output)
@@ -109,14 +111,20 @@ class NecOnenandFast_v2(CommonOnenandIdMixin, NecRwAccess_v2, NecProtocol_v2):
             self.oob_size = 128
             self.inline_spare = True
 
-            print("Readout Partition Information...")
-            pi = self.read_pi(0)
+            if self.opts.get("fully_slc", False):
+                pi = -1
+                boundary_address = -1
+                self.mlc_blocks = 0
+                self.slc_blocks = usable_raw_size // (MLC_PAGES * self.page_size)
+            else:
+                print("Readout Partition Information...")
+                pi = self.read_pi(0)
 
-            boundary_address = pi & 0b1111111111
+                boundary_address = pi & 0b1111111111
 
-            self.slc_blocks = boundary_address + 1
-            # calculate mlc blocks as taking whole device as mlc then subtract the slc blocks
-            self.mlc_blocks = usable_raw_size // (MLC_PAGES * self.page_size) - self.slc_blocks
+                self.slc_blocks = boundary_address + 1
+                # calculate mlc blocks as taking whole device as mlc then subtract the slc blocks
+                self.mlc_blocks = usable_raw_size // (MLC_PAGES * self.page_size) - self.slc_blocks
 
             print("Partition Information: 0x{:04X} | Boundary Address: 0x{:X} | SLC blocks: 0x{:X} ({} MiB) | MLC blocks: 0x{:X} ({} MiB)".format(
                 pi, boundary_address,

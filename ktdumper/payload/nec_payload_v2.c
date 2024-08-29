@@ -127,9 +127,11 @@ static void onenand_read(uint32_t block, uint32_t page, uint16_t *data16) {
     {}
 
     // data16[0] = onenand->ecc_status_register_1;
-    // data16[0] = onenand->ecc_status_register_2;
-    // data16[0] = onenand->ecc_status_register_3;
-    // data16[0] = onenand->ecc_status_register_4;
+    // data16[1] = onenand->ecc_status_register_2;
+    // data16[2] = onenand->ecc_status_register_3;
+    // data16[3] = onenand->ecc_status_register_4;
+    // data16[4] = onenand->controller_status;
+    // data16[5] = onenand->interrupt;
 
     for (size_t i = 0; i < 4096/2; ++i)
         data16[i] = onenand->datam[i];
@@ -205,7 +207,10 @@ void main(void) {
             uint32_t page = XADDR(payload, 5);
 
             onenand_read(block, page, onenand_buf);
-            send_msg(onenand_buf, sizeof(onenand_buf));
+            // TODO: configurable chunking
+            for (uint8_t *sender = (void*)onenand_buf; sender < (uint8_t*)onenand_buf+sizeof(onenand_buf); sender += 64) {
+                send_msg(sender, 64);
+            }
         }
     }
 }

@@ -205,7 +205,7 @@ DEVICES = [
 
     Device("n-06b", 0x0409, 0x02c0, {
         "onenand_id": NecOnenandId_v2(),
-        "dump_nand": NecOnenandFast_v2(),
+        "dump_nand": NecOnenandFast_v2(fully_slc=True),
     }, secret="170d4f68c40a4e9c9d3cfbe11d4a4d0baba935a9",
        payload_base=0x30000000, usb_receive=0x35d4ae1c, usb_send=0x35d4b780,
        onenand_addr=0x0),
