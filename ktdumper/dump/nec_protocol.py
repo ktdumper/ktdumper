@@ -8,6 +8,7 @@ from dump.dumper import Dumper
 SLOW_READ = 1
 
 
+# TODO: this should really be split into mask and checksum as separate things
 def mask_packet(pkt):
     out = [0xFF]
     ck = 0
@@ -85,16 +86,6 @@ class NecProtocol(Dumper):
             elif b"\xFE" in resp:
                 raise RuntimeError("mismatched packet masking, resp={}".format(resp.hex()))
         return unmask_resp(resp)
-
-    def usb_send(self, data):
-        masked = mask_packet(data)
-        # print("=> {}".format(masked.hex()))
-        self.dev.write(0x8, masked)
-
-    def usb_receive(self):
-        data = self.read_resp()
-        # print("<= {}".format(data.hex()))
-        return data
 
     def comm_oneway(self, cmd, subcmd=0, variable_payload=None):
         pkt = make_packet(cmd, subcmd, variable_payload)

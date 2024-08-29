@@ -22,7 +22,14 @@ static void unmask_payload(void) {
         }
     }
 
-    // TODO: checksum as well?
+    uint8_t ck = 0;
+    for (size_t i = 0; i < payload_sz; ++i)
+        ck += payload[i];
+
+    if (ck != 0 || payload_sz == 0) {
+        while (1)
+        {}
+    }
 }
 
 static void receive_msg(void) {
@@ -34,9 +41,6 @@ static void receive_msg(void) {
 static void mask_payload(const void *addr, size_t len) {
     const uint8_t *caddr = addr;
 
-    resp[0] = 0xFF;
-    resp_sz = 1;
-
     for (size_t i = 0; i < len; ++i) {
         if (caddr[i] == 0xFD || caddr[i] == 0xFE || caddr[i] == 0xFF) {
             resp[resp_sz++] = 0xFD;
@@ -45,13 +49,20 @@ static void mask_payload(const void *addr, size_t len) {
             resp[resp_sz++] = caddr[i];
         }
     }
-
-    resp[resp_sz++] = 0xFE;
 }
 
 static void send_msg(const void *addr, size_t len) {
+    const uint8_t *caddr = addr;
+    uint8_t ck = 0;
+    for (size_t i = 0; i < len; ++i)
+        ck += caddr[i];
+    ck = -ck;
+
+    resp[0] = 0xFF;
+    resp_sz = 1;
     mask_payload(addr, len);
-    // TODO: checksum response?
+    mask_payload(&ck, 1);
+    resp[resp_sz++] = 0xFE;
 
     respfunc_send_ep(resp_sz, resp);
 }

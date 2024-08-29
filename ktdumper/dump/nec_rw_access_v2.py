@@ -1,17 +1,7 @@
 import struct
 
-from util.payload_builder import PayloadBuilder
-
 
 class NecRwAccess_v2:
-
-    def parse_opts(self, opts):
-        super().parse_opts(opts)
-
-        self.payload_base = opts["payload_base"]
-
-        self.f_usb_receive = opts.get("usb_receive")
-        self.f_usb_send = opts.get("usb_send")
 
     def readb(self, addr):
         self.usb_send(struct.pack("<BI", 0x10, addr))
@@ -34,11 +24,6 @@ class NecRwAccess_v2:
     def writew(self, val, addr):
         self.usb_send(struct.pack("<BII", 0x22, addr, val))
 
-    def magic_handshake(self):
-        self.usb_send(bytes([0x42]))
-        data = self.usb_receive()
-        assert data == bytes.fromhex("55545352")
-
     def read64(self, addr):
         self.usb_send(struct.pack("<BI", 0x60, addr))
         return self.usb_receive()
@@ -56,18 +41,8 @@ class NecRwAccess_v2:
     def execute(self, dev, output):
         super().execute(dev, output)
 
-        payload = PayloadBuilder("nec_payload_v2.c").build(
-            base=self.payload_base, usb_receive=self.f_usb_receive, usb_send=self.f_usb_send)
-
-        self.cmd_write(self.payload_base, payload)
-        self.cmd_exec()
-
-        self.magic_handshake()
-
         # validate payload set up correctly
         self.writew(0xDEADBEEF, self.payload_base+0x10000)
         assert self.readw(self.payload_base+0x10000) == 0xDEADBEEF
         self.writeh(0xEE, self.payload_base+0x10000)
         assert self.readw(self.payload_base+0x10000) == 0xDEAD00EE
-
-        print("!! Restart the phone before running another payload !!")
