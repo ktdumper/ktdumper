@@ -42,8 +42,8 @@ static void mask_payload(const void *addr, size_t len) {
     const uint8_t *caddr = addr;
 
     for (size_t i = 0; i < len; ++i) {
-        if (caddr[i] == 0xFB || caddr[i] == 0xFC || caddr[i] == 0xFD || caddr[i] == 0xFE || caddr[i] == 0xFF) {
-            resp[resp_sz++] = 0xFD;
+        if (caddr[i] == 0x99 || caddr[i] == 0x9A || caddr[i] == 0x9B || caddr[i] == 0x9C || caddr[i] == 0x9D) {
+            resp[resp_sz++] = 0x99;
             resp[resp_sz++] = caddr[i] ^ 0x10;
         } else {
             resp[resp_sz++] = caddr[i];
@@ -52,7 +52,7 @@ static void mask_payload(const void *addr, size_t len) {
 }
 
 #ifndef KT_chunk
-#define KT_chunk 32
+#define KT_chunk 48
 #endif
 
 #define CHUNK (KT_chunk - 2)
@@ -62,12 +62,12 @@ static void send_chunked_entry(const void *addr, size_t sz, int is_last) {
 
     uint8_t data[CHUNK+2];
     for (size_t i = 0; i < sizeof(data); ++i)
-        data[i] = 0xFB;
+        data[i] = 0x9A;
 
-    data[0] = 0xFF;
+    data[0] = 0x9B;
     for (size_t i = 0; i < sz; ++i)
         data[1 + i] = caddr[i];
-    data[sizeof(data)-1] = is_last ? 0xFE : 0xFC;
+    data[sizeof(data)-1] = is_last ? 0x9C : 0x9D;
 
     respfunc_send_ep(sizeof(data), data);
 }

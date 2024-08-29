@@ -6,7 +6,7 @@ def unmask_resp(resp):
     out = []
     x = 0
     while x < len(resp):
-        if resp[x] == 0xFD:
+        if resp[x] == 0x99:
             out.append(resp[x+1] ^ 0x10)
             x += 2
         else:
@@ -51,23 +51,23 @@ class NecProtocol_v2(NecProtocol):
 
         over = False
         while not over:
-            # start retrieving chunk, first ch=FF
+            # start retrieving chunk, first ch=9B
             ch = self._usb_readch()
-            assert ch == 0xFF
+            assert ch == 0x9B
 
             # retrieve body of the chunk
             while True:
                 ch = self._usb_readch()
 
-                # FC = chunk is over
-                if ch == 0xFC:
+                # 9D = chunk is over
+                if ch == 0x9D:
                     break
-                # FE = whole payload is over
-                elif ch == 0xFE:
+                # 9C = whole payload is over
+                elif ch == 0x9C:
                     over = True
                     break
-                # FB = padding
-                elif ch == 0xFB:
+                # 9A = padding
+                elif ch == 0x9A:
                     pass
                 else:
                     resp.append(ch)
