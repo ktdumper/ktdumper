@@ -42,12 +42,44 @@ static void mask_payload(const void *addr, size_t len) {
     const uint8_t *caddr = addr;
 
     for (size_t i = 0; i < len; ++i) {
-        if (caddr[i] == 0xFD || caddr[i] == 0xFE || caddr[i] == 0xFF) {
+        if (caddr[i] == 0xFB || caddr[i] == 0xFC || caddr[i] == 0xFD || caddr[i] == 0xFE || caddr[i] == 0xFF) {
             resp[resp_sz++] = 0xFD;
             resp[resp_sz++] = caddr[i] ^ 0x10;
         } else {
             resp[resp_sz++] = caddr[i];
         }
+    }
+}
+
+#ifndef KT_chunk
+#define KT_chunk 32
+#endif
+
+#define CHUNK (KT_chunk - 2)
+
+static void send_chunked_entry(const void *addr, size_t sz, int is_last) {
+    const uint8_t *caddr = addr;
+
+    uint8_t data[CHUNK+2];
+    for (size_t i = 0; i < sizeof(data); ++i)
+        data[i] = 0xFB;
+
+    data[0] = 0xFF;
+    for (size_t i = 0; i < sz; ++i)
+        data[1 + i] = caddr[i];
+    data[sizeof(data)-1] = is_last ? 0xFE : 0xFC;
+
+    respfunc_send_ep(sizeof(data), data);
+}
+
+static void send_chunked(const void *addr, size_t sz) {
+    const uint8_t *caddr = addr;
+
+    for (size_t off = 0; off < sz; off += CHUNK) {
+        size_t chunk = CHUNK;
+        if (chunk > sz - off)
+            chunk = sz - off;
+        send_chunked_entry(caddr + off, chunk, sz == off+chunk);
     }
 }
 
@@ -58,13 +90,11 @@ static void send_msg(const void *addr, size_t len) {
         ck += caddr[i];
     ck = -ck;
 
-    resp[0] = 0xFF;
-    resp_sz = 1;
+    resp_sz = 0;
     mask_payload(addr, len);
     mask_payload(&ck, 1);
-    resp[resp_sz++] = 0xFE;
 
-    respfunc_send_ep(resp_sz, resp);
+    send_chunked(resp, resp_sz);
 }
 
 typedef struct {
@@ -204,10 +234,7 @@ void main(void) {
             uint32_t page = XADDR(payload, 5);
 
             onenand_read(block, page, onenand_buf);
-            // TODO: configurable chunking
-            for (uint8_t *sender = (void*)onenand_buf; sender < (uint8_t*)onenand_buf+sizeof(onenand_buf); sender += 64) {
-                send_msg(sender, 64);
-            }
+            send_msg(onenand_buf, sizeof(onenand_buf));
         } else if (ch == 0x71) {
             /* check if the block is likely SLC or MLC by comparing if first and second 64 pages inside are the same or different */
             uint32_t block = XADDR(payload, 1);

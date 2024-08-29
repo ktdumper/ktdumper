@@ -27,10 +27,7 @@ class NecOnenandFast_v2(CommonOnenandIdMixin, NecRwAccess_v2, NecProtocol_v2):
     def read_page_and_oob(self, block, page):
         try:
             self.usb_send(struct.pack("<BII", 0x70, block, page))
-            data = b""
-            # TODO: configurable chunking
-            for x in range((4096+128)//64):
-                data += self.usb_receive()
+            data = self.usb_receive()
         except Exception:
             print("exception reading block=0x{:X} page=0x{:X}".format(block, page))
             raise
