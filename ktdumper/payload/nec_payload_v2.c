@@ -208,6 +208,27 @@ void main(void) {
             for (uint8_t *sender = (void*)onenand_buf; sender < (uint8_t*)onenand_buf+sizeof(onenand_buf); sender += 64) {
                 send_msg(sender, 64);
             }
+        } else if (ch == 0x71) {
+            /* check if the block is likely SLC or MLC by comparing if first and second 64 pages inside are the same or different */
+            uint32_t block = XADDR(payload, 1);
+            uint8_t likely_slc = 1;
+            uint8_t *scratchbuf = resp;
+            for (size_t page = 0; page < 64; ++page) {
+                onenand_read(block, page, (void*)scratchbuf);
+                onenand_read(block, 64 + page, (void*)(scratchbuf + 4096 + 128));
+
+                for (size_t x = 0; x < 4096+128; ++x) {
+                    if (scratchbuf[x] != scratchbuf[4096+128+x]) {
+                        likely_slc = 0;
+                        break;
+                    }
+                }
+
+                if (!likely_slc)
+                    break;
+            }
+
+            send_msg(&likely_slc, 1);
         }
     }
 }
