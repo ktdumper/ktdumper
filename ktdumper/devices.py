@@ -4,11 +4,13 @@ from dump.nec_protocol import SLOW_READ
 from dump.nec_memory_dumper import NecMemoryDumper
 from dump.nec_nand_dumper import NecNandDumper
 from dump.nec_onenand_dumper import NecOnenandDumper
+from dump.nec_onenand_dumper_v2 import NecOnenandDumper_v2
 from dump.nec_memory_dumper_payload import NecMemoryDumperPayload
 from dump.nec_nand_id import NecNandId
 from dump.nec_nand_dumper_lp import NecNandDumperLp
 from dump.nec_nand_dumper_lp_via_poke import NecNandDumperLpViaPoke
 from dump.nec_onenand_id import NecOnenandId
+from dump.nec_onenand_id_v2 import NecOnenandId_v2
 from dump.nec_onenand_fast import NecOnenandFast
 from dump.nec_gpmc import NecGpmc
 
@@ -199,6 +201,13 @@ DEVICES = [
        usb_command=0x802bbc48, usb_data=0x802cbc92, usb_datasz=0x802cbc8c, usb_respfunc=0x80265cd4,
        keep_mmu=True,
        onenand_addr=0x08000000),
+
+    Device("n-06b", 0x0409, 0x02c0, {
+        "onenand_id": NecOnenandId_v2(),
+        "dump_nand": NecOnenandDumper_v2(size=MB(1024), has_4k_pages=True, flex=0xFFFF),
+    }, secret="170d4f68c40a4e9c9d3cfbe11d4a4d0baba935a9",
+       payload_base=0x30000000, usb_receive=0x35d4ae1c, usb_send=0x35d4b780,
+       onenand_addr=0x0),
 
     Device("n-01c", 0x0409, 0x02e8, {
         "onenand_id": NecOnenandId(),

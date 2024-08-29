@@ -83,8 +83,18 @@ class NecProtocol(Dumper):
             if resp.endswith(b"\xFE"):
                 break
             elif b"\xFE" in resp:
-                raise RuntimeError("mismatched packet masking")
+                raise RuntimeError("mismatched packet masking, resp={}".format(resp.hex()))
         return unmask_resp(resp)
+
+    def usb_send(self, data):
+        masked = mask_packet(data)
+        # print("=> {}".format(masked.hex()))
+        self.dev.write(0x8, masked)
+
+    def usb_receive(self):
+        data = self.read_resp()
+        # print("<= {}".format(data.hex()))
+        return data
 
     def comm_oneway(self, cmd, subcmd=0, variable_payload=None):
         pkt = make_packet(cmd, subcmd, variable_payload)
