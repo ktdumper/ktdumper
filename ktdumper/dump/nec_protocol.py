@@ -70,6 +70,8 @@ class NecProtocol(Dumper):
             self.secret = bytes.fromhex(self.secret)
         self.keep_mmu = int(opts.get("keep_mmu", False))
 
+        self.panasonic_unlock = opts.get("panasonic_unlock")
+
         if opts.get("quirks", 0) & SLOW_READ:
             self.chunk = 0x10
         else:
@@ -95,6 +97,49 @@ class NecProtocol(Dumper):
         self.comm_oneway(cmd, subcmd, variable_payload)
         return self.read_resp()
 
+    def do_panasonic_unlock(self):
+        if self.panasonic_unlock == "p906i":
+            ptr_to_zero = 0x8024dbeb
+            payload_pre_sz = 0x8022c840
+            payload_pre = 0x80235660
+            g_ep = 0x8024db47
+            auth_flags = 0x8022c244
+            restore_setup_buf = 0x8024db97
+        else:
+            raise RuntimeError("unsupported value for panasonic_unlock: {}".formnat(self.panasonic_unlock))
+
+        # preload reasonable data into setup buffer
+        self.dev.ctrl_transfer(0x80, 0x06, 0x200, 0x00, 0x100)
+
+        # overwrite pointer to setup packet contents so next ctrl_transfer's wValue/wIndex writes into the payload_pre_sz
+        payload = b"\xFF" + b"\x00" * (g_ep - payload_pre) + struct.pack("<II", ptr_to_zero, payload_pre_sz - 2)
+        assert b"\xFE" not in payload
+        assert b"\xFF" not in payload[1:]
+
+        assert self.dev.write(8, payload) == len(payload)
+
+        def write_at(addr, data):
+            offset = (addr - payload_pre) & 0xFFFFFFFF
+            self.dev.ctrl_transfer(0x80, 0x06, offset & 0xFFFF, offset >> 16, 0x100)
+            self.dev.write(8, data)
+
+        # set auth_passed=1, auth_required=0
+        write_at(auth_flags, b"\x01\x00")
+
+        # reset buffer size back to 0 and write a dummy no-op packet
+        write_at(payload_pre, b"")
+        noop = make_packet(0x02, 0)
+        self.dev.write(8, noop[1:])
+
+        # do the INIT cmd
+        self.comm(3, variable_payload=b"\x00")
+
+        # restore overwritten setup endpoint structure
+        self.cmd_write(g_ep+4, struct.pack("<I", restore_setup_buf))
+
+        # check we restored properly
+        assert bytearray(self.dev.ctrl_transfer(0x80, 0x06, 0x303, 0x00, 0x100)) == bytes.fromhex("2003300030003000300030003000300030003000300030003000300030003000")
+
     def init_recovery(self):
         # go into serial comms mode => turns green led on for some, display on
         self.dev.ctrl_transfer(0x41, 0x60, 0x60, 2)
@@ -102,7 +147,9 @@ class NecProtocol(Dumper):
         time.sleep(3)
         self.dev = usb.core.find(idVendor=self.dev.idVendor, idProduct=self.dev.idProduct)
 
-        if self.secret is not None:
+        if self.panasonic_unlock is not None:
+            self.do_panasonic_unlock()
+        elif self.secret is not None:
             user_buffer = self.secret + checksum2(self.secret) + b"\x00" * 0x20
             self.comm_oneway(0x13, subcmd=2, variable_payload=user_buffer)
             self.comm(3, variable_payload=b"\x22")
