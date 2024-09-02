@@ -143,7 +143,7 @@ typedef struct {
 
 onenand_t *onenand = (void*)KT_onenand_addr;
 
-static void onenand_read(uint32_t block, uint32_t page, uint16_t *data16) {
+static void _onenand_cmd(uint32_t block, uint32_t page, uint32_t cmd) {
     onenand->start_address_1 = block;
     onenand->start_address_2 = 0;
     onenand->start_address_8 = page << 2;
@@ -151,22 +151,28 @@ static void onenand_read(uint32_t block, uint32_t page, uint16_t *data16) {
     onenand->start_buffer = (1 << 3) << 8;
 
     onenand->interrupt = 0;
-    onenand->command = 0; // READ
+    onenand->command = cmd;
 
     while ((onenand->interrupt & 0x80) != 0x80)
     {}
+}
 
-    // data16[0] = onenand->ecc_status_register_1;
-    // data16[1] = onenand->ecc_status_register_2;
-    // data16[2] = onenand->ecc_status_register_3;
-    // data16[3] = onenand->ecc_status_register_4;
-    // data16[4] = onenand->controller_status;
-    // data16[5] = onenand->interrupt;
+static void _onenand_readout(uint32_t read_off, uint32_t read_sz, uint16_t *data16) {
+    for (size_t i = 0; i < read_sz/2; ++i)
+        data16[i] = ((uint16_t*)onenand + read_off/2)[i];
+}
 
-    for (size_t i = 0; i < 4096/2; ++i)
-        data16[i] = onenand->datam[i];
-    for (size_t i = 0; i < 128/2; ++i)
-        data16[4096/2+i] = onenand->datas[i];
+static void onenand_read_4k(uint32_t block, uint32_t page, uint16_t *data16) {
+    _onenand_cmd(block, page, 0x00); // READ
+    _onenand_readout(0x400, 4096, data16);
+    _onenand_readout(0x10020, 128, data16 + 4096/2);
+}
+
+static void onenand_read_2k(uint32_t block, uint32_t page, uint16_t *data16) {
+    _onenand_cmd(block, page, 0x00); // READ
+    _onenand_readout(0x400, 2048, data16);
+    _onenand_cmd(block, page, 0x13); // READ SPARE
+    _onenand_readout(0x10020, 64, data16 + 2048/2);
 }
 
 #define XADDR(_arr, _off) ((_arr[_off]) | (_arr[_off+1] << 8) | (_arr[_off+2] << 16) | (_arr[_off+3] << 24))
@@ -233,16 +239,16 @@ void main(void) {
             uint32_t block = XADDR(payload, 1);
             uint32_t page = XADDR(payload, 5);
 
-            onenand_read(block, page, onenand_buf);
-            send_msg(onenand_buf, sizeof(onenand_buf));
+            onenand_read_4k(block, page, onenand_buf);
+            send_msg(onenand_buf, 4096+128);
         } else if (ch == 0x71) {
             /* check if the block is likely SLC or MLC by comparing if first and second 64 pages inside are the same or different */
             uint32_t block = XADDR(payload, 1);
             uint8_t likely_slc = 1;
             uint8_t *scratchbuf = resp;
             for (size_t page = 0; page < 64; ++page) {
-                onenand_read(block, page, (void*)scratchbuf);
-                onenand_read(block, 64 + page, (void*)(scratchbuf + 4096 + 128));
+                onenand_read_4k(block, page, (void*)scratchbuf);
+                onenand_read_4k(block, 64 + page, (void*)(scratchbuf + 4096 + 128));
 
                 for (size_t x = 0; x < 4096+128; ++x) {
                     if (scratchbuf[x] != scratchbuf[4096+128+x]) {
@@ -256,6 +262,13 @@ void main(void) {
             }
 
             send_msg(&likely_slc, 1);
+        } else if (ch == 0x72) {
+            /* read onenand 2048b page + 64b oob */
+            uint32_t block = XADDR(payload, 1);
+            uint32_t page = XADDR(payload, 5);
+
+            onenand_read_2k(block, page, onenand_buf);
+            send_msg(onenand_buf, 2048+64);
         }
     }
 }

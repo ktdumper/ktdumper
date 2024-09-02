@@ -2,6 +2,7 @@ from device import Device
 from dump.nec_protocol import SLOW_READ
 
 from dump.nec_memory_dumper import NecMemoryDumper
+from dump.nec_memory_dumper_v2 import NecMemoryDumper_v2
 from dump.nec_nand_dumper import NecNandDumper
 from dump.nec_onenand_dumper import NecOnenandDumper
 from dump.nec_onenand_dumper_v2 import NecOnenandDumper_v2
@@ -380,12 +381,13 @@ DEVICES = [
     }, payload_base=0x90000000, onenand_addr=0x08000000),
 
     Device("p906i", 0x0a3c, 0x000d, {
-        "onenand_id": NecOnenandId(),
+        "onenand_id": NecOnenandId_v2(),
         "probe_nor": NecNorProbe(base=0x0),
-        "dump_nor": NecMemoryDumper(base=0x0, size=MB(128)),
-        "dump_nand": NecOnenandDumper(size=MB(256)),
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
+        "dump_nand": NecOnenandFast_v2(),
     }, panasonic_unlock="p906i",
-       payload_base=0x80005000, onenand_addr=0x10000000),
+       payload_base=0x80005000, usb_receive=0x00011c74, usb_send=0x00011b14,
+       onenand_addr=0x10000000),
 
     Device("p-01a", 0x04da, 0x216b, {
         "dump_nor": PiplExploitMemoryDumper(base=0x0, size=MB(128)),

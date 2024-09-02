@@ -5,7 +5,7 @@ from dump.common_onenand_id import CommonOnenandIdMixin, deviceid_ddp, deviceid_
 import struct
 import tqdm
 
-
+SEPARATION_SLC = 0
 SEPARATION_FLEX = 2
 
 raw_sizes = {
@@ -26,7 +26,7 @@ class NecOnenandFast_v2(CommonOnenandIdMixin, NecRwAccess_v2, NecProtocol_v2):
 
     def read_page_and_oob(self, block, page):
         try:
-            self.usb_send(struct.pack("<BII", 0x70, block, page))
+            self.usb_send(struct.pack("<BII", self.onenand_cmd, block, page))
             data = self.usb_receive()
         except Exception:
             print("exception reading block=0x{:X} page=0x{:X}".format(block, page))
@@ -55,6 +55,8 @@ class NecOnenandFast_v2(CommonOnenandIdMixin, NecRwAccess_v2, NecProtocol_v2):
                             bar.update(chunk)
 
     def dump_flexnand(self):
+        self.onenand_cmd = 0x70
+
         if self.slc_blocks > 0:
             print("Dumping OneNAND & OOB [SLC]")
             self._dump_blocks_pages("onenand_slc", self.slc_blocks, 0, SLC_PAGES_PER_BLOCK)
@@ -62,6 +64,12 @@ class NecOnenandFast_v2(CommonOnenandIdMixin, NecRwAccess_v2, NecProtocol_v2):
         if self.mlc_blocks > 0:
             print("Dumping OneNAND & OOB [MLC]")
             self._dump_blocks_pages("onenand_mlc", self.mlc_blocks, self.slc_blocks, MLC_PAGES_PER_BLOCK)
+
+    def dump_onenand_2k(self):
+        self.onenand_cmd = 0x72
+
+        print("Dumping OneNAND & OOB")
+        self._dump_blocks_pages("onenand", self.blocks, 0, SLC_PAGES_PER_BLOCK)
 
     def execute(self, dev, output):
         super().execute(dev, output)
@@ -113,5 +121,16 @@ class NecOnenandFast_v2(CommonOnenandIdMixin, NecRwAccess_v2, NecProtocol_v2):
                 self.slc_blocks, SLC_PAGES_PER_BLOCK*self.page_size*self.slc_blocks//1024//1024,
                 self.mlc_blocks, MLC_PAGES_PER_BLOCK*self.page_size*self.mlc_blocks//1024//1024))
             self.dump_flexnand()
+        elif separation == SEPARATION_SLC:
+            # TODO: only supports 2k pages, non-DDP right now
+
+            assert not ddp
+
+            self.page_size = 2048
+            self.oob_size = 64
+            self.inline_spare = False
+
+            self.blocks = usable_raw_size // (SLC_PAGES_PER_BLOCK * self.page_size)
+            self.dump_onenand_2k()
         else:
             raise RuntimeError("unsupported configuration for NecOnenandFast_v2")
