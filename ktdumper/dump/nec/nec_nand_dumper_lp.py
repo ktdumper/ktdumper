@@ -1,8 +1,7 @@
 import tqdm
 import struct
-import time
 
-from dump.nec_direct_usb import NecDirectUsb
+from dump.nec.nec_direct_usb import NecDirectUsb
 
 
 class NecNandDumperLp(NecDirectUsb):

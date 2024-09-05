@@ -1,7 +1,7 @@
 import zlib
 import struct
 
-from dump.nec_protocol import NecProtocol, mask_packet
+from dump.nec.nec_protocol import NecProtocol, mask_packet
 from util.payload_builder import PayloadBuilder
 
 

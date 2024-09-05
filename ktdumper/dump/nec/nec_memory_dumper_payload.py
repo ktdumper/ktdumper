@@ -1,7 +1,6 @@
-import tqdm
 import struct
 
-from dump.nec_direct_usb import NecDirectUsb
+from dump.nec.nec_direct_usb import NecDirectUsb
 from dump.common_memory_dumper import CommonMemoryDumper
 
 

@@ -1,8 +1,7 @@
-import tqdm
 import struct
 
-from dump.nec_protocol import NecProtocol
-from dump.nec_pipl_rw_access import NecPiplRwAccess
+from dump.nec.nec_protocol import NecProtocol
+from dump.nec.nec_pipl_rw_access import NecPiplRwAccess
 
 
 NAND_CMD_READID = 0x90

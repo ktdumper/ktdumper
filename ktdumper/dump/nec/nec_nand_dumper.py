@@ -1,7 +1,7 @@
 import tqdm
 import struct
 
-from dump.nec_protocol import NecProtocol
+from dump.nec.nec_protocol import NecProtocol
 from util.payload_builder import PayloadBuilder
 
 
