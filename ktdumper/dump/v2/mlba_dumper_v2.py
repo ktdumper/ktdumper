@@ -1,9 +1,11 @@
 import struct
 import tqdm
+
 from dump.sh.sh_srec_exploit import ShSrecExploit
+from dump.v2.rw_access_v2 import RwAccess_v2
 
 
-class ShSrecExploitMlbaDumper(ShSrecExploit):
+class MlbaDumper_v2(RwAccess_v2):
 
     def parse_opts(self, opts):
         super().parse_opts(opts)
@@ -41,21 +43,12 @@ class ShSrecExploitMlbaDumper(ShSrecExploit):
 
         return self.readh(self.NAND_DATA) | (self.readh(self.NAND_DATA) << 8) | (self.readh(self.NAND_DATA) << 16) | (self.readh(self.NAND_DATA) << 24)
 
-    def read_fully(self, sz):
-        data = b""
-        while len(data) < sz:
-            data += self.dev.read(0x82, 512)
-        assert len(data) == sz
-        return data
-
     def _dump_with_cmd(self, dumpcmd, numpages, offset, outf_nand, outf_oob):
         with tqdm.tqdm(total=528*numpages, unit='B', unit_scale=True, unit_divisor=1024) as bar:
             for x in range(numpages):
-                self.dev.write(3, struct.pack("<BI", dumpcmd, offset + x))
+                self.usb_send(struct.pack("<BI", dumpcmd, offset + x))
 
-                page = self.read_fully(1 + 264)
-                self.dev.write(3, b"\x00")
-                page += self.read_fully(264)
+                page = self.usb_receive()
                 if page[0] == 0xE0:
                     page = page[1:]
                 else:

@@ -1,5 +1,6 @@
 #include <inttypes.h>
 
+#include "lib/nand.c"
 #include "lib/onenand.c"
 
 /* these are the two APIs that the main payload driver has to implement */
@@ -12,6 +13,7 @@ uint8_t payload[0x100], resp[0x4000];
 
 void payload_main_loop(void) {
     static uint16_t onenand_buf[(4096+128)/2];
+    uint8_t *scratch = (void*)onenand_buf;
 
     while (1) {
         receive_msg();
@@ -63,6 +65,18 @@ void payload_main_loop(void) {
                 *(volatile uint32_t*)addr = data;
                 break;
             }
+        } else if (ch == 0x50) {
+            /* MLBA nand_read_mda */
+            uint32_t page = XADDR(payload, 1);
+
+            scratch[0] = mlba_nand_read_mda(page, scratch + 1);
+            send_msg(scratch, 529);
+        } else if (ch == 0x51) {
+            /* MLBA nand_read_sda */
+            uint32_t page = XADDR(payload, 1);
+
+            scratch[0] = mlba_nand_read_sda(page, scratch + 1);
+            send_msg(scratch, 529);
         } else if (ch == 0x60) {
             /* read 64 bytes */
             uint32_t addr = XADDR(payload, 1);
