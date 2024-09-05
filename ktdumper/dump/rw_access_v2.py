@@ -1,7 +1,7 @@
 import struct
 
 
-class NecRwAccess_v2:
+class RwAccess_v2:
 
     def readb(self, addr):
         self.usb_send(struct.pack("<BI", 0x10, addr))
