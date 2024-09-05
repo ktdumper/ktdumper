@@ -1,3 +1,6 @@
+import zlib
+import struct
+
 from dump.nec_protocol import NecProtocol, mask_packet
 from util.payload_builder import PayloadBuilder
 
@@ -75,10 +78,11 @@ class NecProtocol_v2(NecProtocol):
         data = bytearray(unmask_resp(resp))
         # print("<= {}".format(data.hex()))
 
-        # checksum is the last byte
-        ck = (-sum(data[:-1])) & 0xFF
-        assert data[-1] == ck
-        return data[:-1]
+        # checksum is the last 4 bytes
+        crc = struct.unpack("<I", data[-4:])[0]
+        assert zlib.crc32(data[:-4]) == crc
+
+        return data[:-4]
 
     def magic_handshake(self):
         self.usb_send(bytes([0x42]))

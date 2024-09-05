@@ -83,16 +83,29 @@ static void send_chunked(const void *addr, size_t sz) {
     }
 }
 
+/* https://web.archive.org/web/20190108202303/http://www.hackersdelight.org/hdcodetxt/crc.c.txt */
+uint32_t crc32b(const uint8_t *message, size_t sz) {
+   uint32_t byte, crc, mask;
+
+   crc = 0xFFFFFFFF;
+   for (size_t i = 0; i < sz; ++i) {
+      byte = message[i];            // Get next byte.
+      crc = crc ^ byte;
+      for (int j = 7; j >= 0; j--) {    // Do eight times.
+         mask = -(crc & 1);
+         crc = (crc >> 1) ^ (0xEDB88320 & mask);
+      }
+   }
+   return ~crc;
+}
+
 static void send_msg(const void *addr, size_t len) {
     const uint8_t *caddr = addr;
-    uint8_t ck = 0;
-    for (size_t i = 0; i < len; ++i)
-        ck += caddr[i];
-    ck = -ck;
+    uint32_t crc = crc32b(caddr, len);
 
     resp_sz = 0;
     mask_payload(addr, len);
-    mask_payload(&ck, 1);
+    mask_payload(&crc, sizeof(crc));
 
     send_chunked(resp, resp_sz);
 }
