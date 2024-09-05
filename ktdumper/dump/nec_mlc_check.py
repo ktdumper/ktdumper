@@ -1,6 +1,6 @@
 from dump.nec_protocol_v2 import NecProtocol_v2
 from dump.nec_rw_access_v2 import NecRwAccess_v2
-from dump.nec_onenand_fast_v2 import raw_sizes
+from dump.onenand_fast_v2 import raw_sizes
 from dump.common_onenand_id import CommonOnenandIdMixin, deviceid_ddp, deviceid_density, deviceid_separation
 
 import struct

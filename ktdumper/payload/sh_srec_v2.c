@@ -46,7 +46,7 @@ static void mask_payload(const void *addr, size_t len) {
 }
 
 #ifndef KT_chunk
-#define KT_chunk 48
+#define KT_chunk 384
 #endif
 
 #define CHUNK (KT_chunk - 2)
