@@ -24,20 +24,20 @@ from dump.pipl.pipl_emmc_dumper import PiplEmmcDumper
 from dump.pipl.pipl_emmc_fuse import PiplEmmcFuse
 from dump.pipl.pipl_exploit_nor_probe import PiplExploitNorProbe
 
-from dump.sh_exploit import ShExploit
+from dump.sh.sh_exploit import ShExploit
 from dump.fujitsu.fujitsu_java_dumper import FujitsuJavaDumper
 
-from dump.sh_srec_exploit_mlba_dumper import ShSrecExploitMlbaDumper
-from dump.sh_srec_exploit_memory_dumper import ShSrecExploitMemoryDumper
-from dump.sh_srec_exploit_nand_id import ShSrecExploitNandId
-from dump.sh_srec_exploit_nand_dumper import ShSrecExploitNandDumper
-from dump.sh_srec_exploit_onenand_id import ShSrecExploitOnenandId
-from dump.sh_srec_exploit_onenand_id_v2 import ShSrecExploitOnenandId_v2
-from dump.sh_srec_exploit_onenand_dumper import ShSrecExploitOnenandDumper
-from dump.sh_srec_exploit_probe_nor import ShSrecExploitProbeNor
-from dump.sh_srec_exploit_probe_nand import ShSrecExploitProbeNand
-from dump.sh_srec_exploit_onenand_fast_v2 import ShSrecExploitOnenandFast_v2
-from dump.sh_srec_exploit_mlc_check_v2 import ShSrecExploitMlcCheck_v2
+from dump.sh.sh_srec_exploit_mlba_dumper import ShSrecExploitMlbaDumper
+from dump.sh.sh_srec_exploit_memory_dumper import ShSrecExploitMemoryDumper
+from dump.sh.sh_srec_exploit_nand_id import ShSrecExploitNandId
+from dump.sh.sh_srec_exploit_nand_dumper import ShSrecExploitNandDumper
+from dump.sh.sh_srec_exploit_onenand_id import ShSrecExploitOnenandId
+from dump.sh.sh_srec_exploit_onenand_id_v2 import ShSrecExploitOnenandId_v2
+from dump.sh.sh_srec_exploit_onenand_dumper import ShSrecExploitOnenandDumper
+from dump.sh.sh_srec_exploit_probe_nor import ShSrecExploitProbeNor
+from dump.sh.sh_srec_exploit_probe_nand import ShSrecExploitProbeNand
+from dump.sh.sh_srec_exploit_onenand_fast_v2 import ShSrecExploitOnenandFast_v2
+from dump.sh.sh_srec_exploit_mlc_check_v2 import ShSrecExploitMlcCheck_v2
 
 
 def MB(x):
