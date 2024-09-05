@@ -75,6 +75,11 @@ DEVICES = [
         "dump_nand": NecNandDumper(size=MB(32), quirks=SLOW_READ),
     }, payload_base=0x10000000, nand_data=0x04000000, nand_cmd=0x04000800, nand_addr=0x04000400),
 
+    Device("n700i", 0x0409, 0x0140, {
+        "dump_nor": NecMemoryDumper(base=0x0, size=MB(64)),
+        "dump_nand": NecNandDumper(size=MB(32), quirks=SLOW_READ),
+    }, payload_base=0x10000000, nand_data=0x04000000, nand_cmd=0x04000800, nand_addr=0x04000400),
+
     Device("n901ic", 0x0409, 0x0129, {
         "dump_nor": NecMemoryDumper(base=0x04000000, size=MB(64)),
         "dump_nand": NecNandDumper(size=MB(64), quirks=SLOW_READ, big=1),
@@ -513,6 +518,13 @@ DEVICES = [
     # SHARP
     ################################################################################################
 
+    Device("sh906itv", 0x04dd, 0x91ee, {
+        "dump_nor": ShSrecExploitMemoryDumper(base=0x30000000, size=MB(128)),
+        "nand_id": ShSrecExploitNandId(),
+        "dump_nand": ShSrecExploitNandDumper(size=MB(256)),
+    }, payload_base=0x64000000, fatal_err=0x646069f4, usb_interrupt=0x64601000, usb_getch=0x6460396c, usb_send=0x64603be4, usb_send_commit=0x646034c0,
+        nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),
+    
     Device("sh706i", 0x04dd, 0x91f1, {
         "dump_nor": ShSrecExploitMemoryDumper(base=0x30000000, size=MB(128)),
         "nand_id": ShSrecExploitNandId(),
