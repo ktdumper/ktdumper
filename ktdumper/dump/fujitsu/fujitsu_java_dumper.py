@@ -1,7 +1,7 @@
 import tqdm
 import string
 
-from dump.fujitsu_protocol import FujitsuProtocol
+from dump.fujitsu.fujitsu_protocol import FujitsuProtocol
 
 PRINTABLE = string.printable.encode("ascii")
 

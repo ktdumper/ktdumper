@@ -27,7 +27,7 @@ from dump.pipl_emmc_fuse import PiplEmmcFuse
 from dump.pipl_exploit_nor_probe import PiplExploitNorProbe
 
 from dump.sh_exploit import ShExploit
-from dump.fujitsu_java_dumper import FujitsuJavaDumper
+from dump.fujitsu.fujitsu_java_dumper import FujitsuJavaDumper
 
 from dump.sh_srec_exploit_mlba_dumper import ShSrecExploitMlbaDumper
 from dump.sh_srec_exploit_memory_dumper import ShSrecExploitMemoryDumper
