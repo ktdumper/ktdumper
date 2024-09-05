@@ -34,6 +34,7 @@ from dump.sh_srec_exploit_memory_dumper import ShSrecExploitMemoryDumper
 from dump.sh_srec_exploit_nand_id import ShSrecExploitNandId
 from dump.sh_srec_exploit_nand_dumper import ShSrecExploitNandDumper
 from dump.sh_srec_exploit_onenand_id import ShSrecExploitOnenandId
+from dump.sh_srec_exploit_onenand_id_v2 import ShSrecExploitOnenandId_v2
 from dump.sh_srec_exploit_onenand_dumper import ShSrecExploitOnenandDumper
 from dump.sh_srec_exploit_probe_nor import ShSrecExploitProbeNor
 from dump.sh_srec_exploit_probe_nand import ShSrecExploitProbeNand
@@ -675,7 +676,7 @@ DEVICES = [
         onenand_addr=0x30000000),
 
     Device("f-01c", 0x04c5, 0x11e8, {
-        "onenand_id": ShSrecExploitOnenandId(),
+        "onenand_id": ShSrecExploitOnenandId_v2(),
         "dump_nand": ShSrecExploitOnenandDumper(size=MB(1024), has_4k_pages=True, flex=0xF800),
     }, payload_base=0xE55B0000, fatal_err=0x60c04570, usb_interrupt=0x60C02000, usb_getch=0x60c03cb0, usb_send=0x60c03e88, usb_send_commit=0x60c03884,
         onenand_addr=0x30000000),
