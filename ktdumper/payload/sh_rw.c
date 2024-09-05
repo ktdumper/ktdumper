@@ -20,6 +20,43 @@ int main(void) {
     __asm__ volatile ("MCR p15, 0, %0, c7, c5, 0\n" :: "r" (0) : "memory");
 }
 
+volatile uint16_t *NAND_DATA = (void*)%nand_data%;
+volatile uint8_t *NAND_ADDR = (void*)%nand_addr%;
+volatile uint8_t *NAND_CMD = (void*)%nand_cmd%;
+
+int nand_wait() {
+	while (1) {
+		uint16_t data;
+		*NAND_CMD = 0x70;
+		data = *NAND_DATA;
+		if (data & 0x40) {
+			return data;
+		}
+	}
+}
+
+int nand_read(uint32_t page, void *dst) {
+    *NAND_CMD = 0x00;
+
+    *NAND_ADDR = 0x00;
+    *NAND_ADDR = 0x00;
+    *NAND_ADDR = page & 0xFF;
+    *NAND_ADDR = (page >> 8) & 0xFF;
+    *NAND_ADDR = (page >> 16) & 0xFF;
+
+    *NAND_CMD = 0x30;
+
+    int ret = nand_wait();
+
+    *NAND_CMD = 0x00;
+
+    uint16_t *scratchbuf16 = dst;
+    for (int i = 0; i < 0x420; ++i)
+        scratchbuf16[i] = *NAND_DATA;
+
+    return ret;
+}
+
 int (*usb_getch)() = (void*)%usb_getch%;
 int (*usb_send)() = (void*)%usb_send%;
 int (*usb_send_commit)() = (void*)%usb_send_commit%;
@@ -109,38 +146,6 @@ void runner(void) {
                 *(volatile uint32_t*)addr = data;
                 break;
             }
-        } else if (ch == 0x50) {
-            /* nand_read_mda */
-            uint32_t page = recvaddr();
-
-            uint8_t buf[528];
-            uint8_t ret = nand_read_mda(page, buf);
-            dis_int();
-            usb_send(&ret, 1);
-            usb_send(&buf[0], 264);
-            ena_int();
-            usb_send_commit();
-            usb_getch();
-            dis_int();
-            usb_send(&buf[264], 264);
-            ena_int();
-            usb_send_commit();
-        } else if (ch == 0x51) {
-            /* nand_read_sda */
-            uint32_t page = recvaddr();
-
-            uint8_t buf[528];
-            uint8_t ret = nand_read_sda(page, buf);
-            dis_int();
-            usb_send(&ret, 1);
-            usb_send(&buf[0], 264);
-            ena_int();
-            usb_send_commit();
-            usb_getch();
-            dis_int();
-            usb_send(&buf[264], 264);
-            ena_int();
-            usb_send_commit();
         } else if (ch == 0x52) {
             /* nand_LP_read */
             uint32_t page = recvaddr();
