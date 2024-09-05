@@ -1,5 +1,5 @@
 from dump.onenand_fast_v2 import raw_sizes
-from dump.common_onenand_id import CommonOnenandIdMixin, deviceid_ddp, deviceid_density, deviceid_separation
+from dump.common.common_onenand_id import CommonOnenandIdMixin, deviceid_ddp, deviceid_density, deviceid_separation
 
 import struct
 import tqdm

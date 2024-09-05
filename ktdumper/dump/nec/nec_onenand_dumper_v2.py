@@ -1,4 +1,4 @@
-from dump.common_onenand_dumper import CommonOnenandDumper
+from dump.common.common_onenand_dumper import CommonOnenandDumper
 from dump.rw_access_v2 import RwAccess_v2
 from dump.nec.nec_protocol_v2 import NecProtocol_v2
 

@@ -1,7 +1,7 @@
 import struct
 
 from dump.nec.nec_direct_usb import NecDirectUsb
-from dump.common_memory_dumper import CommonMemoryDumper
+from dump.common.common_memory_dumper import CommonMemoryDumper
 
 
 class NecMemoryDumperPayloadExec:
