@@ -16,13 +16,13 @@ from dump.nec.nec_onenand_fast_v2 import NecOnenandFast_v2
 from dump.nec.nec_mlc_check import NecMlcCheck
 from dump.nec.nec_nor_probe import NecNorProbe
 
-from dump.pipl_exploit_memory_dumper import PiplExploitMemoryDumper
-from dump.pipl_onenand_dumper import PiplOnenandDumper
-from dump.pipl_onenand_id import PiplOnenandId
-from dump.pipl_onenand_fast import PiplOnenandFast
-from dump.pipl_emmc_dumper import PiplEmmcDumper
-from dump.pipl_emmc_fuse import PiplEmmcFuse
-from dump.pipl_exploit_nor_probe import PiplExploitNorProbe
+from dump.pipl.pipl_exploit_memory_dumper import PiplExploitMemoryDumper
+from dump.pipl.pipl_onenand_dumper import PiplOnenandDumper
+from dump.pipl.pipl_onenand_id import PiplOnenandId
+from dump.pipl.pipl_onenand_fast import PiplOnenandFast
+from dump.pipl.pipl_emmc_dumper import PiplEmmcDumper
+from dump.pipl.pipl_emmc_fuse import PiplEmmcFuse
+from dump.pipl.pipl_exploit_nor_probe import PiplExploitNorProbe
 
 from dump.sh_exploit import ShExploit
 from dump.fujitsu.fujitsu_java_dumper import FujitsuJavaDumper

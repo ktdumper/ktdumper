@@ -2,7 +2,7 @@ import struct
 import usb.core
 import tqdm
 
-from dump.pipl_exploit import PiplExploit
+from dump.pipl.pipl_exploit import PiplExploit
 from util.payload_builder import PayloadBuilder
 
 

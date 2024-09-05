@@ -3,11 +3,10 @@ import errno
 import struct
 import math
 
-from dump.pipl_exploit import PiplExploit
+from dump.pipl.pipl_exploit import PiplExploit
 from util.payload_builder import PayloadBuilder
 
-from fusepy import FUSE, FuseOSError, Operations, fuse_get_context
-
+from fusepy import FUSE, FuseOSError, Operations
 
 PATH = "/tmp/ktdumper_fuse"
 
