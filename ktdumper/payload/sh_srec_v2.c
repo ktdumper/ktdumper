@@ -14,10 +14,12 @@ void receive_msg(void) {
     size_t sz = 0;
 
     while (1) {
+        dis_int();
         uint8_t ch = usb_getch();
         if (ch == 0xFF) {
             break;
         } else if (ch == 0xFE) {
+            dis_int();
             ch = usb_getch() ^ 0x10;
         }
         payload[sz++] = ch;
@@ -63,12 +65,15 @@ static void send_chunked_entry(const void *addr, size_t sz, int is_last) {
         data[1 + i] = caddr[i];
     data[sizeof(data)-1] = is_last ? 0x9C : 0x9D;
 
+    dis_int();
     usb_send(data, sizeof(data));
     usb_send_commit();
 
     /* SYNC */
-    if (!is_last)
+    if (!is_last) {
+        dis_int();
         usb_getch();
+    }
 }
 
 static void send_chunked(const void *addr, size_t sz) {
@@ -119,13 +124,13 @@ __asm__(
 void runner(void) {
     static uint8_t nandbuf[2112];
 
-    dis_int();
-
     while (1) {
+        dis_int();
         uint8_t ch = usb_getch();
         if (ch == 0x42) {
             /* handshake */
             uint8_t resp = 0x43;
+            dis_int();
             usb_send(&resp, 1);
             usb_send_commit();
 
