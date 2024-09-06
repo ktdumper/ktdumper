@@ -35,7 +35,7 @@ from dump.sh.sh_srec_exploit_onenand_id import ShSrecExploitOnenandId
 from dump.sh.sh_srec_exploit_onenand_id_v2 import ShSrecExploitOnenandId_v2
 from dump.sh.sh_srec_exploit_onenand_dumper import ShSrecExploitOnenandDumper
 from dump.sh.sh_srec_exploit_probe_nor import ShSrecExploitProbeNor
-from dump.sh.sh_srec_exploit_probe_nand import ShSrecExploitProbeNand
+from dump.sh.sh_srec_exploit_probe_nand_v2 import ShSrecExploitProbeNand_v2
 from dump.sh.sh_srec_exploit_onenand_fast_v2 import ShSrecExploitOnenandFast_v2
 from dump.sh.sh_srec_exploit_mlc_check_v2 import ShSrecExploitMlcCheck_v2
 
@@ -561,8 +561,9 @@ DEVICES = [
     Device("sh-03a", 0x04dd, 0x9262, {
         "probe_nor": ShSrecExploitProbeNor(base=0x30000000),
         "dump_nor": ShSrecExploitMemoryDumper(base=0x30000000, size=MB(128)),
-        "nand_id": ShSrecExploitNandId_v2(),
-        "probe_nand": ShSrecExploitProbeNand(sweep=0x10000000, nand_data=0x0, nand_addr=0x10, nand_cmd=0x20),
+        "nand_id_a": ShSrecExploitNandId_v2(nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),
+        "nand_id_b": ShSrecExploitNandId_v2(nand_data=0x16000000, nand_addr=0x16000010, nand_cmd=0x16000020),
+        "probe_nand": ShSrecExploitProbeNand_v2(sweep=0x10000000, nand_data=0x0, nand_addr=0x10, nand_cmd=0x20),
         "dump_nand_a": ShSrecExploitNandDumper(nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020, size=MB(256)),
         "dump_nand_b": ShSrecExploitNandDumper(nand_data=0x16000000, nand_addr=0x16000010, nand_cmd=0x16000020, size=MB(256)),
     }, payload_base=0xE55B0000, fatal_err=0x60605084, usb_interrupt=0x60601000, usb_getch=0x6060474c, usb_send=0x606049dc, usb_send_commit=0x6060420c),
@@ -579,7 +580,7 @@ DEVICES = [
         "dump_nor": ShSrecExploitMemoryDumper(base=0x30000000, size=MB(32)),
         "probe_nor": ShSrecExploitProbeNor(base=0x30000000),
         "nand_id": ShSrecExploitNandId_v2(),
-        "probe_nand": ShSrecExploitProbeNand(sweep=0x10000000, nand_data=0x0, nand_addr=0x10, nand_cmd=0x20),
+        "probe_nand": ShSrecExploitProbeNand_v2(sweep=0x10000000, nand_data=0x0, nand_addr=0x10, nand_cmd=0x20),
         "dump_nand": ShSrecExploitNandDumper(size=MB(512)),
     }, payload_base=0xe55b0000, fatal_err=0x60604cfc, usb_interrupt=0x60601000, usb_getch=0x606043c4, usb_send=0x60604654, usb_send_commit=0x60603e84,
         nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),
