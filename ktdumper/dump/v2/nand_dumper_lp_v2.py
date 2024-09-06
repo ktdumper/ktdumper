@@ -2,13 +2,12 @@ import struct
 import tqdm
 import usb.core
 
-from dump.sh.sh_srec_exploit import ShSrecExploit
 
 
 RETRIES = 8
 
 
-class ShSrecExploitNandDumper(ShSrecExploit):
+class NandDumperLp_v2:
 
     def parse_opts(self, opts):
         super().parse_opts(opts)
@@ -20,21 +19,9 @@ class ShSrecExploitNandDumper(ShSrecExploit):
         assert size % 2048 == 0
         self.num_pages = size // 2048
 
-    def read_fully(self, sz):
-        data = b""
-        while len(data) < sz:
-            data += self.dev.read(0x82, 512)
-        if len(data) != sz:
-            raise RuntimeError("requested {} bytes got {} bytes, response={}".format(sz, len(data), data.hex()))
-        return data
-
     def read_page(self, page):
-        self.dev.write(3, struct.pack("<BI", 0x52, page))
-        data = self.read_fully(1)
-        for x in range(33):
-            self.dev.write(3, b"\x00")
-            data += self.read_fully(64)
-        return data
+        self.usb_send(struct.pack("<BI", 0x52, page))
+        return self.usb_receive()
 
     def execute(self, dev, output):
         super().execute(dev, output)
@@ -44,10 +31,7 @@ class ShSrecExploitNandDumper(ShSrecExploit):
                 with tqdm.tqdm(total=2048*self.num_pages, unit='B', unit_scale=True, unit_divisor=1024) as bar:
                     for page in range(self.num_pages):
                         for retries in range(RETRIES):
-                            try:
-                                data = self.read_page(page)
-                            except usb.core.USBTimeoutError:
-                                data = b"\xAA" * 2113
+                            data = self.read_page(page)
 
                             if data[0] == 0xE0:
                                 data = data[1:]

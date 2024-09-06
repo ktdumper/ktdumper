@@ -63,3 +63,29 @@ int mlba_nand_read_sda(uint32_t page, void *dst) {
 
     return ret;
 }
+
+int nand_read_lp(uint32_t page, void *dst) {
+	uint8_t *cdst = dst;
+
+    *NAND_CMD = 0x00;
+
+    *NAND_ADDR = 0x00;
+    *NAND_ADDR = 0x00;
+    *NAND_ADDR = page & 0xFF;
+    *NAND_ADDR = (page >> 8) & 0xFF;
+    *NAND_ADDR = (page >> 16) & 0xFF;
+
+    *NAND_CMD = 0x30;
+
+    int ret = nand_wait();
+
+    *NAND_CMD = 0x00;
+
+    for (int i = 0; i < 0x420; ++i) {
+		uint16_t data = *NAND_DATA;
+		cdst[2 * i] = data & 0xFF;
+		cdst[2 * i + 1] = data >> 8;
+	}
+
+    return ret;
+}

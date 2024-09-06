@@ -77,6 +77,12 @@ void payload_main_loop(void) {
 
             scratch[0] = mlba_nand_read_sda(page, scratch + 1);
             send_msg(scratch, 529);
+        } else if (ch == 0x52) {
+            /* nand_LP_read */
+            uint32_t page = XADDR(payload, 1);
+
+            scratch[0] = nand_read_lp(page, scratch + 1);
+            send_msg(scratch, 1 + 0x420*2);
         } else if (ch == 0x60) {
             /* read 64 bytes */
             uint32_t addr = XADDR(payload, 1);
