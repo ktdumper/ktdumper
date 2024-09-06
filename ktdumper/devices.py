@@ -28,7 +28,7 @@ from dump.sh.sh_exploit import ShExploit
 from dump.fujitsu.fujitsu_java_dumper import FujitsuJavaDumper
 
 from dump.sh.sh_srec_exploit_mlba_dumper_v2 import ShSrecExploitMlbaDumper_v2
-from dump.sh.sh_srec_exploit_memory_dumper import ShSrecExploitMemoryDumper
+from dump.sh.sh_srec_exploit_memory_dumper_v2 import ShSrecExploitMemoryDumper_v2
 from dump.sh.sh_srec_exploit_nand_id_v2 import ShSrecExploitNandId_v2
 from dump.sh.sh_srec_exploit_nand_dumper import ShSrecExploitNandDumper
 from dump.sh.sh_srec_exploit_onenand_id import ShSrecExploitOnenandId
@@ -538,21 +538,21 @@ DEVICES = [
     ################################################################################################
 
     Device("sh906itv", 0x04dd, 0x91ee, {
-        "dump_nor": ShSrecExploitMemoryDumper(base=0x30000000, size=MB(128)),
+        "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
         "nand_id": ShSrecExploitNandId_v2(),
         "dump_nand": ShSrecExploitNandDumper(size=MB(256)),
     }, payload_base=0x64000000, fatal_err=0x646069f4, usb_interrupt=0x64601000, usb_getch=0x6460396c, usb_send=0x64603be4, usb_send_commit=0x646034c0,
         nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),
 
     Device("sh706i", 0x04dd, 0x91f1, {
-        "dump_nor": ShSrecExploitMemoryDumper(base=0x30000000, size=MB(128)),
+        "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
         "nand_id": ShSrecExploitNandId_v2(),
         "dump_nand": ShSrecExploitNandDumper(size=MB(256)),
     }, payload_base=0x64000000, fatal_err=0x646069f4, usb_interrupt=0x64601000, usb_getch=0x6460396c, usb_send=0x64603be4, usb_send_commit=0x646034c0,
         nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),
 
     Device("sh-02a", 0x04dd, 0x925f, {
-        "dump_nor": ShSrecExploitMemoryDumper(base=0x30000000, size=MB(128)),
+        "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
         "nand_id": ShSrecExploitNandId_v2(),
         "dump_nand": ShSrecExploitNandDumper(size=MB(256)),
     }, payload_base=0x64000000, fatal_err=0x646069f4, usb_interrupt=0x64601000, usb_getch=0x6460396c, usb_send=0x64603be4, usb_send_commit=0x646034c0,
@@ -560,7 +560,7 @@ DEVICES = [
 
     Device("sh-03a", 0x04dd, 0x9262, {
         "probe_nor": ShSrecExploitProbeNor_v2(base=0x30000000),
-        "dump_nor": ShSrecExploitMemoryDumper(base=0x30000000, size=MB(128)),
+        "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
         "nand_id_a": ShSrecExploitNandId_v2(nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),
         "nand_id_b": ShSrecExploitNandId_v2(nand_data=0x16000000, nand_addr=0x16000010, nand_cmd=0x16000020),
         "probe_nand": ShSrecExploitProbeNand_v2(sweep=0x10000000, nand_data=0x0, nand_addr=0x10, nand_cmd=0x20),
@@ -570,14 +570,14 @@ DEVICES = [
 
     Device("sh-05a", 0x04dd, 0x9287, {
         "probe_nor": ShSrecExploitProbeNor_v2(base=0x30000000),
-        "dump_nor": ShSrecExploitMemoryDumper(base=0x30000000, size=MB(128)),
+        "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
         "nand_id": ShSrecExploitNandId_v2(),
         "dump_nand": ShSrecExploitNandDumper(size=MB(512)),
     }, payload_base=0xE55B0000, fatal_err=0x60604d0c, usb_interrupt=0x60601000, usb_getch=0x606043d4, usb_send=0x60604664, usb_send_commit=0x60603e94,
         nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),
 
     Device("sh-06a", 0x04dd, 0x9284, {
-        "dump_nor": ShSrecExploitMemoryDumper(base=0x30000000, size=MB(32)),
+        "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(32)),
         "probe_nor": ShSrecExploitProbeNor_v2(base=0x30000000),
         "nand_id": ShSrecExploitNandId_v2(),
         "probe_nand": ShSrecExploitProbeNand_v2(sweep=0x10000000, nand_data=0x0, nand_addr=0x10, nand_cmd=0x20),
@@ -633,7 +633,7 @@ DEVICES = [
 
     Device("f905i", 0x04c5, 0x1128, {
         "dump_java": FujitsuJavaDumper(),
-        "dump_nor": ShSrecExploitMemoryDumper(base=0x30000000, size=MB(128)),
+        "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
         "nand_id": ShSrecExploitNandId_v2(),
         "dump_nand": ShSrecExploitNandDumper(size=MB(256)),
     }, payload_base=0x64000000, fatal_err=0x64606890, usb_interrupt=0x64601000, usb_getch=0x6460380c, usb_send=0x64603a80, usb_send_commit=0x6460339c,
@@ -641,7 +641,7 @@ DEVICES = [
 
     Device("f906i", 0x04c5, 0x115d, {
         "dump_java": FujitsuJavaDumper(),
-        "dump_nor": ShSrecExploitMemoryDumper(base=0x30000000, size=MB(128)),
+        "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
         "onenand_id": ShSrecExploitOnenandId(),
         "dump_nand": ShSrecExploitOnenandDumper(size=MB(256)),
     }, payload_base=0x64000000, fatal_err=0x64606700, usb_interrupt=0x64601000, usb_getch=0x646036cc, usb_send=0x64603940, usb_send_commit=0x6460325c,
@@ -709,7 +709,7 @@ DEVICES = [
 
     Device("d905i", 0x06d3, 0x21b0, {
         "dump_java": FujitsuJavaDumper(),
-        "dump_nor": ShSrecExploitMemoryDumper(base=0x30000000, size=MB(128)),
+        "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
         "nand_id": ShSrecExploitNandId_v2(),
         "dump_nand": ShSrecExploitNandDumper(size=MB(256)),
     }, payload_base=0x64000000, fatal_err=0x64606890, usb_interrupt=0x64601000, usb_getch=0x6460380c, usb_send=0x64603a80, usb_send_commit=0x6460339c,
