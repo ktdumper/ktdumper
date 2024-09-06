@@ -22,9 +22,9 @@ MLC_PAGES_PER_BLOCK = 128
 
 class OnenandFast_v2(CommonOnenandIdMixin):
 
-    def read_page_and_oob(self, block, page):
+    def read_page_and_oob(self, ddp, block, page):
         try:
-            self.usb_send(struct.pack("<BII", self.onenand_cmd, block, page))
+            self.usb_send(struct.pack("<BIIB", self.onenand_cmd, block, page, ddp))
             data = self.usb_receive()
         except Exception:
             print("exception reading block=0x{:X} page=0x{:X}".format(block, page))
@@ -37,20 +37,21 @@ class OnenandFast_v2(CommonOnenandIdMixin):
         with self.output.mkfile(prefixname + ".bin") as onenand_bin:
             with self.output.mkfile(prefixname + ".oob") as onenand_oob:
                 chunk = self.page_size + self.oob_size
-                with tqdm.tqdm(total=chunk*num_pages_per_block*num_blocks, unit='B', unit_scale=True, unit_divisor=1024) as bar:
-                    for block in range(num_blocks):
-                        for page in range(num_pages_per_block):
-                            full = self.read_page_and_oob(blocks_offset + block, page)
+                with tqdm.tqdm(total=chunk*num_pages_per_block*num_blocks*self.num_ddp, unit='B', unit_scale=True, unit_divisor=1024) as bar:
+                    for ddp in range(self.num_ddp):
+                        for block in range(num_blocks):
+                            for page in range(num_pages_per_block):
+                                full = self.read_page_and_oob(ddp, blocks_offset + block, page)
 
-                            data = full[0:self.page_size]
-                            spare = full[self.page_size:]
-                            assert len(data) == self.page_size
-                            assert len(spare) == self.oob_size
+                                data = full[0:self.page_size]
+                                spare = full[self.page_size:]
+                                assert len(data) == self.page_size
+                                assert len(spare) == self.oob_size
 
-                            onenand_bin.write(data)
-                            onenand_oob.write(spare)
+                                onenand_bin.write(data)
+                                onenand_oob.write(spare)
 
-                            bar.update(chunk)
+                                bar.update(chunk)
 
     def dump_flexnand(self):
         self.onenand_cmd = 0x70
@@ -95,6 +96,8 @@ class OnenandFast_v2(CommonOnenandIdMixin):
         if separation == SEPARATION_FLEX:
             assert not ddp
 
+            self.num_ddp = 1
+
             self.page_size = 4096
             self.oob_size = 128
             self.inline_spare = True
@@ -120,15 +123,17 @@ class OnenandFast_v2(CommonOnenandIdMixin):
                 self.mlc_blocks, MLC_PAGES_PER_BLOCK*self.page_size*self.mlc_blocks//1024//1024))
             self.dump_flexnand()
         elif separation == SEPARATION_SLC:
-            # TODO: only supports 2k pages, non-DDP right now
+            # TODO: only supports 2k pages right now
 
-            assert not ddp
+            self.num_ddp = int(ddp) + 1
 
             self.page_size = 2048
             self.oob_size = 64
             self.inline_spare = False
 
             self.blocks = usable_raw_size // (SLC_PAGES_PER_BLOCK * self.page_size)
+            if ddp:
+                self.blocks //= 2
             self.dump_onenand_2k()
         else:
             raise RuntimeError("unsupported configuration for OnenandFast_v2")

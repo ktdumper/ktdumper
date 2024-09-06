@@ -47,9 +47,11 @@ typedef struct {
 
 onenand_t *onenand = (void*)KT_onenand_addr;
 
-static void _onenand_cmd(uint32_t block, uint32_t page, uint32_t cmd) {
-    onenand->start_address_1 = block;
-    onenand->start_address_2 = 0;
+#define WITH_DDP(x, ddp) ((ddp) ? ((1 << 15) | x) : (x))
+
+static void _onenand_cmd(int ddp, uint32_t block, uint32_t page, uint32_t cmd) {
+    onenand->start_address_1 = WITH_DDP(block, ddp);
+    onenand->start_address_2 = WITH_DDP(0, ddp);
     onenand->start_address_8 = page << 2;
 
     onenand->start_buffer = (1 << 3) << 8;
@@ -66,15 +68,15 @@ static void _onenand_readout(uint32_t read_off, uint32_t read_sz, uint16_t *data
         data16[i] = ((uint16_t*)onenand + read_off/2)[i];
 }
 
-static void onenand_read_4k(uint32_t block, uint32_t page, uint16_t *data16) {
-    _onenand_cmd(block, page, 0x00); // READ
+static void onenand_read_4k(int ddp, uint32_t block, uint32_t page, uint16_t *data16) {
+    _onenand_cmd(ddp, block, page, 0x00); // READ
     _onenand_readout(0x400, 4096, data16);
     _onenand_readout(0x10020, 128, data16 + 4096/2);
 }
 
-static void onenand_read_2k(uint32_t block, uint32_t page, uint16_t *data16) {
-    _onenand_cmd(block, page, 0x00); // READ
+static void onenand_read_2k(int ddp, uint32_t block, uint32_t page, uint16_t *data16) {
+    _onenand_cmd(ddp, block, page, 0x00); // READ
     _onenand_readout(0x400, 2048, data16);
-    _onenand_cmd(block, page, 0x13); // READ SPARE
+    _onenand_cmd(ddp, block, page, 0x13); // READ SPARE
     _onenand_readout(0x10020, 64, data16 + 2048/2);
 }

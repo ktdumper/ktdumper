@@ -91,8 +91,9 @@ void payload_main_loop(void) {
             /* read onenand 4096b page + 128b oob */
             uint32_t block = XADDR(payload, 1);
             uint32_t page = XADDR(payload, 5);
+            uint8_t ddp = payload[9];
 
-            onenand_read_4k(block, page, onenand_buf);
+            onenand_read_4k(ddp, block, page, onenand_buf);
             send_msg(onenand_buf, 4096+128);
         } else if (ch == 0x71) {
             /* check if the block is likely SLC or MLC by comparing if first and second 64 pages inside are the same or different */
@@ -100,8 +101,9 @@ void payload_main_loop(void) {
             uint8_t likely_slc = 1;
             uint8_t *scratchbuf = resp;
             for (size_t page = 0; page < 64; ++page) {
-                onenand_read_4k(block, page, (void*)scratchbuf);
-                onenand_read_4k(block, 64 + page, (void*)(scratchbuf + 4096 + 128));
+                // TODO: what should we do about ddp here?
+                onenand_read_4k(0, block, page, (void*)scratchbuf);
+                onenand_read_4k(0, block, 64 + page, (void*)(scratchbuf + 4096 + 128));
 
                 for (size_t x = 0; x < 4096+128; ++x) {
                     if (scratchbuf[x] != scratchbuf[4096+128+x]) {
@@ -119,8 +121,9 @@ void payload_main_loop(void) {
             /* read onenand 2048b page + 64b oob */
             uint32_t block = XADDR(payload, 1);
             uint32_t page = XADDR(payload, 5);
+            uint8_t ddp = payload[9];
 
-            onenand_read_2k(block, page, onenand_buf);
+            onenand_read_2k(ddp, block, page, onenand_buf);
             send_msg(onenand_buf, 2048+64);
         }
     }
