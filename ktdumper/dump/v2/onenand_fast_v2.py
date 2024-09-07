@@ -113,6 +113,9 @@ class OnenandFast_v2(CommonOnenandIdMixin):
                 print("Readout Partition Information...")
                 pi = self.read_pi(0)
 
+                if pi == 0xFFFF:
+                    print("WARNING: PI is 0xFFFF - this device might be fully SLC. Please run mlc_check.")
+
                 boundary_address = pi & 0b1111111111
 
                 self.slc_blocks = boundary_address + 1
