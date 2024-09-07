@@ -1,7 +1,6 @@
 import struct
 import tqdm
 
-from dump.sh.sh_srec_exploit import ShSrecExploit
 from dump.v2.rw_access_v2 import RwAccess_v2
 
 
