@@ -642,7 +642,7 @@ DEVICES = [
         "dump_java": FujitsuJavaDumper(),
         "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
         "onenand_id": ShSrecExploitOnenandId_v2(),
-        "dump_nand": ShSrecExploitOnenandDumper(size=MB(256)),
+        "dump_nand": ShSrecExploitOnenandFast_v2(),
     }, payload_base=0x64000000, fatal_err=0x64606700, usb_interrupt=0x64601000, usb_getch=0x646036cc, usb_send=0x64603940, usb_send_commit=0x6460325c,
         onenand_addr=0x10000000),
 
