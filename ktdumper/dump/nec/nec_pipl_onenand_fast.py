@@ -69,16 +69,9 @@ class NecPiplOnenandFast:
             usb_respfunc=self.usb_respfunc,
             onenand_addr=self.onenand_addr,
         )
-        if self.secret:
-            kwargs["patch"] = self.patch
-            kwargs["keep_mmu"] = self.keep_mmu
 
         payload = PayloadBuilder("onenand_fast.c").build(**kwargs)
         self.cmd_write(self.payload_base, payload)
-
-        # must execute one no-op first to trigger the smc cleanup code
-        if self.secret:
-            self.cmd_exec()
 
         print("Dumping OneNAND & OOB")
         with output.mkfile("onenand.bin") as onenand_bin:

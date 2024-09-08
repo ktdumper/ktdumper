@@ -68,7 +68,6 @@ class NecProtocol(Dumper):
         self.secret = opts.get("secret")
         if self.secret is not None:
             self.secret = bytes.fromhex(self.secret)
-        self.keep_mmu = int(opts.get("keep_mmu", False))
 
         self.panasonic_unlock = opts.get("panasonic_unlock")
 
@@ -76,8 +75,6 @@ class NecProtocol(Dumper):
             self.chunk = 0x10
         else:
             self.chunk = 0x100
-
-        self.patch = opts.get("patch", 0)
 
     def read_resp(self):
         resp = b""
@@ -157,7 +154,7 @@ class NecProtocol(Dumper):
             self.comm(3, variable_payload=b"\x00")
 
     def cmd_read(self, addr, sz):
-        if self.patch:
+        if self.secret is not None:
             raise RuntimeError("this device does not support cmd_read")
 
         data = self.comm(6, 0, variable_payload=struct.pack("<IH", addr, sz))

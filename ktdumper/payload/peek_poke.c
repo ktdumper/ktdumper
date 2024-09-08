@@ -6,10 +6,6 @@
 #define BASE %base%
 
 void start() {
-#if %patch%
-    #include "nec_smc_patcher.inc"
-#endif
-
     unsigned char *command = (void*)(BASE + 0x400);
     unsigned *data = (void*)(BASE + 0x800);
 
@@ -41,14 +37,5 @@ void start() {
             *data = *(volatile unsigned*)addr;
             break;
         }
-
-#if %patch%
-        USB_SEND(data, 4);
-#endif
     }
-#if %patch%
-    else if (is_wr == 2) {
-        USB_SEND(addr, 64);
-    }
-#endif
 }

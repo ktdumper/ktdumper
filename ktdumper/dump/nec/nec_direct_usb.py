@@ -23,8 +23,6 @@ class NecDirectUsb(NecProtocol):
             usb_data=self.usb_data,
             usb_datasz=self.usb_datasz,
             usb_respfunc=self.usb_respfunc,
-            patch=self.patch,
-            keep_mmu=self.keep_mmu,
         )
 
     def insert_payload(self, name, **kwargs):
@@ -32,7 +30,3 @@ class NecDirectUsb(NecProtocol):
         opts.update(kwargs)
         payload = PayloadBuilder(name).build(**opts)
         self.cmd_write(self.payload_base, payload)
-
-        # must execute one no-op first to trigger the smc cleanup code
-        if self.patch:
-            self.cmd_exec()
