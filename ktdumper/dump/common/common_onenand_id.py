@@ -36,6 +36,8 @@ deviceid_separation = {
     0b11: "Reserved",
 }
 
+ONENAND_KNOWN_MANU = [0xEC, 0x20]
+
 
 class CommonOnenandIdMixin:
 
@@ -156,7 +158,7 @@ class CommonOnenandId(CommonOnenandIdMixin):
         print("System Configuration 1: {:04X}".format(self.readh(self.onenand_SYSCFG1)))
         print("")
 
-        if manu_id not in [0xEC, 0x20]:
+        if manu_id not in ONENAND_KNOWN_MANU:
             raise RuntimeError("OneNAND manufacturer ID isn't 00ECh or 0020h")
 
         if separation == 2:
