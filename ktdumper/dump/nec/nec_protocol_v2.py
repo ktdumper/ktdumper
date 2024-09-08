@@ -97,6 +97,9 @@ class NecProtocol_v2(NecProtocol):
             usb_receive=self.f_usb_receive,
             usb_send=self.f_usb_send,
             onenand_addr=self.opts.get("onenand_addr", -1),
+            nand_data=self.opts.get("nand_data", -1),
+            nand_addr=self.opts.get("nand_addr", -1),
+            nand_cmd=self.opts.get("nand_cmd", -1),
         )
 
         self.cmd_write(self.payload_base, payload)
