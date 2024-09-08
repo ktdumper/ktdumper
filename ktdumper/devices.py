@@ -88,7 +88,7 @@ DEVICES = [
 
     Device("n901is", 0x0409, 0x0144, {
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(64)),
-        "dump_nand": NecOnenandDumper(size=MB(64), quirks=SLOW_READ),
+        "dump_nand": NecOnenandDumper(quirks=SLOW_READ),
     }, payload_base=0x10000000, onenand_addr=0x06000000),
 
     Device("n701i", 0x0409, 0x0142, {
@@ -103,13 +103,13 @@ DEVICES = [
 
     Device("n702id", 0x0409, 0x0168, {
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(128)),
-        "dump_nand": NecOnenandDumper(size=MB(64), quirks=SLOW_READ),
+        "dump_nand": NecOnenandDumper(quirks=SLOW_READ),
     }, payload_base=0x10000000, onenand_addr=0x06000000),
 
     Device("n904i", 0x0409, 0x0200, {
         "dump_rom": NecMemoryDumper(base=0x0, size=0x8000),
         "dump_nor": NecMemoryDumper(base=0x08000000, size=MB(128)),
-        "dump_nand": NecOnenandDumper(size=MB(128)),
+        "dump_nand": NecOnenandDumper(),
     }, payload_base=0x80000000, onenand_addr=0x06000000, quirks=SLOW_READ),
 
     Device("n905i", 0x0409, 0x0210, {
@@ -327,7 +327,7 @@ DEVICES = [
     Device("p901itv", 0x0a3c, 0x000d, {
         "dump_rom": NecMemoryDumper(base=0x0, size=0x8000),
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(64)),
-        "dump_nand": NecOnenandDumper(size=MB(128)),
+        "dump_nand": NecOnenandDumper(),
     }, payload_base=0x90000000, onenand_addr=0x08000000, quirks=SLOW_READ),
 
     Device("p851i", 0x0a3c, 0x000d, {
@@ -338,45 +338,45 @@ DEVICES = [
     Device("p902i", 0x0a3c, 0x000d, {
         "dump_rom": NecMemoryDumper(base=0x0, size=0x8000),
         "dump_nor": NecMemoryDumper(base=0x08000000, size=MB(64)),
-        "dump_nand": NecOnenandDumper(size=MB(128)),
+        "dump_nand": NecOnenandDumper(),
     }, payload_base=0x80000000, onenand_addr=0x10000000, quirks=SLOW_READ),
 
     Device("p902is", 0x0a3c, 0x000d, {
         "dump_rom": NecMemoryDumper(base=0x0, size=0x8000),
         "dump_nor": NecMemoryDumper(base=0x08000000, size=MB(64)),
-        "dump_nand": NecOnenandDumper(size=MB(128)),
+        "dump_nand": NecOnenandDumper(),
     }, payload_base=0x80000000, onenand_addr=0x10000000, quirks=SLOW_READ),
 
     Device("p702i", 0x0a3c, 0x000d, {
         "dump_rom": NecMemoryDumper(base=0x0, size=0x8000),
         "dump_nor": NecMemoryDumper(base=0x08000000, size=MB(64)),
-        "dump_nand": NecOnenandDumper(size=MB(128)),
+        "dump_nand": NecOnenandDumper(),
     }, payload_base=0x80000000, onenand_addr=0x10000000, quirks=SLOW_READ),
 
     Device("p702id", 0x0a3c, 0x000d, {
         "dump_rom": NecMemoryDumper(base=0x0, size=0x8000),
         "dump_nor": NecMemoryDumper(base=0x08000000, size=MB(64)),
-        "dump_nand": NecOnenandDumper(size=MB(128)),
+        "dump_nand": NecOnenandDumper(),
     }, payload_base=0x80000000, onenand_addr=0x10000000, quirks=SLOW_READ),
 
     Device("p903i", 0x0a3c, 0x000d, {
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(128)),
-        "dump_nand": NecOnenandDumper(size=MB(128)),
+        "dump_nand": NecOnenandDumper(),
     }, payload_base=0x90000000, onenand_addr=0x08000000),
 
     Device("p903itv", 0x0a3c, 0x000d, {
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(128)),
-        "dump_nand": NecOnenandDumper(size=MB(256)),
+        "dump_nand": NecOnenandDumper(),
     }, payload_base=0x90000000, onenand_addr=0x0C000000),
 
     Device("p904i", 0x0a3c, 0x000d, {
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(128)),
-        "dump_nand": NecOnenandDumper(size=MB(512), has_ddp=True),
+        "dump_nand": NecOnenandDumper(),
     }, payload_base=0x90040000, onenand_addr=0x0C000000),
 
     Device("p704i", 0x0a3c, 0x000d, {
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(96)),
-        "dump_nand": NecOnenandDumper(size=MB(128)),
+        "dump_nand": NecOnenandDumper(),
     }, payload_base=0x90000000, onenand_addr=0x08000000),
 
     Device("p906i", 0x0a3c, 0x000d, {
@@ -391,88 +391,88 @@ DEVICES = [
     Device("p-01a", 0x04da, 0x216b, {
         "dump_nor": PiplExploitMemoryDumper(base=0x0, size=MB(128)),
         "onenand_id": PiplOnenandId(),
-        "dump_nand": PiplOnenandDumper(size=MB(512), has_ddp=True),
+        "dump_nand": PiplOnenandDumper(),
     }, exploit_flavor="A", payload_base=0x8009c000, onenand_addr=0x0C000000),
 
     Device("p-02a", 0x04da, 0x216b, {
         "probe_nor": PiplExploitNorProbe(base=0x0),
         "dump_nor": PiplExploitMemoryDumper(base=0x0, size=MB(128)),
         "onenand_id": PiplOnenandId(),
-        "dump_nand": PiplOnenandDumper(size=MB(512), has_ddp=True),
+        "dump_nand": PiplOnenandDumper(),
     }, exploit_flavor="A", payload_base=0x8009c000, onenand_addr=0x0C000000),
 
     Device("p-03a", 0x04da, 0x216b, {
         "dump_nor": PiplExploitMemoryDumper(base=0x0, size=MB(128)),
         "onenand_id": PiplOnenandId(),
-        "dump_nand": PiplOnenandDumper(size=MB(256)),
+        "dump_nand": PiplOnenandDumper(),
     }, exploit_flavor="A", payload_base=0x8009c000, onenand_addr=0x0C000000),
 
     Device("p-04a", 0x04da, 0x216b, {
         "dump_nor": PiplExploitMemoryDumper(base=0x0, size=MB(128)),
         "onenand_id": PiplOnenandId(),
-        "dump_nand": PiplOnenandDumper(size=MB(256)),
+        "dump_nand": PiplOnenandDumper(),
     }, exploit_flavor="A", payload_base=0x8009c000, onenand_addr=0x0C000000),
 
     Device("p-05a", 0x04da, 0x216b, {
         "probe_nor": PiplExploitNorProbe(base=0x0),
         "dump_nor": PiplExploitMemoryDumper(base=0x0, size=MB(128)),
         "onenand_id": PiplOnenandId(),
-        "dump_nand": PiplOnenandDumper(size=MB(256)),
+        "dump_nand": PiplOnenandDumper(),
     }, exploit_flavor="A", payload_base=0x8009c000, onenand_addr=0x0C000000),
 
     Device("p-08a", 0x04da, 0x216b, {
         "dump_nor": PiplExploitMemoryDumper(base=0x0, size=MB(128)),
         "onenand_id": PiplOnenandId(),
-        "dump_nand": PiplOnenandDumper(size=MB(512), has_ddp=True),
+        "dump_nand": PiplOnenandDumper(),
     }, exploit_flavor="A", payload_base=0x8009c000, onenand_addr=0x0C000000),
 
     Device("p-09a", 0x04da, 0x216b, {
         "probe_nor": PiplExploitNorProbe(base=0x0),
         "dump_nor": PiplExploitMemoryDumper(base=0x0, size=MB(128)),
         "onenand_id": PiplOnenandId(),
-        "dump_nand": PiplOnenandDumper(size=MB(512), has_ddp=True),
+        "dump_nand": PiplOnenandDumper(),
     }, exploit_flavor="A", payload_base=0x8009c000, onenand_addr=0x0C000000),
 
     Device("p-10a", 0x04da, 0x216b, {
         "dump_nor": PiplExploitMemoryDumper(base=0x0, size=MB(128)),
         "onenand_id": PiplOnenandId(),
-        "dump_nand": PiplOnenandDumper(size=MB(256)),
+        "dump_nand": PiplOnenandDumper(),
     }, exploit_flavor="A", payload_base=0x8009c000, onenand_addr=0x0C000000),
 
     Device("p-01b", 0x04da, 0x216b, {
         "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
-        "dump_nand_a": PiplOnenandDumper(onenand_addr=0x0C000000, size=MB(512), has_ddp=True),
-        "dump_nand_b": PiplOnenandDumper(onenand_addr=0x18000000, size=MB(256)),
+        "dump_nand_a": PiplOnenandDumper(onenand_addr=0x0C000000),
+        "dump_nand_b": PiplOnenandDumper(onenand_addr=0x18000000),
     }, exploit_flavor="B", payload_base=0x83800000),
 
     Device("p-02b", 0x04da, 0x216b, {
         "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
         "onenand_id_a": PiplOnenandId(onenand_addr=0x0C000000),
         "onenand_id_b": PiplOnenandId(onenand_addr=0x18000000),
-        "dump_nand_a": PiplOnenandDumper(onenand_addr=0x0C000000, size=MB(512), has_ddp=True),
-        "dump_nand_b": PiplOnenandDumper(onenand_addr=0x18000000, size=MB(256)),
+        "dump_nand_a": PiplOnenandDumper(onenand_addr=0x0C000000),
+        "dump_nand_b": PiplOnenandDumper(onenand_addr=0x18000000),
     }, exploit_flavor="B", payload_base=0x83800000),
 
     Device("p-03b", 0x04da, 0x216b, {
         "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
-        "dump_nand": PiplOnenandDumper(size=MB(512), has_ddp=True),
+        "dump_nand": PiplOnenandDumper(),
     }, exploit_flavor="B", payload_base=0x83800000, onenand_addr=0x0C000000),
 
     Device("p-04b", 0x04da, 0x216b, {
         "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
-        "dump_nand_a": PiplOnenandDumper(onenand_addr=0x0C000000, size=MB(512), has_ddp=True),
-        "dump_nand_b": PiplOnenandDumper(onenand_addr=0x18000000, size=MB(256)),
+        "dump_nand_a": PiplOnenandDumper(onenand_addr=0x0C000000),
+        "dump_nand_b": PiplOnenandDumper(onenand_addr=0x18000000),
     }, exploit_flavor="B", payload_base=0x83800000),
 
     Device("p-07b", 0x04da, 0x216b, {
         "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
-        "dump_nand": PiplOnenandDumper(size=MB(512)),
+        "dump_nand": PiplOnenandDumper(),
         "onenand_id": PiplOnenandId(),
     }, exploit_flavor="B", payload_base=0x83800000, onenand_addr=0x0C000000),
 
     Device("p-06c", 0x04da, 0x216b, {
         "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
-        "dump_nand_peek_poke": PiplOnenandDumper(has_4k_pages=True, size=MB(1024)),
+        "dump_nand_peek_poke": PiplOnenandDumper(),
         "dump_nand": PiplOnenandFast(size=MB(1024)),
         "onenand_id": PiplOnenandId(),
     }, exploit_flavor="C", payload_base=0x83800000, onenand_addr=0x0C000000,
@@ -510,19 +510,19 @@ DEVICES = [
 
     Device('930p', 0x04da, 0x216b, {
         'dump_rom': PiplExploitMemoryDumper(base=0x0, size=0x8000),
-        'dump_nand': PiplOnenandDumper(onenand_addr=0x0C000000, size=MB(512), has_ddp=True),
+        'dump_nand': PiplOnenandDumper(onenand_addr=0x0C000000),
     }, exploit_flavor="A", payload_base=0x8009c000),
 
     Device("940p", 0x04da, 0x216b, {
         "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
-        "dump_nand_a": PiplOnenandDumper(onenand_addr=0x0C000000, size=MB(512), has_ddp=True),
-        "dump_nand_b": PiplOnenandDumper(onenand_addr=0x18000000, size=MB(256)),
+        "dump_nand_a": PiplOnenandDumper(onenand_addr=0x0C000000),
+        "dump_nand_b": PiplOnenandDumper(onenand_addr=0x18000000),
     }, exploit_flavor="B", payload_base=0x83800000),
 
     Device("942p", 0x04da, 0x216b, {
         "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
-        "dump_nand_a": PiplOnenandDumper(onenand_addr=0x0C000000, size=MB(512), has_ddp=True),
-        "dump_nand_b": PiplOnenandDumper(onenand_addr=0x18000000, size=MB(256)),
+        "dump_nand_a": PiplOnenandDumper(onenand_addr=0x0C000000),
+        "dump_nand_b": PiplOnenandDumper(onenand_addr=0x18000000),
     }, exploit_flavor="B", payload_base=0x83800000),
 
     Device("301p", 0x04da, 0x216b, {
