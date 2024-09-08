@@ -255,10 +255,10 @@ DEVICES = [
        onenand_addr=0x08000000),
 
     Device("n-01e", 0x0409, 0x0418, {
-        "onenand_id": NecOnenandId(),
-        "dump_nand": NecOnenandFast(size=MB(1024)),
-    }, secret="c8d7bd5b4c84c1ccebe7d744eded0af3b6bcbe0b", payload_base=0x80000000, patch=0x80b8883c,
-       usb_command=0x80be503c, usb_data=0x80c060c6, usb_datasz=0x80c060c0, usb_respfunc=0x80b86178,
+        "onenand_id": NecOnenandId_v2(),
+        "dump_nand": NecOnenandFast_v2(),
+    }, secret="c8d7bd5b4c84c1ccebe7d744eded0af3b6bcbe0b",
+       payload_base=0x80000000, usb_receive=0x80b84bb8, usb_send=0x80b8440c,
        onenand_addr=0x08000000),
 
     Device("n-01f", 0x0409, 0x047a, {
