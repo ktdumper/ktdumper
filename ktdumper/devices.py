@@ -241,11 +241,10 @@ DEVICES = [
        onenand_addr=0x08000000),
 
     Device("n-05c", 0x0409, 0x02f8, {
-        "onenand_id": NecOnenandId(),
-        "dump_nand_peek_poke": NecOnenandDumper(has_4k_pages=True, size=MB(1024)),
-        "dump_nand": NecOnenandFast(size=MB(1024)),
-    }, secret="3e339064397c56f5e8f1284218add4777b13243f", payload_base=0x80000000, patch=0x80b888c4,
-       usb_command=0x80be506c, usb_data=0x80c060f6, usb_datasz=0x80c060f0, usb_respfunc=0x80b86200,
+        "onenand_id": NecOnenandId_v2(),
+        "dump_nand": NecOnenandFast_v2(),
+    }, secret="3e339064397c56f5e8f1284218add4777b13243f",
+       payload_base=0x80000000, usb_receive=0x80b84c50, usb_send=0x80b844a4,
        onenand_addr=0x08000000),
 
     Device("n-03d", 0x0409, 0x02dc, {
