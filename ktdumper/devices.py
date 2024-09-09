@@ -50,7 +50,7 @@ DEVICES = [
 
     Device("830ca", 0x1967, 0x2002, {
         "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),
-    }, payload_base=0x30000000, nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000,
+    }, payload_base=0x30000000,
        usb_command=0x33ee50dc, usb_data= 0x33ef5126, usb_datasz=0x33ef5120, usb_respfunc=0x5910,
        quirks=SLOW_READ),
 
@@ -129,7 +129,7 @@ DEVICES = [
 
     Device("n706i", 0x0409, 0x023c, {
         "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),
-    }, payload_base=0x30000000, nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000,
+    }, payload_base=0x30000000,
        usb_command=0x33ee50d0, usb_data=0x33ef511a, usb_datasz=0x33ef5114, usb_respfunc=0x582c,
        quirks=SLOW_READ),
 
@@ -274,7 +274,7 @@ DEVICES = [
     Device("820n", 0x0409, 0x0250, {
         "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),
         "dump_nor_slow": NecMemoryDumper(base=0x0, size=MB(128)),
-    }, payload_base=0x30000000, nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000,
+    }, payload_base=0x30000000,
        usb_command=0x33eec3f8, usb_data=0x33efc442, usb_datasz=0x33efc43c, usb_respfunc=0x4f58,
        quirks=SLOW_READ),
 
@@ -287,7 +287,7 @@ DEVICES = [
 
     Device("831n", 0x0409, 0x0284, {
         "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),
-    }, payload_base=0x30000000, nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000,
+    }, payload_base=0x30000000,
        usb_command=0x33ee50c4, usb_data=0x33ef510e, usb_datasz=0x33ef5108, usb_respfunc=0x57dc,
        quirks=SLOW_READ),
 
