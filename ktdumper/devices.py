@@ -120,7 +120,7 @@ DEVICES = [
        usb_command=0x33eec3f8, usb_data=0x33efc442, usb_datasz=0x33efc43c, usb_respfunc=0x4f58,
        quirks=SLOW_READ),
 
-    Device("n905imyu", 0x0409, 0x0220, {
+    Device("n905iu", 0x0409, 0x0220, {
         "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),
         "dump_nand": NecNandDumperLp(size=MB(512)),
     }, payload_base=0x30000000, nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000,
