@@ -21,6 +21,7 @@ from dump.pipl.pipl_exploit_memory_dumper import PiplExploitMemoryDumper
 from dump.pipl.pipl_onenand_dumper import PiplOnenandDumper
 from dump.pipl.pipl_onenand_id import PiplOnenandId
 from dump.pipl.pipl_onenand_fast import PiplOnenandFast
+from dump.pipl.pipl_onenand_fast_v2 import PiplOnenandFast_v2
 from dump.pipl.pipl_emmc_dumper import PiplEmmcDumper
 from dump.pipl.pipl_emmc_fuse import PiplEmmcFuse
 from dump.pipl.pipl_exploit_nor_probe import PiplExploitNorProbe
@@ -541,6 +542,12 @@ DEVICES = [
         "dump_nand_a": PiplOnenandDumper(onenand_addr=0x0C000000),
         "dump_nand_b": PiplOnenandDumper(onenand_addr=0x18000000),
     }, exploit_flavor="B", payload_base=0x83800000),
+
+    Device("103p", 0x04da, 0x216b, {
+        "onenand_id": PiplOnenandId(),
+        "dump_nand": PiplOnenandFast_v2(),
+    }, exploit_flavor="C", payload_base=0x83800000, usb_receive=0x8002b1f0, usb_send=0x8002afdc,
+       onenand_addr=0x0C000000),
 
     Device("301p", 0x04da, 0x216b, {
         "dump_rom": PiplExploitMemoryDumper(base=0x00000000, size=0x8000),
