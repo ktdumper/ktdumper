@@ -15,6 +15,7 @@ from dump.nec.nec_onenand_fast import NecOnenandFast
 from dump.nec.nec_onenand_fast_v2 import NecOnenandFast_v2
 from dump.nec.nec_mlc_check import NecMlcCheck
 from dump.nec.nec_nor_probe import NecNorProbe
+from dump.nec.nec_nand_dumper_lp_v2 import NecNandDumperLp_v2
 
 from dump.pipl.pipl_exploit_memory_dumper import PiplExploitMemoryDumper
 from dump.pipl.pipl_onenand_dumper import PiplOnenandDumper
@@ -126,6 +127,14 @@ DEVICES = [
     }, payload_base=0x30000000, nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000,
        usb_command=0x33eec400, usb_data=0x33efc44a, usb_datasz=0x33efc444, usb_respfunc=0x4f94,
        quirks=SLOW_READ),
+
+    Device("n906iu", 0x0409, 0x0244, {
+        "probe_nor": NecNorProbe(base=0x0),
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
+        "nand_id": NecNandId(),
+        "dump_nand": NecNandDumperLp_v2(size=MB(512)),
+    }, payload_base=0x30000000, usb_receive=0x000046a0, usb_send=0x00004ff8,
+       nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000),
 
     Device("n706i", 0x0409, 0x023c, {
         "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),

@@ -33,7 +33,7 @@ class NandDumperLp_v2:
                         for retries in range(RETRIES):
                             data = self.read_page(page)
 
-                            if data[0] == 0xE0:
+                            if data[0] in [0xE0, 0x60]:
                                 data = data[1:]
                                 break
                             else:

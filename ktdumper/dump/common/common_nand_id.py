@@ -12,6 +12,18 @@ spansion_device_code = {
     0xDC: "512MB (x16)",
 }
 
+micron_device_code = {
+    0xDC: "4Gb, x8, 3.3V",
+    0xCC: "4Gb, x16, 3.3V",
+    0xAC: "4Gb, x8, 1.8V",
+    0xBC: "4Gb, x16, 1.8V",
+    0xA3: "8Gb, x8, 1.8V",
+    0xB3: "8Gb, x16, 1.8V",
+    0xD3: "8Gb, x8, 3.3V",
+    0xC3: "8Gb, x16, 3.3V",
+    0xD3: "16Gb, x8, 3.3V",
+}
+
 class CommonNandId:
 
     def parse_opts(self, opts):
@@ -90,6 +102,11 @@ class CommonNandId:
             print("Block Size, Simultaneous Programmed Pages, RFU : {:02X}".format(nand_id[6]))
             print("Page Size, Spare Size, RFU                     : {:02X}".format(nand_id[8]))
             # print("RAM and Other MCP identifiers                  : {:02X}".format(nand_id[10]))
+        # Micron
+        elif nand_id[0] == 0x2C:
+            print("=" * 80)
+            print("Maker Code                                     : {:02X} (Micron)".format(nand_id[0]))
+            print("Device ID                                      : {:02X} ({})".format(nand_id[2], micron_device_code.get(nand_id[2], "UNKNOWN")))
 
         if onfi_id == bytes.fromhex("4f004e00460049004900"):
             self.print_onfi()
