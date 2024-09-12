@@ -519,14 +519,12 @@ DEVICES = [
 
     # SOFTBANK
 
-    Device("842p", 0x04da, 0x216b, {
-        "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
-        "onenand_id": PiplOnenandId(),
-        "dump_nand": PiplOnenandDumper(),
-    }, exploit_flavor="A", payload_base=0x8009c000,
-       onenand_addr=0x0C000000),
-
     Device('930p', 0x04da, 0x216b, {
+        'dump_rom': PiplExploitMemoryDumper(base=0x0, size=0x8000),
+        'dump_nand': PiplOnenandDumper(onenand_addr=0x0C000000),
+    }, exploit_flavor="A", payload_base=0x8009c000),
+    
+    Device('832p', 0x04da, 0x216b, {
         'dump_rom': PiplExploitMemoryDumper(base=0x0, size=0x8000),
         'dump_nand': PiplOnenandDumper(onenand_addr=0x0C000000),
     }, exploit_flavor="A", payload_base=0x8009c000),
@@ -542,6 +540,13 @@ DEVICES = [
         "dump_nand_a": PiplOnenandDumper(onenand_addr=0x0C000000),
         "dump_nand_b": PiplOnenandDumper(onenand_addr=0x18000000),
     }, exploit_flavor="B", payload_base=0x83800000),
+
+    Device("842p", 0x04da, 0x216b, {
+        "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
+        "onenand_id": PiplOnenandId(),
+        "dump_nand": PiplOnenandDumper(),
+    }, exploit_flavor="A", payload_base=0x8009c000,
+       onenand_addr=0x0C000000),
 
     Device("103p", 0x04da, 0x216b, {
         "onenand_id": PiplOnenandId(),
