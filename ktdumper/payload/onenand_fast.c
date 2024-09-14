@@ -4,10 +4,6 @@
 #define ONENAND (KT_onenand_addr)
 
 void start() {
-#if KT_patch
-    #include "nec_smc_patcher.inc"
-#endif
-
     uint8_t *command = (void*)KT_usb_command;
     uint8_t *data = (void*)KT_usb_data; // comes from cmd_read
     uint16_t *data16 = (void*)KT_usb_data;

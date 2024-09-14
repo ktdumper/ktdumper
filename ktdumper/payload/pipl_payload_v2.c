@@ -10,28 +10,21 @@ uint32_t payload_sz_pre, payload_sz, resp_sz;
 uint8_t payload_pre[0x100];
 
 static void unmask_payload(void) {
-    payload_sz = 0;
-    for (int i = 0; i < sizeof(payload); ++i)
-        payload[i] = 0;
+    payload[0] = 0;
 
-    for (int idx = 0; idx < payload_sz_pre; ++idx) {
-        if (payload_pre[idx] == 0xFF || payload_pre[idx] == 0xFE) {
-            continue;
-        } else if (payload_pre[idx] == 0xFD) {
-            payload[payload_sz++] = payload_pre[++idx] ^ 0x10;
-        } else {
-            payload[payload_sz++] = payload_pre[idx];
-        }
-    }
+    if (payload_sz_pre <= 9)
+        while(1){};
+
+    payload_sz = payload_sz_pre - 9;
+    for (int i = 0; i < payload_sz; ++i)
+        payload[i] = payload_pre[i + 9];
 
     uint8_t ck = 0;
-    for (size_t i = 0; i < payload_sz; ++i)
-        ck += payload[i];
+    for (size_t i = 0; i < payload_sz_pre; ++i)
+        ck += payload_pre[i];
 
-    if (ck != 0 || payload_sz == 0) {
-        while (1)
-        {}
-    }
+    if (ck != 0)
+        while(1){};
 }
 
 void receive_msg(void) {
@@ -120,11 +113,18 @@ __asm__(
 ".section .text.start\n"
 ".global start\n"
 "start:\n"
-    /* disable mmu which got enabled by the jumper */
-    "mrc p15, 0, r0, c1, c0, 0\n"
-    "bic r0, r0, #0x1\n"
-    "bic r0, r0, #0x2\n"
-    "bic r0, r0, #0x4\n"
-    "mcr p15, 0, r0, c1, c0, 0\n"
+
+    // clean data cache and flush icache before jumping to rest of payload
+    // hopefully increase stability bc we only need 1-2 cache lines to hit
+"    ldr r0, =%base%\n"
+"    ldr r1, =%base%+0x10000\n"
+"loop:\n"
+"    mcr p15, 0, r0, c7, c10, 1\n"
+"    add r0, r0, #32\n"
+"    cmp r0, r1\n"
+"    bne loop\n"
+"    mov r0, #0\n"
+"    mcr p15, 0, r0, c7, c5, 0\n"
+
     "b main\n"
 );
