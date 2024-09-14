@@ -657,6 +657,12 @@ DEVICES = [
     }, payload_base=0xE55B0000, fatal_err=0x60c048dc, usb_interrupt=0x60c02000, usb_getch=0x60c03fa8, usb_send=0x60c041ac, usb_send_commit=0x60c03b28,
        nand_data=0x16000000, nand_addr=0x16000010, nand_cmd=0x16000020),
 
+    Device("sh-09b", 0x04dd, 0x932f, {
+        "dump_nand": ShSrecExploitMlbaDumper_v2(),
+        "nand_id": ShSrecExploitNandId_v2(),
+    }, payload_base=0xE55B0000, fatal_err=0x60c048dc, usb_interrupt=0x60c02000, usb_getch=0x60c03fa8, usb_send=0x60c041ac, usb_send_commit=0x60c03b28,
+       nand_data=0x16000000, nand_addr=0x16000010, nand_cmd=0x16000020),
+
     Device("sh-01c", 0x04dd, 0x936c, {
         "dump_nand": ShSrecExploitMlbaDumper_v2(),
         "nand_id": ShSrecExploitNandId_v2(),
@@ -686,6 +692,7 @@ DEVICES = [
     Device("f902i", 0x04c5, 0x10ce, {"dump_java": FujitsuJavaDumper()}),
     Device("f902is", 0x04c5, 0x10db, {"dump_java": FujitsuJavaDumper()}),
     Device("f702id", 0x04c5, 0x10d9, {"dump_java": FujitsuJavaDumper()}),
+    Device("f903i", 0x04c5, 0x110c, {"dump_java": FujitsuJavaDumper()}),
     Device("f903ix", 0x04c5, 0x113f, {"dump_java": FujitsuJavaDumper()}),
     Device("f884i", 0x04c5, 0x112a, {"dump_java": FujitsuJavaDumper()}),
     Device("f884ies", 0x04c5, 0x1199, {"dump_java": FujitsuJavaDumper()}),
