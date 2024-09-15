@@ -102,6 +102,13 @@ class NecProtocol(Dumper):
             g_ep = 0x8024db47
             auth_flags = 0x8022c244
             restore_setup_buf = 0x8024db97
+        elif self.panasonic_unlock == "p705i":
+            ptr_to_zero = 0x8024dc0b
+            payload_pre_sz = 0x8022c860
+            payload_pre = 0x80235680
+            g_ep = 0x8024db67
+            auth_flags = 0x8022c264
+            restore_setup_buf = 0x8024dbb7
         else:
             raise RuntimeError("unsupported value for panasonic_unlock: {}".formnat(self.panasonic_unlock))
 
