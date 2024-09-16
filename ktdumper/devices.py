@@ -390,6 +390,13 @@ DEVICES = [
         "dump_nand": NecOnenandDumper(),
     }, payload_base=0x90000000, onenand_addr=0x08000000),
 
+    Device("p704iu", 0x0a3c, 0x000d, {
+        "probe_nor": NecNorProbe(base=0x08000000),
+        "dump_nor": NecMemoryDumper(base=0x08000000, size=MB(64)),
+        "onenand_id": NecOnenandId(),
+        "dump_nand": NecOnenandDumper(),
+    }, payload_base=0x80000000, onenand_addr=0x10000000, quirks=SLOW_READ),
+
     Device("p905i", 0x0a3c, 0x000d, {
         "onenand_id": NecOnenandId_v2(),
         "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
