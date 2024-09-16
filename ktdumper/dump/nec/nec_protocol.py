@@ -8,51 +8,6 @@ from dump.dumper import Dumper
 SLOW_READ = 1
 
 
-# TODO: this should really be split into mask and checksum as separate things
-def mask_packet(pkt):
-    out = [0xFF]
-    ck = 0
-    for b in pkt:
-        if b in [0xFD, 0xFE, 0xFF]:
-            out.append(0xFD)
-            out.append(b ^ 0x10)
-        else:
-            out.append(b)
-        ck += b
-    ck = (-ck) & 0xFF
-    if ck in [0xFD, 0xFE, 0xFF]:
-        out.append(0xFD)
-        out.append(ck ^ 0x10)
-    else:
-        out.append(ck)
-    out.append(0xFE)
-
-    return bytearray(out)
-
-
-def make_packet(cmd, subcmd, variable_payload=None):
-    if variable_payload is None:
-        variable_payload = b""
-    packet = struct.pack("<BBBHBBBB", 0xE9, 0xE3, 0x42, 6 + len(variable_payload), 0, 0, cmd, subcmd) + variable_payload
-    return mask_packet(packet)
-
-
-def unmask_resp(resp):
-    assert resp[0] == 0xFF
-    assert resp[-1] == 0xFE
-    resp = resp[1:-1]
-    out = []
-    x = 0
-    while x < len(resp):
-        if resp[x] == 0xFD:
-            out.append(resp[x+1] ^ 0x10)
-            x += 2
-        else:
-            out.append(resp[x])
-            x += 1
-    return bytearray(out)
-
-
 def checksum2(data):
     s = 0
     for x in range(0, len(data), 2):
@@ -76,18 +31,67 @@ class NecProtocol(Dumper):
         else:
             self.chunk = 0x100
 
+        self.MASKED_START = 0xFF
+        self.MASKED_END = 0xFE
+        self.MASKED_CHARS = [0xFD, 0xFE, 0xFF]
+        self.MASKING_CHAR = 0xFD
+        self.MASK_XOR = 0x10
+
+    # TODO: this should really be split into mask and checksum as separate things
+    def mask_packet(self, pkt):
+        out = [self.MASKED_START]
+        ck = 0
+        for b in pkt:
+            if b in self.MASKED_CHARS:
+                out.append(self.MASKING_CHAR)
+                out.append(b ^ self.MASK_XOR)
+            else:
+                out.append(b)
+            ck += b
+        ck = (-ck) & 0xFF
+        if ck in self.MASKED_CHARS:
+            out.append(self.MASKING_CHAR)
+            out.append(ck ^ self.MASK_XOR)
+        else:
+            out.append(ck)
+        out.append(self.MASKED_END)
+
+        return bytearray(out)
+
+    def make_packet(self, cmd, subcmd, variable_payload=None):
+        if variable_payload is None:
+            variable_payload = b""
+        packet = struct.pack("<BBBHBBBB", 0xE9, 0xE3, 0x42, 6 + len(variable_payload), 0, 0, cmd, subcmd) + variable_payload
+        return self.mask_packet(packet)
+
+    def unmask_resp(self, resp):
+        assert resp[0] == self.MASKED_START
+        assert resp[-1] == self.MASKED_END
+        resp = resp[1:-1]
+        out = []
+        x = 0
+        while x < len(resp):
+            if resp[x] == self.MASKING_CHAR:
+                out.append(resp[x+1] ^ self.MASK_XOR)
+                x += 2
+            else:
+                out.append(resp[x])
+                x += 1
+        return bytearray(out)
+
     def read_resp(self):
         resp = b""
+        tgt = bytes([self.MASKED_END])
         while True:
             resp += self.dev.read(0x87, 64)
-            if resp.endswith(b"\xFE"):
+            if resp.endswith(tgt):
                 break
-            elif b"\xFE" in resp:
+            elif tgt in resp:
                 raise RuntimeError("mismatched packet masking, resp={}".format(resp.hex()))
-        return unmask_resp(resp)
+        return self.unmask_resp(resp)
 
     def comm_oneway(self, cmd, subcmd=0, variable_payload=None):
-        pkt = make_packet(cmd, subcmd, variable_payload)
+        pkt = self.make_packet(cmd, subcmd, variable_payload)
         ret = self.dev.write(0x8, pkt)
 
     def comm(self, cmd, subcmd=0, variable_payload=None):
@@ -132,7 +136,7 @@ class NecProtocol(Dumper):
 
         # reset buffer size back to 0 and write a dummy no-op packet
         write_at(payload_pre, b"")
-        noop = make_packet(0x02, 0)
+        noop = self.make_packet(0x02, 0)
         self.dev.write(8, noop[1:])
 
         # do the INIT cmd

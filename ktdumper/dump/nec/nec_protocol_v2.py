@@ -1,7 +1,7 @@
 import zlib
 import struct
 
-from dump.nec.nec_protocol import NecProtocol, mask_packet
+from dump.nec.nec_protocol import NecProtocol
 from util.payload_builder import PayloadBuilder
 
 
@@ -35,7 +35,7 @@ class NecProtocol_v2(NecProtocol):
 
     def usb_send(self, data):
         # TODO: mask_packet currently appends checksum but this needs to be changed after it stops doing it
-        masked = mask_packet(data)
+        masked = self.mask_packet(data)
 
         # print("=> {}".format(masked.hex()))
         self.dev.write(0x8, masked)
