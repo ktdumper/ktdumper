@@ -390,6 +390,22 @@ DEVICES = [
         "dump_nand": NecOnenandDumper(),
     }, payload_base=0x90000000, onenand_addr=0x08000000),
 
+    Device("p905i", 0x0a3c, 0x000d, {
+        "onenand_id": NecOnenandId_v2(),
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
+        "dump_nand": NecOnenandFast_v2(),
+    }, panasonic_unlock="p906i",
+       payload_base=0x80005000, usb_receive=0x00011a38, usb_send=0x000118d8,
+       onenand_addr=0x10000000),
+
+    Device("p705i", 0x0a3c, 0x000d, {
+        "onenand_id": NecOnenandId_v2(),
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
+        "dump_nand": NecOnenandFast_v2(),
+    }, panasonic_unlock="p906i",
+       payload_base=0x80005000, usb_receive=0x000123a8, usb_send=0x00012248,
+       onenand_addr=0x10000000),
+
     Device("p705icl", 0x0a3c, 0x000d, {
         "probe_nor": NecNorProbe(base=0x0),
         "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
@@ -536,6 +552,14 @@ DEVICES = [
        usb_command=0x8115a960, usb_data=0x8115a54a, usb_datasz=0x8115a544, usb_respfunc=0x80010a68),
 
     # SOFTBANK
+    
+    Device("920p", 0x0a3c, 0x000d, {
+        "onenand_id": NecOnenandId_v2(),
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
+        "dump_nand": NecOnenandFast_v2(),
+    }, panasonic_unlock="p906i",
+       payload_base=0x80005000, usb_receive=0x00012068, usb_send=0x00011f08,
+       onenand_addr=0x10000000),
 
     Device('930p', 0x04da, 0x216b, {
         'dump_rom': PiplExploitMemoryDumper(base=0x0, size=0x8000),
