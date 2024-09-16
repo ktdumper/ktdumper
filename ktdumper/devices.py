@@ -390,6 +390,15 @@ DEVICES = [
         "dump_nand": NecOnenandDumper(),
     }, payload_base=0x90000000, onenand_addr=0x08000000),
 
+    Device("p705icl", 0x0a3c, 0x000d, {
+        "probe_nor": NecNorProbe(base=0x0),
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
+        "onenand_id": NecOnenandId_v2(),
+        "dump_nand": NecOnenandFast_v2(),
+    }, panasonic_unlock="p705i",
+       payload_base=0x80005000, usb_receive=0x00012470, usb_send=0x00012310,
+       onenand_addr=0x10000000),
+
     Device("p705iu", 0x0a3c, 0x000d, {
         "probe_nor": NecNorProbe(base=0x0),
         "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
