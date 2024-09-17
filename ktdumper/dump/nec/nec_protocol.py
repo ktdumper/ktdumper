@@ -31,11 +31,18 @@ class NecProtocol(Dumper):
         else:
             self.chunk = 0x100
 
-        self.MASKED_START = 0xFF
-        self.MASKED_END = 0xFE
-        self.MASKED_CHARS = [0xFD, 0xFE, 0xFF]
-        self.MASKING_CHAR = 0xFD
-        self.MASK_XOR = 0x10
+        if opts.get("legacy_masking", False):
+            self.MASKED_START = 0xC0
+            self.MASKED_END = 0xC1
+            self.MASKED_CHARS = [0x7D, 0xC0, 0xC1]
+            self.MASKING_CHAR = 0x7D
+            self.MASK_XOR = 0x20
+        else:
+            self.MASKED_START = 0xFF
+            self.MASKED_END = 0xFE
+            self.MASKED_CHARS = [0xFD, 0xFE, 0xFF]
+            self.MASKING_CHAR = 0xFD
+            self.MASK_XOR = 0x10
 
     # TODO: this should really be split into mask and checksum as separate things
     def mask_packet(self, pkt):
