@@ -379,6 +379,12 @@ DEVICES = [
         "dump_nand": NecOnenandDumper(),
     }, payload_base=0x80000000, onenand_addr=0x10000000, quirks=SLOW_READ),
 
+    Device("p701id", 0x0a3c, 0x000d, {
+        "dump_rom": NecMemoryDumper(base=0x0, size=0x8000),
+        "dump_nor": NecMemoryDumper(base=0x0C000000, size=MB(64)),
+        "dump_nand": NecNandDumper(size=MB(64), big=1),
+    }, payload_base=0x10000000, nand_data=0x04000000, nand_cmd=0x04000800, nand_addr=0x04000400, quirks=SLOW_READ),
+
     Device("p702i", 0x0a3c, 0x000d, {
         "dump_rom": NecMemoryDumper(base=0x0, size=0x8000),
         "dump_nor": NecMemoryDumper(base=0x08000000, size=MB(64)),
