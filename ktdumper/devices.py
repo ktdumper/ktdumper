@@ -5,6 +5,7 @@ from dump.nec.nec_memory_dumper import NecMemoryDumper
 from dump.nec.nec_memory_dumper_v2 import NecMemoryDumper_v2
 from dump.nec.nec_nand_dumper import NecNandDumper
 from dump.nec.nec_onenand_dumper import NecOnenandDumper
+from dump.nec.nec_onenand_dumper_v2 import NecOnenandDumper_v2
 from dump.nec.nec_memory_dumper_payload import NecMemoryDumperPayload
 from dump.nec.nec_nand_id import NecNandId
 from dump.nec.nec_nand_dumper_lp import NecNandDumperLp
@@ -51,10 +52,11 @@ DEVICES = [
     ################################################################################################
 
     Device("830ca", 0x1967, 0x2002, {
-        "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),
-    }, payload_base=0x30000000,
-       usb_command=0x33ee50dc, usb_data= 0x33ef5126, usb_datasz=0x33ef5120, usb_respfunc=0x5910,
-       quirks=SLOW_READ),
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
+        "onenand_id": NecOnenandId_v2(),
+        "dump_nand": NecOnenandDumper_v2(),
+    }, payload_base=0x30000000, usb_receive=0x00004f40, usb_send=0x00005898,
+       onenand_addr=0x10000000),
 
     Device("930ca", 0x1967, 0x2004, {
         "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),
@@ -144,8 +146,11 @@ DEVICES = [
        quirks=SLOW_READ),
 
     Device("n706ie", 0x0409, 0x024a, {
-        "dump_nor": NecMemoryDumper(base=0x0, size=MB(128)),
-    }, quirks=SLOW_READ),
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
+        "onenand_id": NecOnenandId_v2(),
+        "dump_nand": NecOnenandDumper_v2(),
+    }, payload_base=0x30000000, usb_receive=0x00004e0c, usb_send=0x00005764,
+       onenand_addr=0x10000000),
 
     Device("n706i2", 0x0409, 0x0224, {
         "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),
@@ -296,10 +301,11 @@ DEVICES = [
        quirks=SLOW_READ),
 
     Device("831n", 0x0409, 0x0284, {
-        "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),
-    }, payload_base=0x30000000,
-       usb_command=0x33ee50c4, usb_data=0x33ef510e, usb_datasz=0x33ef5108, usb_respfunc=0x57dc,
-       quirks=SLOW_READ),
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
+        "onenand_id": NecOnenandId_v2(),
+        "dump_nand": NecOnenandDumper_v2(),
+    }, payload_base=0x30000000, usb_receive=0x00004e0c, usb_send=0x00005764,
+       onenand_addr=0x10000000),
 
     ################################################################################################
     # PANASONIC
