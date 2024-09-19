@@ -758,6 +758,12 @@ DEVICES = [
     }, payload_base=0xE55B0000, fatal_err=0x60c048dc, usb_interrupt=0x60c02000, usb_getch=0x60c03fa8, usb_send=0x60c041ac, usb_send_commit=0x60c03b28,
        nand_data=0x16000000, nand_addr=0x16000010, nand_cmd=0x16000020),
 
+    Device("sh-07b", 0x04dd, 0x9305, {
+        "dump_nand": ShSrecExploitMlbaDumper_v2(),
+        "nand_id": ShSrecExploitNandId_v2(),
+    }, payload_base=0xE55B0000, fatal_err=0x60c04608, usb_interrupt=0x60c02000, usb_getch=0x60c03d30, usb_send=0x60c03f08, usb_send_commit=0x60c03904,
+       nand_data=0x16000000, nand_addr=0x16000010, nand_cmd=0x16000020),
+    
     Device("sh-09b", 0x04dd, 0x932f, {
         "dump_nand": ShSrecExploitMlbaDumper_v2(),
         "nand_id": ShSrecExploitNandId_v2(),
@@ -856,6 +862,13 @@ DEVICES = [
         "mlc_check": ShSrecExploitMlcCheck_v2(),
         "probe_onenand": ShSrecExploitProbeOnenand_v2(sweep_start=0x0),
     }, payload_base=0xE55B0000, fatal_err=0x60c04570, usb_interrupt=0x60C02000, usb_getch=0x60c03cb0, usb_send=0x60c03e88, usb_send_commit=0x60c03884,
+       onenand_addr=0x30000000),
+
+    Device("f-05c", 0x04c5, 0x1216, {
+        "onenand_id": ShSrecExploitOnenandId_v2(),
+        "dump_nand": ShSrecExploitOnenandFast_v2(),
+        "probe_onenand": ShSrecExploitProbeOnenand_v2(sweep_start=0x0),
+    }, payload_base=0xE55B0000, fatal_err=0x60c04848, usb_interrupt=0x60C02000, usb_getch=0x60c03f14, usb_send=0x60c04118, usb_send_commit=0x60c03a94,
        onenand_addr=0x30000000),
 
     Device("f-08c", 0x04c5, 0x122f, {
