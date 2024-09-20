@@ -144,6 +144,14 @@ DEVICES = [
        usb_command=0x33eec400, usb_data=0x33efc44a, usb_datasz=0x33efc444, usb_respfunc=0x4f94,
        quirks=SLOW_READ),
 
+    Device("n906i", 0x0409, 0x0234, {
+        "probe_nor": NecNorProbe(base=0x0),
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
+        "nand_id": NecNandId(),
+        "dump_nand": NecNandDumperLp_v2(size=MB(512)),
+    }, payload_base=0x30000000, usb_receive=0x000046a0, usb_send=0x00004ff8,
+       nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000),
+
     Device("n906iu", 0x0409, 0x0244, {
         "probe_nor": NecNorProbe(base=0x0),
         "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
@@ -658,6 +666,13 @@ DEVICES = [
     # SHARP
     ################################################################################################
 
+    Device("sh905i", 0x04dd, 0x91af, {
+        "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
+        "nand_id": ShSrecExploitNandId_v2(),
+        "dump_nand": ShSrecExploitNandDumper_v2(size=MB(256)),
+    }, payload_base=0x64000000, fatal_err=0x646067f8, usb_interrupt=0x64601000, usb_getch=0x64603770, usb_send=0x646039e8, usb_send_commit=0x646032c4,
+       nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),   
+    
     Device("sh905itv", 0x04dd, 0x91ce, {
         "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
         "nand_id": ShSrecExploitNandId_v2(),
