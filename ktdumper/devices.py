@@ -70,7 +70,7 @@ DEVICES = [
 
     # DOCOMO
 
-    Device("n2051", 0x0a3c, 0x00, {
+    Device("n2051", 0x0a3c, 0x000d, {
         "probe_nor": NecNorProbe(base=0x0),
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(32)),
         "nand_id": NecNandId(),
