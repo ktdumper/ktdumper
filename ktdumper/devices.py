@@ -25,6 +25,7 @@ from dump.pipl.pipl_onenand_fast_v2 import PiplOnenandFast_v2
 from dump.pipl.pipl_emmc_dumper import PiplEmmcDumper
 from dump.pipl.pipl_emmc_fuse import PiplEmmcFuse
 from dump.pipl.pipl_exploit_nor_probe import PiplExploitNorProbe
+from dump.pipl.pipl_probe_onenand import PiplProbeOnenand
 
 from dump.sh.sh_exploit import ShExploit
 from dump.fujitsu.fujitsu_java_dumper import FujitsuJavaDumper
@@ -578,6 +579,7 @@ DEVICES = [
     Device("p-01c", 0x04da, 0x216b, {
         "dump_nand": PiplOnenandDumper(),
         "onenand_id": PiplOnenandId(),
+        "probe_onenand": PiplProbeOnenand(sweep_start=0x0),
     }, exploit_flavor="C2", payload_base=0x83800000, onenand_addr=0x0C000000),
 
     Device("p-06c", 0x04da, 0x216b, {
