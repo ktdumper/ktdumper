@@ -114,6 +114,20 @@ class CommonOnenandDumper(CommonOnenandIdMixin):
         print("Dumping OneNAND & OOB")
         self._dump_blocks_pages("onenand", self.blocks, 0, SLC_PAGES_PER_BLOCK)
 
+    def probe_really_4k_page(self):
+        # try to write magic into onenand buffer. then execute read page and read magic back
+        self.writeh(0xDEAD, self.onenand_addr + 0x400 + 2048)
+        self.writeh(0xBEEF, self.onenand_addr + 0x400 + 2048 + 2)
+        self._onenand_cmd(0, 0, 0, 0x00)
+        magic1 = self.readh(self.onenand_addr + 0x400 + 2048)
+        magic2 = self.readh(self.onenand_addr + 0x400 + 2048 + 2)
+
+        # if magic is unchanged, this is actually a 2k page onenand
+        if magic1 == 0xDEAD and magic2 == 0xBEEF:
+            return False
+
+        return True
+
     def execute(self, dev, output):
         super().execute(dev, output)
 
@@ -181,6 +195,10 @@ class CommonOnenandDumper(CommonOnenandIdMixin):
                 # assume 4k pages for devices that are 2Gb or higher raw size per ddp chip
                 # e.g. 512MB w/o ddp would be 4k page, but 512MB with ddp would be 2k page
                 has_4k_pages = (usable_raw_size // self.num_ddp) >= 512 * 1024 * 1024
+
+                # do a double-check by reading a single page and see if it's 2k or 4k
+                if has_4k_pages:
+                    has_4k_pages = self.probe_really_4k_page()
 
             if has_4k_pages:
                 self.page_size = 4096
