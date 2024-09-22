@@ -493,6 +493,14 @@ DEVICES = [
     }, exploit_flavor="A2", payload_base=0x80005000, usb_receive=0x00012678, usb_send=0x00012518,
        onenand_addr=0x0C000000),
 
+    Device("p706ie", 0x04da, 0x216b, {
+        "dump_nor": PiplExploitMemoryDumper(base=0x0, size=MB(128)),
+        "probe_nor": PiplExploitNorProbe(base=0x0),
+        "onenand_id": PiplOnenandId(),
+        "dump_nand": PiplOnenandFast_v2(),
+    }, exploit_flavor="A2", payload_base=0x80005000, usb_receive=0x00012678, usb_send=0x00012518,
+       onenand_addr=0x0C000000),
+
     Device("p906i", 0x0a3c, 0x000d, {
         "onenand_id": NecOnenandId_v2(),
         "probe_nor": NecNorProbe(base=0x0),
