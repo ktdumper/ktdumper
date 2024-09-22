@@ -48,10 +48,10 @@ class MlbaDumper_v2(RwAccess_v2):
                 self.usb_send(struct.pack("<BI", dumpcmd, offset + x))
 
                 page = self.usb_receive()
-                if page[0] == 0xE0:
+                if page[0] in [0xE0, 0xE8]:
                     page = page[1:]
                 else:
-                    print("read page 0x{:X} returned error 0x{:X}".format(x, page[0]))
+                    print("read page 0x{:X} returned error 0x{:X} contents={}".format(x, page[0], page.hex()))
                     page = b"\xFF" * 528
 
                 assert len(page) == 528
