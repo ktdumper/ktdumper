@@ -412,6 +412,12 @@ DEVICES = [
         "dump_nand": NecOnenandDumper(),
     }, payload_base=0x80000000, onenand_addr=0x10000000, quirks=SLOW_READ),
 
+    Device("p703i", 0x0a3c, 0x000d, {
+        "dump_nor": NecMemoryDumper(base=0x0, size=MB(96)),
+        "onenand_id": NecOnenandId(),
+        "dump_nand": NecOnenandDumper(),
+    }, payload_base=0x90000000, onenand_addr=0x08000000),
+
     Device("p703iu", 0x0a3c, 0x000d, {
         "probe_nor": NecNorProbe(base=0x08000000),
         "dump_nor": NecMemoryDumper(base=0x08000000, size=MB(64)),
