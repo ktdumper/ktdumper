@@ -265,6 +265,13 @@ DEVICES = [
        payload_base=0x80000000, usb_receive=0x80264704, usb_send=0x80263f6c,
        onenand_addr=0x08000000),
 
+    Device("n-05b", 0x0409, 0x029c, {
+        "onenand_id": NecOnenandId_v2(),
+        "dump_nand": NecOnenandFast_v2(),
+    }, secret="72c31bffccb50b4ef733cee76e91ccfc79615a6b",
+       payload_base=0x80000000, usb_receive=0x802646e0, usb_send=0x80263f48,
+       onenand_addr=0x08000000),
+
     Device("n-06b", 0x0409, 0x02c0, {
         "onenand_id": NecOnenandId_v2(),
         "dump_nand": NecOnenandFast_v2(fully_slc=True),
