@@ -700,10 +700,11 @@ DEVICES = [
     }, exploit_flavor="A", payload_base=0x8009c000),
 
     Device("823p", 0x04da, 0x216b, {
-        "dump_nor": PiplExploitMemoryDumper(base=0x0, size=MB(128)),
         "probe_nor": PiplExploitNorProbe(base=0x0),
+        "dump_nor": PiplExploitMemoryDumper(base=0x0, size=MB(128)),
         "onenand_id": PiplOnenandId(),
-        "dump_nand": PiplOnenandFast_v2(),
+        "probe_nand": PiplProbeOnenand(sweep_start=0x0),
+        "dump_nand": PiplOnenandDumper(),
     }, exploit_flavor="A2", payload_base=0x80005000, usb_receive=0x00012678, usb_send=0x00012518,
        onenand_addr=0x0C000000),
 
