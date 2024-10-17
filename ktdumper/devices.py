@@ -280,6 +280,14 @@ DEVICES = [
        payload_base=0x30000000, usb_receive=0x35d4ae1c, usb_send=0x35d4b780,
        onenand_addr=0x0),
 
+    Device("n-07b", 0x0409, 0x02ac, {
+        "onenand_id": NecOnenandId_v2(),
+        "dump_nand": NecOnenandFast_v2(),
+        "mlc_check": NecMlcCheck(),
+    }, secret="72c31bffccb50b4ef733cee76e91ccfc79615a6b",
+       payload_base=0x80000000, usb_receive=0x80264704, usb_send=0x80263f6c,
+       onenand_addr=0x08000000),
+
     Device("n-01c", 0x0409, 0x02e8, {
         "onenand_id": NecOnenandId_v2(),
         "dump_nand": NecOnenandFast_v2(),
