@@ -66,6 +66,13 @@ DEVICES = [
        usb_command=0x33ee51a8, usb_data=0x33ef51f2, usb_datasz=0x33ef51ec, usb_respfunc=0x50a8,
        quirks=SLOW_READ),
 
+    Device("ca-01c", 0x0409, 0x02d0, {
+        "onenand_id": NecOnenandId_v2(),
+        "dump_nand": NecOnenandFast_v2(),
+    },secret="3e339064397c56f5e8f1284218add4777b13243f",
+       payload_base=0x80000000, usb_receive=0x80b84c20, usb_send=0x80b84474,
+       onenand_addr=0x08000000),
+
     ################################################################################################
     # NEC
     ################################################################################################
