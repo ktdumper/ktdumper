@@ -18,3 +18,9 @@ Run `./ktdumper.sh` to show the list of supported devices. Afterwards, run the s
 sudo ./ktdumper.sh p321ab dump_nor
 sudo ./ktdumper.sh p321ab dump_nand
 ```
+
+## Notes
+
+For DoCoMo devices (and Softbank phones from Panasonic/NEC/Casio), you must remove the battery before plugging in the phone to use ktdumper.
+
+Make sure to unplug and replug the phone after each command.
