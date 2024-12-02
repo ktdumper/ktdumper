@@ -351,6 +351,13 @@ DEVICES = [
     }, payload_base=0x30000000, usb_receive=0x00004f94, usb_send=0x000058ec,
        onenand_addr=0x10000000),
 
+    Device("821n", 0x0409, 0x0250, {
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
+        "onenand_id": NecOnenandId_v2(),
+        "dump_nand": NecOnenandFast_v2(),
+    }, payload_base=0x30000000, usb_receive=0x00004f94, usb_send=0x000058ec,
+       onenand_addr=0x10000000),
+
     Device("930n", 0x0409, 0x027c, {
         "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),
         "dump_nand": NecNandDumperLp(size=MB(512)),
@@ -358,12 +365,34 @@ DEVICES = [
        usb_command=0x33ee5190, usb_data=0x33ef51da, usb_datasz=0x33ef51d4, usb_respfunc=0x50d4,
        quirks=SLOW_READ),
 
+    Device("830n", 0x0409, 0x0264, {
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
+        "nand_id": NecNandId(),
+        "dump_nand": NecNandDumperLp_v2(size=MB(512)),
+    }, payload_base=0x30000000, usb_receive=0x000046a0, usb_send=0x00005030,
+       nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000),
+
+    Device("931n", 0x0409, 0x0290, {
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
+        "nand_id": NecNandId(),
+        "dump_nand": NecOnenandFast_v2(),
+    }, payload_base=0x30000000, usb_receive=0x000046e0, usb_send=0x00005070,
+       nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000),
+
     Device("831n", 0x0409, 0x0284, {
         "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
         "onenand_id": NecOnenandId_v2(),
         "dump_nand": NecOnenandFast_v2(),
     }, payload_base=0x30000000, usb_receive=0x00004e0c, usb_send=0x00005764,
        onenand_addr=0x10000000),
+
+    Device("841n", 0x0409, 0x0264, {
+        "probe_nor": NecNorProbe(base=0x0),
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
+        "nand_id": NecNandId(),
+        "dump_nand": NecNandDumperLp_v2(size=MB(512)),
+    }, payload_base=0x30000000, usb_receive=0x000046a0, usb_send=0x00005030,
+       nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000),
 
     ################################################################################################
     # PANASONIC
