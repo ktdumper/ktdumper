@@ -133,6 +133,10 @@ DEVICES = [
         "dump_nand": NecOnenandDumper(quirks=SLOW_READ),
     }, payload_base=0x10000000, onenand_addr=0x06000000),
 
+    Device("n703id", 0x0409, 0x01aa, {
+        "dump_nor": NecMemoryDumper(base=0x0, size=MB(128)),
+    }, payload_base=0x30000000, quirks=SLOW_READ),
+
     Device("n904i", 0x0409, 0x0200, {
         "dump_rom": NecMemoryDumper(base=0x0, size=0x8000),
         "dump_nor": NecMemoryDumper(base=0x08000000, size=MB(128)),
