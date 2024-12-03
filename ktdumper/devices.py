@@ -171,6 +171,13 @@ DEVICES = [
     }, payload_base=0x30000000, usb_receive=0x000046a0, usb_send=0x00004ff8,
        nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000),
 
+    Device("n906il", 0x0409, 0x0215, {
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
+        "nand_id": NecNandId(),
+        "dump_nand": NecNandDumperLp_v2(size=MB(512)),
+    }, payload_base=0x30000000, usb_receive=0x000046b4, usb_send=0x0000500c,
+       nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000),
+
     Device("n906iu", 0x0409, 0x0244, {
         "probe_nor": NecNorProbe(base=0x0),
         "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
@@ -303,6 +310,14 @@ DEVICES = [
         "mlc_check": NecMlcCheck(),
     }, secret="72c31bffccb50b4ef733cee76e91ccfc79615a6b",
        payload_base=0x80000000, usb_receive=0x80264704, usb_send=0x80263f6c,
+       onenand_addr=0x08000000),
+
+    Device("n-08b", 0x0409, 0x02b0, {
+        "onenand_id": NecOnenandId_v2(),
+        "dump_nand": NecOnenandFast_v2(),
+        "mlc_check": NecMlcCheck(),
+    }, secret="cf9fdbf69cc3f54a6f0f6a8d45ee6322fd6c9dd3",
+       payload_base=0x80000000, usb_receive=0x80264730, usb_send=0x80263f98,
        onenand_addr=0x08000000),
 
     Device("n-01c", 0x0409, 0x02e8, {
