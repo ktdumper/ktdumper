@@ -396,7 +396,7 @@ DEVICES = [
     Device("931n", 0x0409, 0x0290, {
         "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
         "nand_id": NecNandId(),
-        "dump_nand": NecOnenandFast_v2(),
+        "dump_nand": NecNandDumperLp_v2(size=MB(512)),
     }, payload_base=0x30000000, usb_receive=0x000046e0, usb_send=0x00005070,
        nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000),
 
