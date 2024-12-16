@@ -274,6 +274,14 @@ DEVICES = [
        usb_command=0x33ee5198, usb_data=0x33ef51e2, usb_datasz=0x33ef51dc, usb_respfunc=0x50e8,
        quirks=SLOW_READ),
 
+    Device("n-02b", 0x0409, 0x0298, {
+        "onenand_id": NecOnenandId_v2(),
+        "dump_nand": NecOnenandFast_v2(),
+        "mlc_check": NecMlcCheck(),
+    }, secret="3dad7cd3d3dfd21451f1fe865cccd1f15548bcef",
+       payload_base=0x80000000, usb_receive=0x802645c4, usb_send=0x80263e2c,
+       onenand_addr=0x08000000),
+
     Device("n-03b", 0x0409, 0x02a0, {
         "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),
         "dump_nand": NecNandDumperLp(size=MB(512)),
