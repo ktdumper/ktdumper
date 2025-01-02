@@ -833,6 +833,8 @@ DEVICES = [
         "dump_rom": PiplExploitMemoryDumper(base=0x00000000, size=0x8000),
         "dump_emmc": PiplEmmcDumper(size=MB(2048)),
         "fuse_user": PiplEmmcFuse(offset=0x1a900000, size=0x40000000),
+        "dump_nvm": PiplExploitMemoryDumper(base=0x83B7D000, size=0x20000),
+        "dump_nvminit": PiplExploitMemoryDumper(base=0x80045000, size=0x20000),
     }, exploit_flavor="C", payload_base=0x83800000, emmc_read_and_dcache=0x8000c528, emmc_inv_dcache_and_write=0x8000c600,
        usb_command=0x8115a960, usb_data=0x8115a54a, usb_datasz=0x8115a544, usb_respfunc=0x8000f39c),
 
@@ -840,6 +842,8 @@ DEVICES = [
         "dump_rom": PiplExploitMemoryDumper(base=0x00000000, size=0x8000),
         "dump_emmc": PiplEmmcDumper(size=MB(2048)),
         "fuse_user": PiplEmmcFuse(offset=0x1a900000, size=0x40000000),
+        "dump_nvm": PiplExploitMemoryDumper(base=0x83B7D000, size=0x20000),
+        "dump_nvminit": PiplExploitMemoryDumper(base=0x80045000, size=0x20000),
     }, exploit_flavor="C", payload_base=0x83800000, emmc_read_and_dcache=0x8000c528, emmc_inv_dcache_and_write=0x8000c600,
        usb_command=0x8115a960, usb_data=0x8115a54a, usb_datasz=0x8115a544, usb_respfunc=0x8000f39c),
 
