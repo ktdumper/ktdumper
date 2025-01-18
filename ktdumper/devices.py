@@ -46,6 +46,7 @@ from dump.sony.sony_memory_dumper_v2 import SonyMemoryDumper_v2
 from dump.sony.sony_probe_nor_v2 import SonyProbeNor_v2
 from dump.sony.sony_probe_onenand_v2 import SonyProbeOnenand_v2
 from dump.sony.sony_probe_nand_v2 import SonyProbeNand_v2
+from dump.sony.sony_probe_mdoc_v2 import SonyProbeMdoc_v2
 
 
 def MB(x):
@@ -1160,4 +1161,10 @@ DEVICES = [
         "dump_nor": SonyMemoryDumper_v2(base=0x08000000, size=MB(64)),
         "probe_nor": SonyProbeNor_v2(base=0x08000000),
     }, recv_ch=0x0800e0d4, usb_send=0x0800f290),
+
+    Device("so903itv", 0x0fce, 0xd082, {
+        "dump_nor": SonyMemoryDumper_v2(base=0x08000000, size=MB(64)),
+        "probe_nor": SonyProbeNor_v2(base=0x08000000),
+        "probe_mdoc": SonyProbeMdoc_v2(sweep_start=0x0),
+    }, recv_ch=0x0800e1dc, usb_send=0x0800f398),
 ]
