@@ -42,6 +42,11 @@ from dump.sh.sh_srec_exploit_onenand_fast_v2 import ShSrecExploitOnenandFast_v2
 from dump.sh.sh_srec_exploit_mlc_check_v2 import ShSrecExploitMlcCheck_v2
 from dump.sh.sh_srec_exploit_probe_onenand_v2 import ShSrecExploitProbeOnenand_v2
 
+from dump.sony.sony_memory_dumper_v2 import SonyMemoryDumper_v2
+from dump.sony.sony_probe_nor_v2 import SonyProbeNor_v2
+from dump.sony.sony_probe_onenand_v2 import SonyProbeOnenand_v2
+from dump.sony.sony_probe_nand_v2 import SonyProbeNand_v2
+
 
 def MB(x):
     return x*1024*1024
@@ -1141,4 +1146,13 @@ DEVICES = [
 
     Device("d705i", 0x06d3, 0x21d0, {"dump_java": FujitsuJavaDumper()}),
     Device("d705iu", 0x06d3, 0x21c0, {"dump_java": FujitsuJavaDumper()}),
+
+    ################################################################################################
+    # SONY
+    ################################################################################################
+
+    Device("so902i", 0x0fce, 0xd027, {
+        "dump_nor": SonyMemoryDumper_v2(base=0x08000000, size=MB(128)),
+        "probe_nor": SonyProbeNor_v2(base=0x08000000),
+    }, recv_ch=0x08010050, usb_send=0x08011568),
 ]
