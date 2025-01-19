@@ -47,6 +47,8 @@ from dump.sony.sony_probe_nor_v2 import SonyProbeNor_v2
 from dump.sony.sony_probe_onenand_v2 import SonyProbeOnenand_v2
 from dump.sony.sony_probe_nand_v2 import SonyProbeNand_v2
 from dump.sony.sony_probe_mdoc_v2 import SonyProbeMdoc_v2
+from dump.sony.sony_mdoc_dumper_slow_v2 import SonyMdocDumperSlow_v2
+from dump.sony.sony_mdoc_dumper_v2 import SonyMdocDumper_v2
 
 
 def MB(x):
@@ -1166,5 +1168,7 @@ DEVICES = [
         "dump_nor": SonyMemoryDumper_v2(base=0x08000000, size=MB(64)),
         "probe_nor": SonyProbeNor_v2(base=0x08000000),
         "probe_mdoc": SonyProbeMdoc_v2(sweep_start=0x0),
-    }, recv_ch=0x0800e1dc, usb_send=0x0800f398),
+        "dump_nand_slow": SonyMdocDumperSlow_v2(),
+        "dump_nand": SonyMdocDumper_v2(),
+    }, recv_ch=0x0800e1dc, usb_send=0x0800f398, mdoc_base=0x0c000000),
 ]

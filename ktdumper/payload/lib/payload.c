@@ -2,6 +2,7 @@
 
 #include "lib/nand.c"
 #include "lib/onenand.c"
+#include "lib/mdoc.c"
 
 /* these are the two APIs that the main payload driver has to implement */
 void receive_msg(void);
@@ -125,6 +126,13 @@ void payload_main_loop(void) {
 
             onenand_read_2k(ddp, block, page, onenand_buf);
             send_msg(onenand_buf, 2048+64);
+        } else if (ch == 0x80) {
+            /* read mdoc nand 512b sector */
+            uint8_t part = payload[1];
+            uint32_t block = XADDR(payload, 2);
+
+            mdoc_read(part, block, onenand_buf);
+            send_msg(onenand_buf, 512);
         }
     }
 }

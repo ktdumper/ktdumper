@@ -53,6 +53,8 @@ class SonyProtocol_v2(Dumper):
         self.f_usb_send = opts["usb_send"]
 
         self.nand_data = opts.get("nand_data", 0)
+        if not self.nand_data:
+            self.nand_data = opts.get("mdoc_base", 0)
         self.nand_addr = opts.get("nand_addr", 0)
         self.nand_cmd = opts.get("nand_cmd", 0)
 
