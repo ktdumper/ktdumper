@@ -126,7 +126,7 @@ class SonyMdocDumperSlow_v2(RwAccess_v2, SonyProtocol_v2):
         for part in range(num_parts):
             part_sectors = self.get_part_info(part)
             sectors.append(part_sectors)
-            print("Partition {} : {}".format(part, convert_size(part_sectors * SECTOR_SIZE)))
+            print("Partition {} : 0x{:08X} sectors : {}".format(part, part_sectors, convert_size(part_sectors * SECTOR_SIZE)))
         print("-" * 80)
 
         for part, num_sectors in enumerate(sectors):
