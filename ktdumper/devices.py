@@ -1183,6 +1183,11 @@ DEVICES = [
         "probe_nor": SonyProbeNor_v2(base=0x08000000),
     }, recv_ch=0x08010050, usb_send=0x08011568),
 
+    Device("so702i", 0x0fce, 0xd027, {
+        "dump_nor": SonyMemoryDumper_v2(base=0x08000000, size=MB(128)),
+        "probe_nor": SonyProbeNor_v2(base=0x08000000),
+    }, recv_ch=0x08010050, usb_send=0x08011568),
+
     Device("so703i", 0x0fce, 0xd081, {
         "dump_nor": SonyMemoryDumper_v2(base=0x08000000, size=MB(64)),
         "probe_nor": SonyProbeNor_v2(base=0x08000000),
