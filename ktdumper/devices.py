@@ -878,7 +878,7 @@ DEVICES = [
 
     Device("sh903itv", 0x04dd, 0x916d, {
         "probe_nor": ShSrecExploitProbeNor_v2(base=0x30000000),
-        "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
+        "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(32)),
     }, payload_base=0xe0000000, usb_reset=0xe0603318, usb_getch=0xe0602c9c, usb_send=0xe0602f58, usb_send_commit=0xe06029f0),
 
     Device("sh905i", 0x04dd, 0x91af, {
