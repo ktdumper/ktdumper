@@ -4,6 +4,7 @@
 
 void dis_int();
 
+int (*usb_reset)() = (void*)KT_usb_reset;
 int (*usb_getch)() = (void*)KT_usb_getch;
 int (*usb_send)() = (void*)KT_usb_send;
 int (*usb_send_commit)() = (void*)KT_usb_send_commit;
@@ -142,6 +143,13 @@ void runner(void) {
 }
 
 int main(void) {
+#if KT_usb_reset
+    *(volatile uint16_t*)0x39060412 |= 8;
+    for (volatile int i = 0; i < 1000000; ++i) {}
+    usb_reset();
+    for (volatile int i = 0; i < 100000; ++i) {}
+    runner();
+#else
     /* restore IRQ so that we don't enter here again */
     *(uint32_t*)0x20 = KT_usb_interrupt;
 
@@ -155,8 +163,29 @@ int main(void) {
     __asm__ volatile ("MCR p15, 0, %0, c7, c10, 1\n" :: "r" ((uint32_t)KT_fatal_err+4) : "memory");
     /* invalidate all icache */
     __asm__ volatile ("MCR p15, 0, %0, c7, c5, 0\n" :: "r" (0) : "memory");
+#endif
 }
 
+#if KT_usb_reset
+__asm__(
+".section .text.start\n"
+".global start\n"
+"start:\n"
+    // clean data cache and flush icache before jumping to rest of payload
+    // hopefully increase stability bc we only need 1-2 cache lines to hit
+"    ldr r0, =%base%\n"
+"    ldr r1, =%base%+0x10000\n"
+"loop:\n"
+"    mcr p15, 0, r0, c7, c10, 1\n"
+"    add r0, r0, #32\n"
+"    cmp r0, r1\n"
+"    bne loop\n"
+"    mov r0, #0\n"
+"    mcr p15, 0, r0, c7, c5, 0\n"
+
+"    b main\n"
+);
+#else
 __asm__(
 ".section .text.start\n"
 ".global start\n"
@@ -186,3 +215,4 @@ __asm__(
 
 "    ldmia sp!,{r0,r1,r2,r3,r4,r5,r12,lr,pc}\n"
 );
+#endif
