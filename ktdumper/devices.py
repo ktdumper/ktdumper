@@ -881,6 +881,16 @@ DEVICES = [
         "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(32)),
     }, payload_base=0xe0000000, usb_reset=0xe0603318, usb_getch=0xe0602c9c, usb_send=0xe0602f58, usb_send_commit=0xe06029f0),
 
+    Device("sh703i", 0x04dd, 0x9125, {
+        "probe_nor": ShSrecExploitProbeNor_v2(base=0x30000000),
+        "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(32)),
+    }, payload_base=0xe0000000, usb_reset=0xe0603318, usb_getch=0xe0602c9c, usb_send=0xe0602f58, usb_send_commit=0xe06029f0),
+    
+    Device("sh704i", 0x04dd, 0x9194, {
+        "probe_nor": ShSrecExploitProbeNor_v2(base=0x00000000),
+        "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x50C00000, size=MB(32)),
+    }, payload_base=0xe0000000, usb_reset=0xe0603318, usb_getch=0xe0602c9c, usb_send=0xe0602f58, usb_send_commit=0xe06029f0),
+
     Device("sh905i", 0x04dd, 0x91af, {
         "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
         "nand_id": ShSrecExploitNandId_v2(),
