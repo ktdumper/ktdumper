@@ -61,7 +61,7 @@ int main() {
     AP_CMD = 0;
     AP_STS = 0xBBBAAA;
 
-    volatile uint8_t *dstbuf = (void*)0xe6c21000;
+    volatile uint16_t *dstbuf = (void*)0xe6c21000;
 
     while (1) {
         uint32_t cmd = AP_CMD;
@@ -106,15 +106,15 @@ int main() {
         }
 
         case CMD_AP_READ: {
-            volatile uint8_t *ptr = (void*)AP_ARG;
-            for (int i = 0; i < 64; ++i)
+            volatile uint16_t *ptr = (void*)AP_ARG;
+            for (int i = 0; i < 64/2; ++i)
                 dstbuf[i] = ptr[i];
             break;
         }
 
         case CMD_AP_READ2048: {
-            volatile uint8_t *ptr = (void*)AP_ARG;
-            for (int i = 0; i < 2048; ++i)
+            volatile uint16_t *ptr = (void*)AP_ARG;
+            for (int i = 0; i < 2048/2; ++i)
                 dstbuf[i] = ptr[i];
             break;
         }

@@ -51,6 +51,8 @@ from dump.sony.sony_mdoc_dumper_slow_v2 import SonyMdocDumperSlow_v2
 from dump.sony.sony_mdoc_dumper_v2 import SonyMdocDumper_v2
 
 from dump.sh_g1.sh_g1_memory_dumper import ShG1MemoryDumper
+from dump.sh_g1.sh_g1_onenand_id import ShG1OnenandId
+from dump.sh_g1.sh_g1_onenand_dumper import ShG1OnenandDumper
 
 
 def MB(x):
@@ -1181,7 +1183,12 @@ DEVICES = [
     }, payload_base=0x64000000, fatal_err=0x64606890, usb_interrupt=0x64601000, usb_getch=0x6460380c, usb_send=0x64603a80, usb_send_commit=0x6460339c,
        nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),
 
-    Device("d705i", 0x06d3, 0x21d0, {"dump_java": FujitsuJavaDumper()}),
+    Device("d705i", 0x06d3, 0x21d0, {
+        "dump_java": FujitsuJavaDumper(),
+        "onenand_id": ShG1OnenandId(),
+        "dump_nand": ShG1OnenandDumper(),
+    }, onenand_addr=0x08000000),
+
     Device("d705iu", 0x06d3, 0x21c0, {"dump_java": FujitsuJavaDumper()}),
 
     ################################################################################################
