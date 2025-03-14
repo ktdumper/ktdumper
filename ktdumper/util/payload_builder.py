@@ -27,7 +27,8 @@ OBJCOPY = ["arm-none-eabi-objcopy", "-O", "binary"]
 
 class PayloadBuilder:
 
-    def __init__(self, srcfile):
+    def __init__(self, srcfile, extra_args=None):
+        self.extra_args = extra_args or []
         with open(os.path.join(PAYLOAD_PATH, srcfile)) as inf:
             self.src = inf.read()
 
@@ -51,7 +52,7 @@ class PayloadBuilder:
                 outf.write(LINKER.replace("BASE", hex(base)))
             with open(p_payload_c, "w") as outf:
                 outf.write(src)
-            subprocess.check_output(COMPILE + defs + ["-o", p_payload_o, p_payload_c])
+            subprocess.check_output(COMPILE + self.extra_args + defs + ["-o", p_payload_o, p_payload_c])
             subprocess.check_output(LINK + ["-T", p_linker_x, "-o", p_payload, p_payload_o])
             subprocess.check_output(OBJCOPY + [p_payload, p_payload_bin])
             with open(p_payload_bin, "rb") as inf:

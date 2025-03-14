@@ -50,6 +50,8 @@ from dump.sony.sony_probe_mdoc_v2 import SonyProbeMdoc_v2
 from dump.sony.sony_mdoc_dumper_slow_v2 import SonyMdocDumperSlow_v2
 from dump.sony.sony_mdoc_dumper_v2 import SonyMdocDumper_v2
 
+from dump.sh_g1.sh_g1_memory_dumper import ShG1MemoryDumper
+
 
 def MB(x):
     return x*1024*1024
@@ -882,6 +884,11 @@ DEVICES = [
     ################################################################################################
     # SHARP
     ################################################################################################
+
+    Device("sh904i", 0x04dd, 0x916f, {
+        "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
+        "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
+    }),
 
     Device("sh905i", 0x04dd, 0x91af, {
         "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
