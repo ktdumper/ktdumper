@@ -54,6 +54,7 @@ from dump.sh_g1.sh_g1_memory_dumper import ShG1MemoryDumper
 from dump.sh_g1.sh_g1_onenand_id import ShG1OnenandId
 from dump.sh_g1.sh_g1_onenand_dumper import ShG1OnenandDumper
 from dump.sh_g1.sh_g1_nand_id import ShG1NandId
+from dump.sh_g1.sh_g1_nand_dumper import ShG1NandDumper
 
 
 def MB(x):
@@ -892,6 +893,7 @@ DEVICES = [
         "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
         "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
         "nand_id": ShG1NandId(),
+        "dump_nand": ShG1NandDumper(size=MB(128)),
     }, nand_data=0x08000000, nand_addr=0x09000000, nand_cmd=0x0A000000),
 
     Device("sh905i", 0x04dd, 0x91af, {

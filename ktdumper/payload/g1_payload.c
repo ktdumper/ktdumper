@@ -110,6 +110,16 @@ uint32_t ap_read2048(uint32_t addr) {
     }
 }
 
+uint32_t ap_readnand(uint32_t page) {
+    AP_STS = 0;
+    AP_ARG = page;
+    AP_CMD = CMD_AP_READNAND;
+    while (1) {
+        if (AP_STS)
+            return AP_ARG;
+    }
+}
+
 void start_ap(void) {
     volatile uint16_t *DAT_39060410 = (void*)0x39060410;
     volatile uint32_t *DAT_50401ff8 = (void*)0x50401ff8;
@@ -327,6 +337,11 @@ void go(void) {
             uint32_t addr = XADDR(payload, 1);
             ap_read2048(addr);
             send_msg(dstbuf, 2048);
+        } else if (ch == 0x52) {
+            /* nand_LP_read */
+            uint32_t page = XADDR(payload, 1);
+            ap_readnand(page);
+            send_msg(dstbuf, 0x841);
         }
     }
 }

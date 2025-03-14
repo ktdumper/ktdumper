@@ -7,14 +7,9 @@
 #define AP_ARG (*(volatile uint32_t*)0xe6c21ff0)
 #define AP_ARGS ((volatile uint32_t*)0xe6c21ff0)
 
-#define NAND_BASE (0x08000000)
-#define off_NAND_DATA 0x0
-#define off_NAND_ADDR 0x1000000
-#define off_NAND_CMD 0x2000000
-
-volatile uint16_t *NAND_DATA = (void*)(NAND_BASE + off_NAND_DATA);
-volatile uint8_t *NAND_ADDR = (void*)(NAND_BASE + off_NAND_ADDR);
-volatile uint8_t *NAND_CMD = (void*)(NAND_BASE + off_NAND_CMD);
+volatile uint16_t *NAND_DATA = (void*)(KT_nand_data);
+volatile uint8_t *NAND_ADDR = (void*)(KT_nand_addr);
+volatile uint8_t *NAND_CMD = (void*)(KT_nand_cmd);
 
 int nand_wait() {
 	while (1) {
@@ -27,8 +22,8 @@ int nand_wait() {
 	}
 }
 
-int nand_read_lp(uint32_t page, void *dst) {
-	uint8_t *cdst = dst;
+int nand_read_lp(uint32_t page, volatile void *dst) {
+	volatile uint8_t *cdst = dst;
 
     *NAND_CMD = 0x00;
 
@@ -116,6 +111,11 @@ int main() {
             volatile uint16_t *ptr = (void*)AP_ARG;
             for (int i = 0; i < 2048/2; ++i)
                 dstbuf[i] = ptr[i];
+            break;
+        }
+
+        case CMD_AP_READNAND: {
+            dstbuf[0x840/2] = nand_read_lp(AP_ARG, dstbuf);
             break;
         }
 

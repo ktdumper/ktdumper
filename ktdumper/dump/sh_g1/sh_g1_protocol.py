@@ -74,6 +74,13 @@ class ShG1Protocol(Dumper):
 
         self.buffer = []
 
+    def parse_opts(self, opts):
+        super().parse_opts(opts)
+
+        self.nand_data = opts.get("nand_data", 0)
+        self.nand_addr = opts.get("nand_addr", 0)
+        self.nand_cmd = opts.get("nand_cmd", 0)
+
     def wait_for_srec(self):
         time.sleep(0.5)
         while True:
@@ -257,7 +264,7 @@ class ShG1Protocol(Dumper):
         self.dev = self.wait_for_reconnect()
         print("Got srec mode, stage 2...")
 
-        ap_payload = PayloadBuilder("g1_ap.c").build(base=AP_BASE)
+        ap_payload = PayloadBuilder("g1_ap.c").build(base=AP_BASE, nand_data=self.nand_data, nand_cmd=self.nand_cmd, nand_addr=self.nand_addr)
         assert len(ap_payload) < 0x800
         payload = PayloadBuilder("g1_payload.c", EXTRA_BUILD_ARGS).build(base=PAYLOAD_BASE, shellcode=",".join(hex(x) for x in ap_payload))
         payload += b"\x00" * (32 * 1024 - len(payload))
