@@ -204,14 +204,26 @@ class ShG1Protocol(Dumper):
         self.usb_send(struct.pack("<BI", 0x60, addr))
         return self.usb_receive()
 
+    def read2048(self, addr):
+        self.usb_send(struct.pack("<BI", 0x61, addr))
+        return self.usb_receive()
+
     def read(self, addr, size):
         assert size % 64 == 0
+        orig = size
 
         data = b""
         while size > 0:
-            data += self.read64(addr)
-            addr += 64
-            size -= 64
+            if size >= 2048:
+                data += self.read2048(addr)
+                addr += 2048
+                size -= 2048
+            else:
+                data += self.read64(addr)
+                addr += 64
+                size -= 64
+
+        assert len(data) == orig
         return data
 
     def execute(self, dev, output):

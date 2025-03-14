@@ -8,4 +8,5 @@ enum {
     CMD_AP_WRITE16 = 5,
     CMD_AP_WRITE32 = 6,
     CMD_AP_READ = 7,
+    CMD_AP_READ2048 = 8,
 };

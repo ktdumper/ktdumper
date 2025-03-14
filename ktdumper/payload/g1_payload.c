@@ -100,6 +100,16 @@ uint32_t ap_read(uint32_t addr) {
     }
 }
 
+uint32_t ap_read2048(uint32_t addr) {
+    AP_STS = 0;
+    AP_ARG = addr;
+    AP_CMD = CMD_AP_READ2048;
+    while (1) {
+        if (AP_STS)
+            return AP_ARG;
+    }
+}
+
 void start_ap(void) {
     volatile uint16_t *DAT_39060410 = (void*)0x39060410;
     volatile uint32_t *DAT_50401ff8 = (void*)0x50401ff8;
@@ -312,6 +322,11 @@ void go(void) {
             uint32_t addr = XADDR(payload, 1);
             ap_read(addr);
             send_msg(dstbuf, 64);
+        } else if (ch == 0x61) {
+            /* read 2048 bytes from AP */
+            uint32_t addr = XADDR(payload, 1);
+            ap_read2048(addr);
+            send_msg(dstbuf, 2048);
         }
     }
 }

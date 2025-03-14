@@ -112,6 +112,13 @@ int main() {
             break;
         }
 
+        case CMD_AP_READ2048: {
+            volatile uint8_t *ptr = (void*)AP_ARG;
+            for (int i = 0; i < 2048; ++i)
+                dstbuf[i] = ptr[i];
+            break;
+        }
+
         default:
             fatal();
         }
