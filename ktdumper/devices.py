@@ -883,32 +883,27 @@ DEVICES = [
     # SHARP
     ################################################################################################
 
-    Device("sh903itv", 0x04dd, 0x916d, {
-        "probe_nor": ShSrecExploitProbeNor_v2(base=0x30000000),
-        "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
-    }, payload_base=0xe0000000, usb_reset=0xe0603318, usb_getch=0xe0602c9c, usb_send=0xe0602f58, usb_send_commit=0xe06029f0),
-
     Device("sh905i", 0x04dd, 0x91af, {
         "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
         "nand_id": ShSrecExploitNandId_v2(),
         "dump_nand": ShSrecExploitNandDumper_v2(size=MB(256)),
     }, payload_base=0x64000000, fatal_err=0x646067f8, usb_interrupt=0x64601000, usb_getch=0x64603770, usb_send=0x646039e8, usb_send_commit=0x646032c4,
-       nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),
-
+       nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),   
+    
     Device("sh905itv", 0x04dd, 0x91ce, {
         "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
         "nand_id": ShSrecExploitNandId_v2(),
         "dump_nand": ShSrecExploitNandDumper_v2(size=MB(256)),
     }, payload_base=0x64000000, fatal_err=0x646067f8, usb_interrupt=0x64601000, usb_getch=0x64603770, usb_send=0x646039e8, usb_send_commit=0x646032c4,
-       nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),
-
+       nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),   
+    
     Device("sh906i", 0x04dd, 0x91d3, {
         "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
         "nand_id": ShSrecExploitNandId_v2(),
         "dump_nand": ShSrecExploitNandDumper_v2(size=MB(256)),
     }, payload_base=0x64000000, fatal_err=0x646069f4, usb_interrupt=0x64601000, usb_getch=0x6460396c, usb_send=0x64603be4, usb_send_commit=0x646034c0,
        nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),
-
+    
     Device("sh906itv", 0x04dd, 0x91ee, {
         "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
         "nand_id": ShSrecExploitNandId_v2(),
