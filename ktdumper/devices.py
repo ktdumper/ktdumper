@@ -53,6 +53,7 @@ from dump.sony.sony_mdoc_dumper_v2 import SonyMdocDumper_v2
 from dump.sh_g1.sh_g1_memory_dumper import ShG1MemoryDumper
 from dump.sh_g1.sh_g1_onenand_id import ShG1OnenandId
 from dump.sh_g1.sh_g1_onenand_dumper import ShG1OnenandDumper
+from dump.sh_g1.sh_g1_nand_id import ShG1NandId
 
 
 def MB(x):
@@ -890,7 +891,8 @@ DEVICES = [
     Device("sh904i", 0x04dd, 0x916f, {
         "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
         "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
-    }),
+        "nand_id": ShG1NandId(),
+    }, nand_data=0x08000000, nand_addr=0x09000000, nand_cmd=0x0A000000),
 
     Device("sh905i", 0x04dd, 0x91af, {
         "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
