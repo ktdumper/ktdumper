@@ -1198,7 +1198,14 @@ DEVICES = [
     Device("d903itv", 0x06d3, 0x2170, {"dump_java": FujitsuJavaDumper()}),
     Device("d703i", 0x06d3, 0x2160, {"dump_java": FujitsuJavaDumper()}),
     Device("d904i", 0x06d3, 0x2190, {"dump_java": FujitsuJavaDumper()}),
-    Device("d704i", 0x06d3, 0x21a0, {"dump_java": FujitsuJavaDumper()}),
+
+    Device("d704i", 0x06d3, 0x21a0, {
+        "dump_java": FujitsuJavaDumper(),
+        "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
+        "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
+        "nand_id": ShG1NandId(),
+        "dump_nand": ShG1NandDumper(size=MB(128)),
+    }, nand_data=0x08000000, nand_addr=0x08000010, nand_cmd=0x08000020),
 
     Device("d905i", 0x06d3, 0x21b0, {
         "dump_java": FujitsuJavaDumper(),
