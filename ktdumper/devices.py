@@ -1223,7 +1223,13 @@ DEVICES = [
         "dump_nand": ShG1OnenandDumper(),
     }, onenand_addr=0x08000000),
 
-    Device("d705iu", 0x06d3, 0x21c0, {"dump_java": FujitsuJavaDumper()}),
+    Device("d705iu", 0x06d3, 0x21c0, {
+        "dump_java": FujitsuJavaDumper(),
+        "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
+        "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
+        "onenand_id": ShG1OnenandId(),
+        "dump_nand": ShG1OnenandDumper(),
+    }, onenand_addr=0x08000000),
 
     ################################################################################################
     # SONY
