@@ -10,10 +10,10 @@ __asm__(
 );
 void dis_int(void);
 
-int (*usb_reset)() = (void*)0xe0603318;
-int (*usb_getch)() = (void*)0xe0602c9c;
-int (*usb_send)() = (void*)0xe0602f58;
-int (*usb_send_commit)() = (void*)0xe06029f0;
+int (*usb_reset)() = (void*)KT_usb_reset;
+int (*usb_getch)() = (void*)KT_usb_getch;
+int (*usb_send)() = (void*)KT_usb_send;
+int (*usb_send_commit)() = (void*)KT_usb_send_commit;
 
 void send(void *buf, size_t sz) {
     usb_send(buf, sz);

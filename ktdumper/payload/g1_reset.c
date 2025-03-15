@@ -1,7 +1,7 @@
 #include <inttypes.h>
 #include <stddef.h>
 
-int (*reboot)() = (void*)0xe0601938;
+int (*reboot)() = (void*)KT_reboot;
 
 void main(void) {
     /* reset a specific bit set by the jumper */

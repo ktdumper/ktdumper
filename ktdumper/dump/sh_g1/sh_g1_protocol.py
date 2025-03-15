@@ -81,6 +81,12 @@ class ShG1Protocol(Dumper):
         self.nand_addr = opts.get("nand_addr", 0)
         self.nand_cmd = opts.get("nand_cmd", 0)
 
+        self.f_reboot = opts.get("reboot", 0xe0601938)
+        self.f_usb_reset = opts.get("usb_reset", 0xe0603318)
+        self.f_usb_getch = opts.get("usb_getch", 0xe0602c9c)
+        self.f_usb_send = opts.get("usb_send", 0xe0602f58)
+        self.f_usb_send_commit = opts.get("usb_send_commit", 0xe06029f0)
+
     def wait_for_srec(self):
         time.sleep(0.5)
         while True:
@@ -111,7 +117,9 @@ class ShG1Protocol(Dumper):
 
     def run_payload(self, payload, twoway_handshake=False):
         self.dev.ctrl_transfer(0x41, 0x62, 0x00, 0, b"\x02\xC0")
+        time.sleep(0.5)
         self.dev.ctrl_transfer(0x41, 0x60, 0xC0, 0)
+        time.sleep(0.5)
 
         if twoway_handshake:
             self.dev.write(3, bytes.fromhex("FF 55 00 42 00 01 01 FE"))
@@ -257,7 +265,7 @@ class ShG1Protocol(Dumper):
         self.dev = self.wait_for_srec()
         print("Got srec mode, stage 1...")
 
-        payload = PayloadBuilder("g1_reset.c", EXTRA_BUILD_ARGS).build(base=PAYLOAD_BASE)
+        payload = PayloadBuilder("g1_reset.c", EXTRA_BUILD_ARGS).build(base=PAYLOAD_BASE, reboot=self.f_reboot)
         payload += b"\x00" * (32 * 1024 - len(payload))
         self.run_payload(payload)
 
@@ -266,7 +274,14 @@ class ShG1Protocol(Dumper):
 
         ap_payload = PayloadBuilder("g1_ap.c").build(base=AP_BASE, nand_data=self.nand_data, nand_cmd=self.nand_cmd, nand_addr=self.nand_addr)
         assert len(ap_payload) < 0x800
-        payload = PayloadBuilder("g1_payload.c", EXTRA_BUILD_ARGS).build(base=PAYLOAD_BASE, shellcode=",".join(hex(x) for x in ap_payload))
+        payload = PayloadBuilder("g1_payload.c", EXTRA_BUILD_ARGS).build(
+            base=PAYLOAD_BASE,
+            shellcode=",".join(hex(x) for x in ap_payload),
+            usb_reset=self.f_usb_reset,
+            usb_getch=self.f_usb_getch,
+            usb_send=self.f_usb_send,
+            usb_send_commit=self.f_usb_send_commit,
+        )
         payload += b"\x00" * (32 * 1024 - len(payload))
         self.run_payload(payload, twoway_handshake=True)
 
