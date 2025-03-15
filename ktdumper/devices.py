@@ -896,7 +896,21 @@ DEVICES = [
         "dump_nand": ShG1NandDumper(size=MB(128)),
     }, nand_data=0x08000000, nand_addr=0x09000000, nand_cmd=0x0A000000),
 
+    Device("sh703i", 0x04dd, 0x9125, {
+        "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
+        "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
+        "nand_id": ShG1NandId(),
+        "dump_nand": ShG1NandDumper(size=MB(128)),
+    }, nand_data=0x08000000, nand_addr=0x09000000, nand_cmd=0x0A000000),
+
     Device("sh904i", 0x04dd, 0x916f, {
+        "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
+        "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
+        "nand_id": ShG1NandId(),
+        "dump_nand": ShG1NandDumper(size=MB(128)),
+    }, nand_data=0x08000000, nand_addr=0x09000000, nand_cmd=0x0A000000),
+
+    Device("sh704i", 0x04dd, 0x9194, {
         "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
         "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
         "nand_id": ShG1NandId(),
