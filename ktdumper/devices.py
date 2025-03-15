@@ -1207,14 +1207,6 @@ DEVICES = [
         "dump_nand": ShG1NandDumper(size=MB(128)),
     }, nand_data=0x08000000, nand_addr=0x08000010, nand_cmd=0x08000020),
 
-    Device("d905i", 0x06d3, 0x21b0, {
-        "dump_java": FujitsuJavaDumper(),
-        "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
-        "nand_id": ShSrecExploitNandId_v2(),
-        "dump_nand": ShSrecExploitNandDumper_v2(size=MB(256)),
-    }, payload_base=0x64000000, fatal_err=0x64606890, usb_interrupt=0x64601000, usb_getch=0x6460380c, usb_send=0x64603a80, usb_send_commit=0x6460339c,
-       nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),
-
     Device("d705i", 0x06d3, 0x21d0, {
         "dump_java": FujitsuJavaDumper(),
         "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
@@ -1230,6 +1222,14 @@ DEVICES = [
         "onenand_id": ShG1OnenandId(),
         "dump_nand": ShG1OnenandDumper(),
     }, onenand_addr=0x08000000),
+
+    Device("d905i", 0x06d3, 0x21b0, {
+        "dump_java": FujitsuJavaDumper(),
+        "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
+        "nand_id": ShSrecExploitNandId_v2(),
+        "dump_nand": ShSrecExploitNandDumper_v2(size=MB(256)),
+    }, payload_base=0x64000000, fatal_err=0x64606890, usb_interrupt=0x64601000, usb_getch=0x6460380c, usb_send=0x64603a80, usb_send_commit=0x6460339c,
+       nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),
 
     ################################################################################################
     # SONY
