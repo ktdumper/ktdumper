@@ -1108,6 +1108,14 @@ DEVICES = [
        onenand_addr=0x08000000),
 
     Device("f904i", 0x04c5, 0x1122, {"dump_java": FujitsuJavaDumper()}),
+
+    Device("f704i", 0x04c5, 0x1124, {
+        "dump_java": FujitsuJavaDumper(),
+        "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
+        "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
+        "nand_id": ShG1NandId(),
+        "dump_nand": ShG1NandDumper(size=MB(128)),
+    }, nand_data=0x08000000, nand_addr=0x08000010, nand_cmd=0x08000020),
     
     Device("f905itw", 0x04c5, 0x1198, {
         "dump_java": FujitsuJavaDumper(),
