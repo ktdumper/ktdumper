@@ -147,6 +147,11 @@ DEVICES = [
         "dump_nand": NecOnenandDumper(quirks=SLOW_READ),
     }, payload_base=0x10000000, onenand_addr=0x06000000),
 
+    Device("n702is", 0x0409, 0x0196, {
+        "dump_nor": NecMemoryDumper(base=0x0, size=MB(128)),
+        "dump_nand": NecOnenandDumper(quirks=SLOW_READ),
+    }, payload_base=0x10000000, onenand_addr=0x06000000),
+
     Device("n903i", 0x0409, 0x0190, {
         "dump_nor": NecMemoryDumper(base=0x08000000, size=MB(96)),
         "dump_nand": NecOnenandDumper(),
@@ -292,6 +297,22 @@ DEVICES = [
         "dump_nand": NecNandDumperLp_v2(size=MB(512)),
     }, payload_base=0x30000000, usb_receive=0x000046e0, usb_send=0x00005070,
        nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000),
+
+    Device("n-01b", 0x0409, 0x0288, {
+        "onenand_id": NecOnenandId_v2(),
+        "dump_nand": NecOnenandFast_v2(),
+        "mlc_check": NecMlcCheck(),
+    }, secret="3dad7cd3d3dfd21451f1fe865cccd1f15548bcef",
+       payload_base=0x80000000, usb_receive=0x80264610, usb_send=0x80263e78,
+       onenand_addr=0x08000000),
+       
+    Device("n-01b.v2", 0x0409, 0x0288, {
+        "onenand_id": NecOnenandId_v2(),
+        "dump_nand": NecOnenandFast_v2(),
+        "mlc_check": NecMlcCheck(),
+    }, secret="3dad7cd3d3dfd21451f1fe865cccd1f15548bcef",
+       payload_base=0x80000000, usb_receive=0x802645c0, usb_send=0x80263e28,
+       onenand_addr=0x08000000),
 
     Device("n-02b", 0x0409, 0x0298, {
         "onenand_id": NecOnenandId_v2(),
@@ -970,6 +991,13 @@ DEVICES = [
     }, payload_base=0x64000000, fatal_err=0x646069f4, usb_interrupt=0x64601000, usb_getch=0x6460396c, usb_send=0x64603be4, usb_send_commit=0x646034c0,
        nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),
 
+    Device("sh706ie", 0x04dd, 0x9224, {
+        "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
+        "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
+        "nand_id": ShG1NandId(),
+        "dump_nand": ShG1NandDumper(size=MB(128)),
+    }, nand_data=0x08000000, nand_addr=0x09000000, nand_cmd=0x0A000000),
+
     Device("sh-01a", 0x04dd, 0x9218, {
         "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
         "nand_id_a": ShSrecExploitNandId_v2(nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),
@@ -1069,6 +1097,12 @@ DEVICES = [
        nand_data=0x16000000, nand_addr=0x16000010, nand_cmd=0x16000020),
 
     Device("sh-02c", 0x04dd, 0x936f, {
+        "dump_nand": ShSrecExploitMlbaDumper_v2(),
+        "nand_id": ShSrecExploitNandId_v2(),
+    }, payload_base=0xE55B0000, fatal_err=0x60c045fc, usb_interrupt=0x60c02000, usb_getch=0x60c03d28, usb_send=0x60c03f00, usb_send_commit=0x60c038fc,
+       nand_data=0x16000000, nand_addr=0x16000010, nand_cmd=0x16000020),
+
+    Device("sh-08c", 0x04dd, 0x93f9, {
         "dump_nand": ShSrecExploitMlbaDumper_v2(),
         "nand_id": ShSrecExploitNandId_v2(),
     }, payload_base=0xE55B0000, fatal_err=0x60c045fc, usb_interrupt=0x60c02000, usb_getch=0x60c03d28, usb_send=0x60c03f00, usb_send_commit=0x60c038fc,
