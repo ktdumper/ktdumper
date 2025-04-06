@@ -66,6 +66,17 @@ DEVICES = [
     # CASIO
     ################################################################################################
 
+    # DOCOMO
+    
+    Device("ca-01c", 0x0409, 0x02d0, {
+        "onenand_id": NecOnenandId_v2(),
+        "dump_nand": NecOnenandFast_v2(),
+    },secret="3e339064397c56f5e8f1284218add4777b13243f",
+       payload_base=0x80000000, usb_receive=0x80b84c20, usb_send=0x80b84474,
+       onenand_addr=0x08000000),
+
+    # SOFTBANK
+
     Device("830ca", 0x1967, 0x2002, {
         "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
         "onenand_id": NecOnenandId_v2(),
@@ -74,18 +85,11 @@ DEVICES = [
        onenand_addr=0x10000000),
 
     Device("930ca", 0x1967, 0x2004, {
-        "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),
-        "dump_nand": NecNandDumperLp(size=MB(512)),
-    }, payload_base=0x30000000, nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000,
-       usb_command=0x33ee51a8, usb_data=0x33ef51f2, usb_datasz=0x33ef51ec, usb_respfunc=0x50a8,
-       quirks=SLOW_READ),
-
-    Device("ca-01c", 0x0409, 0x02d0, {
-        "onenand_id": NecOnenandId_v2(),
-        "dump_nand": NecOnenandFast_v2(),
-    },secret="3e339064397c56f5e8f1284218add4777b13243f",
-       payload_base=0x80000000, usb_receive=0x80b84c20, usb_send=0x80b84474,
-       onenand_addr=0x08000000),
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
+        "nand_id": NecNandId(),
+        "dump_nand": NecNandDumperLp_v2(size=MB(512)),
+    }, payload_base=0x30000000, usb_receive=0x000046a0, usb_send=0x00005030,
+       nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000),
 
     ################################################################################################
     # NEC
