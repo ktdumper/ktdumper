@@ -230,23 +230,20 @@ DEVICES = [
     }, payload_base=0x30000000, nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000,
        usb_command=0x33ee50d0, usb_data=0x33ef511a, usb_datasz=0x33ef5114, usb_respfunc=0x5520,
        quirks=SLOW_READ),
-
+    
     Device("n-01a", 0x0409, 0x0240, {
-        "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),
-        "dump_nand": NecNandDumperLp(size=MB(512)),
-    }, payload_base=0x30000000, nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000,
-       usb_command=0x33ee5198, usb_data=0x33ef51e2, usb_datasz=0x33ef51dc, usb_respfunc=0x5098,
-       quirks=SLOW_READ),
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
+        "nand_id": NecNandId(),
+        "dump_nand": NecNandDumperLp_v2(size=MB(512)),
+    }, payload_base=0x30000000, usb_receive=0x00004690, usb_send=0x00005020,
+       nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000),
 
     Device("n-02a", 0x0409, 0x025c, {
-        "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),
-        "dump_nor_slow": NecMemoryDumper(base=0x0, size=MB(128)),
-        "dump_nand": NecNandDumperLp(size=MB(512)),
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
         "nand_id": NecNandId(),
-        "dump_nand_slow": NecNandDumperLpViaPoke(),
-    }, payload_base=0x30000000, nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000,
-       usb_command=0x33ee5198, usb_data=0x33ef51e2, usb_datasz=0x33ef51dc, usb_respfunc=0x519c,
-       quirks=SLOW_READ),
+        "dump_nand": NecNandDumperLp_v2(size=MB(512)),
+    }, payload_base=0x30000000, usb_receive=0x00004794, usb_send=0x00005124,
+       nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000),
 
     Device("n-03a", 0x0409, 0x0268, {
         "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
@@ -256,11 +253,11 @@ DEVICES = [
        onenand_addr=0x10000000),
 
     Device("n-04a", 0x0409, 0x0260, {
-        "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),
-        "dump_nand": NecNandDumperLp(size=MB(512)),
-    }, payload_base=0x30000000, nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000,
-       usb_command=0x33ee5198, usb_data=0x33ef51e2, usb_datasz=0x33ef51dc, usb_respfunc=0x50a8,
-       quirks=SLOW_READ),
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
+        "nand_id": NecNandId(),
+        "dump_nand": NecNandDumperLp_v2(size=MB(512)),
+    }, payload_base=0x30000000, usb_receive=0x000046a0, usb_send=0x00005030,
+       nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000),
 
     Device("n-05a", 0x0409, 0x0278, {
         "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
@@ -269,20 +266,20 @@ DEVICES = [
         "dump_nand": NecOnenandFast_v2(),
     }, payload_base=0x30000000, usb_receive=0x00004e0c, usb_send=0x00005764, quirks=SLOW_READ,
        onenand_addr=0x10000000),
-
+    
     Device("n-06a", 0x0409, 0x0274, {
-        "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),
-        "dump_nand": NecNandDumperLp(size=MB(512)),
-    }, payload_base=0x30000000, nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000,
-       usb_command=0x33ee5198, usb_data=0x33ef51e2, usb_datasz=0x33ef51dc, usb_respfunc=0x50e8,
-       quirks=SLOW_READ),
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
+        "nand_id": NecNandId(),
+        "dump_nand": NecNandDumperLp_v2(size=MB(512)),
+    }, payload_base=0x30000000, usb_receive=0x000046e0, usb_send=0x00005070,
+       nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000),
 
     Device("n-07a", 0x0409, 0x0280, {
-        "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),
-        "dump_nand": NecNandDumperLp(size=MB(512)),
-    }, payload_base=0x30000000, nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000,
-       usb_command=0x33ee5198, usb_data=0x33ef51e2, usb_datasz=0x33ef51dc, usb_respfunc=0x50f0,
-       quirks=SLOW_READ),
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
+        "nand_id": NecNandId(),
+        "dump_nand": NecNandDumperLp_v2(size=MB(512)),
+    }, payload_base=0x30000000, usb_receive=0x000046e8, usb_send=0x00005078,
+       nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000),
 
     Device("n-08a", 0x0409, 0x026c, {
         "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
@@ -321,13 +318,13 @@ DEVICES = [
     }, secret="3dad7cd3d3dfd21451f1fe865cccd1f15548bcef",
        payload_base=0x80000000, usb_receive=0x802645c4, usb_send=0x80263e2c,
        onenand_addr=0x08000000),
-
+    
     Device("n-03b", 0x0409, 0x02a0, {
-        "dump_nor": NecMemoryDumperPayload(base=0x0, size=MB(128)),
-        "dump_nand": NecNandDumperLp(size=MB(512)),
-    }, payload_base=0x30000000, nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000,
-       usb_command=0x33ee5198, usb_data=0x33ef51e2, usb_datasz=0x33ef51dc, usb_respfunc=0x50d8,
-       quirks=SLOW_READ),
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
+        "nand_id": NecNandId(),
+        "dump_nand": NecNandDumperLp_v2(size=MB(512)),
+    }, payload_base=0x30000000, usb_receive=0x000046e0, usb_send=0x00005070,
+       nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000),
 
     Device("n-04b", 0x0409, 0x0294, {
         "onenand_id": NecOnenandId_v2(),
