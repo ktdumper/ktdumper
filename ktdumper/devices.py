@@ -185,6 +185,13 @@ DEVICES = [
     }, payload_base=0x30000000, usb_receive=0x000045c4, usb_send=0x00004f1c,
        nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000),
 
+    Device("n705i", 0x0409, 0x0224, {
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
+        "nand_id": NecNandId(),
+        "dump_nand": NecNandDumperLp_v2(size=MB(512)),
+    }, payload_base=0x30000000, usb_receive=0x00004b50, usb_send=0x000054a8,
+       nand_data=0x10000000, nand_cmd=0x10020000, nand_addr=0x10040000),
+
     Device("n705iu", 0x0409, 0x0228, {
         "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
         "dump_nand": NecNandDumperLp_v2(size=MB(512)),
