@@ -1300,6 +1300,7 @@ DEVICES = [
    
     Device("d800ids", 0x06d3, 0x2180, {"dump_java": FujitsuJavaDumper()}),
     Device("d901is", 0x06d3, 0x20a0, {"dump_java": FujitsuJavaDumperAlternative()}),
+    Device("d701iwm", 0x06d3, 0x20d0, {"dump_java": FujitsuJavaDumperAlternative()}),
     Device("d902i", 0x06d3, 0x20b0, {"dump_java": FujitsuJavaDumper()}),
     Device("d902is", 0x06d3, 0x2120, {"dump_java": FujitsuJavaDumper()}),
     Device("d702i", 0x06d3, 0x2100, {"dump_java": FujitsuJavaDumper()}),
