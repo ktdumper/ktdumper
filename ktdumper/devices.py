@@ -978,6 +978,13 @@ DEVICES = [
         "dump_nand": ShSrecExploitNandDumper_v2(size=MB(256)),
     }, payload_base=0x64000000, fatal_err=0x646067f8, usb_interrupt=0x64601000, usb_getch=0x64603770, usb_send=0x646039e8, usb_send_commit=0x646032c4,
        nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),   
+
+    Device("sh705i", 0x04dd, 0x91d1, {
+        "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
+        "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
+        "nand_id": ShG1NandId(),
+        "dump_nand": ShG1NandDumper(size=MB(128)),
+    }, nand_data=0x08000000, nand_addr=0x09000000, nand_cmd=0x0A000000),
     
     Device("sh906i", 0x04dd, 0x91d3, {
         "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
@@ -1146,6 +1153,7 @@ DEVICES = [
     Device("f2102v", 0x04c5, 0x1077, {"dump_java": FujitsuJavaDumperAlternative()}),
     Device("f900i", 0x04c5, 0x108e, {"dump_java": FujitsuJavaDumperAlternative()}),
     Device("f700i", 0x04c5, 0x10cb, {"dump_java": FujitsuJavaDumperAlternative()}),
+    Device("f901ic", 0x04c5, 0x109d, {"dump_java": FujitsuJavaDumperAlternative()}),
     Device("f901is", 0x04c5, 0x10d6, {"dump_java": FujitsuJavaDumperAlternative()}),
     Device("f902i", 0x04c5, 0x10ce, {"dump_java": FujitsuJavaDumper()}),
     Device("f902is", 0x04c5, 0x10db, {"dump_java": FujitsuJavaDumper()}),
@@ -1300,10 +1308,12 @@ DEVICES = [
    
     Device("d800ids", 0x06d3, 0x2180, {"dump_java": FujitsuJavaDumper()}),
     Device("d901is", 0x06d3, 0x20a0, {"dump_java": FujitsuJavaDumperAlternative()}),
+    Device("d701i", 0x06d3, 0x20c0, {"dump_java": FujitsuJavaDumperAlternative()}),
     Device("d701iwm", 0x06d3, 0x20d0, {"dump_java": FujitsuJavaDumperAlternative()}),
     Device("d902i", 0x06d3, 0x20b0, {"dump_java": FujitsuJavaDumper()}),
     Device("d902is", 0x06d3, 0x2120, {"dump_java": FujitsuJavaDumper()}),
     Device("d702i", 0x06d3, 0x2100, {"dump_java": FujitsuJavaDumper()}),
+    Device("d702if", 0x06d3, 0x2130, {"dump_java": FujitsuJavaDumper()}),
     
     Device("d903i", 0x06d3, 0x2140, {
         "dump_java": FujitsuJavaDumper(),
