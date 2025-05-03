@@ -1153,6 +1153,7 @@ DEVICES = [
     Device("f2102v", 0x04c5, 0x1077, {"dump_java": FujitsuJavaDumperAlternative()}),
     Device("f900i", 0x04c5, 0x108e, {"dump_java": FujitsuJavaDumperAlternative()}),
     Device("f700i", 0x04c5, 0x10cb, {"dump_java": FujitsuJavaDumperAlternative()}),
+    Device("f901i", 0x04c5, 0x109d, {"dump_java": FujitsuJavaDumperAlternative()}),
     Device("f901ic", 0x04c5, 0x109d, {"dump_java": FujitsuJavaDumperAlternative()}),
     Device("f901is", 0x04c5, 0x10d6, {"dump_java": FujitsuJavaDumperAlternative()}),
     Device("f902i", 0x04c5, 0x10ce, {"dump_java": FujitsuJavaDumper()}),
