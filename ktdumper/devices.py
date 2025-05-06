@@ -1274,7 +1274,7 @@ DEVICES = [
         "dump_nand": ShSrecExploitMlbaDumper_v2(),
         "nand_id": ShSrecExploitNandId_v2(),
     }, payload_base=0xE55B0000, fatal_err=0x60c048a8, usb_interrupt=0x60C02000, usb_getch=0x60c03f74, usb_send=0x60c04178, usb_send_commit=0x60c03af4,
-       nand_data=0x16000040, nand_addr=0x16000010, nand_cmd=0x16000020),
+       nand_data=0x16000040, nand_addr=0x16000050, nand_cmd=0x16000060),
 
     Device("f-01c", 0x04c5, 0x11e8, {
         "onenand_id": ShSrecExploitOnenandId_v2(),
@@ -1288,7 +1288,7 @@ DEVICES = [
         "dump_nand": ShSrecExploitMlbaDumper_v2(),
         "nand_id": ShSrecExploitNandId_v2(),
     }, payload_base=0xE55B0000, fatal_err=0x60c04570, usb_interrupt=0x60C02000, usb_getch=0x60c03cb0, usb_send=0x60c03e88, usb_send_commit=0x60c03884,
-       nand_data=0x16000040, nand_addr=0x16000010, nand_cmd=0x16000020),
+       nand_data=0x16000040, nand_addr=0x16000050, nand_cmd=0x16000060),
 
     Device("f-05c", 0x04c5, 0x1216, {
         "onenand_id": ShSrecExploitOnenandId_v2(),
