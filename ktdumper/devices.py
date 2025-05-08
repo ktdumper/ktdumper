@@ -1436,4 +1436,11 @@ DEVICES = [
         "probe_nor": SonyProbeNor_v2(base=0x08000000),
         "dump_nand": SonyMdocDumper_v2(),
     }, recv_ch=0x0800e068, usb_send=0x0800f224, mdoc_base=0x0c000000),
+
+    Device("so706i", 0x0fce, 0xd0f7, {
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
+        "onenand_id": NecOnenandId_v2(),
+        "dump_nand": NecOnenandFast_v2(),
+    }, payload_base=0x30000000, usb_receive=0x00004e5c, usb_send=0x000057b4,
+       onenand_addr=0x10000000),
 ]
