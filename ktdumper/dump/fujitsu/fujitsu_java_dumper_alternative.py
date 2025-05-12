@@ -46,6 +46,10 @@ class FujitsuJavaDumperAlternative(FujitsuProtocol):
 
     def execute(self, dev, output):
         super().execute(dev, output)
+        
+        print("-" * 80)
+        print("NOTE: This phone dump will require rebuilding of JAM files. No JAM files will be dumped using this method.")
+        print("-" * 80)
 
         print("Retrieving the database")
         db = self.retrieve_file("D:\\Sanremo\\Java\\FJJAM.DB")
