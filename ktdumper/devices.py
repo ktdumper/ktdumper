@@ -909,6 +909,12 @@ DEVICES = [
     }, exploit_flavor="A", payload_base=0x8009c000,
        onenand_addr=0x0C000000),
 
+    Device("001p", 0x04da, 0x216b, {
+        "dump_nand": PiplOnenandDumper(),
+        "onenand_id": PiplOnenandId(),
+        "probe_onenand": PiplProbeOnenand(sweep_start=0x0),
+    }, exploit_flavor="C2", payload_base=0x83800000, onenand_addr=0x0C000000),
+
     Device("103p", 0x04da, 0x216b, {
         "onenand_id": PiplOnenandId(),
         "dump_nand": PiplOnenandFast_v2(),
