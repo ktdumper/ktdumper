@@ -1181,10 +1181,12 @@ DEVICES = [
     ################################################################################################
     # FUJITSU
     ################################################################################################
-    
+
+    Device("f2051", 0x0a3c, 0x0010, {"dump_java": FujitsuJavaDumperAlternative()}),
     Device("f2102v", 0x04c5, 0x1077, {"dump_java": FujitsuJavaDumperAlternative()}),
     Device("f900i", 0x04c5, 0x108e, {"dump_java": FujitsuJavaDumperAlternative()}),
     Device("f700i", 0x04c5, 0x10cb, {"dump_java": FujitsuJavaDumperAlternative()}),
+    Device("f700is", 0x04c5, 0x10ed, {"dump_java": FujitsuJavaDumperAlternative()}),
     Device("f901i", 0x04c5, 0x109d, {"dump_java": FujitsuJavaDumperAlternative()}),
     Device("f901ic", 0x04c5, 0x109d, {"dump_java": FujitsuJavaDumperAlternative()}),
     Device("f901is", 0x04c5, 0x10d6, {"dump_java": FujitsuJavaDumperAlternative()}),
@@ -1360,6 +1362,7 @@ DEVICES = [
     ################################################################################################
    
     Device("d800ids", 0x06d3, 0x2180, {"dump_java": FujitsuJavaDumper()}),
+    Device("d901i", 0x06d3, 0x2090, {"dump_java": FujitsuJavaDumperAlternative()}),
     Device("d901is", 0x06d3, 0x20a0, {"dump_java": FujitsuJavaDumperAlternative()}),
     Device("d701i", 0x06d3, 0x20c0, {"dump_java": FujitsuJavaDumperAlternative()}),
     Device("d701iwm", 0x06d3, 0x20d0, {"dump_java": FujitsuJavaDumperAlternative()}),
