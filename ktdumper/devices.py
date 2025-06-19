@@ -856,7 +856,7 @@ DEVICES = [
 
     Device("p-01h", 0x04da, 0x216b, {
         "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
-        "dump_emmc": PiplEmmcDumper(size=MB(2048)),
+        "dump_emmc": PiplEmmcDumper(size=MB(1888)),
         "fuse_user": PiplEmmcFuse(offset=0x1e500000, size=0x3fe00000),
         "dump_nvm": PiplExploitMemoryDumper(base=0x83B7D000, size=0x20000),
         "dump_nvminit": PiplExploitMemoryDumper(base=0x80045000, size=0x20000),
