@@ -1219,6 +1219,7 @@ DEVICES = [
     Device("f702id", 0x04c5, 0x10d9, {"dump_java": FujitsuJavaDumper()}),
     Device("f903i", 0x04c5, 0x110c, {"dump_java": FujitsuJavaDumper()}),
     Device("f903ix", 0x04c5, 0x113f, {"dump_java": FujitsuJavaDumper()}),
+    Device("f883ies", 0x04c5, 0x1126, {"dump_java": FujitsuJavaDumper()}),
 
     Device("f883iess", 0x04c5, 0x1196, {
         "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
@@ -1278,6 +1279,8 @@ DEVICES = [
         "dump_nand": ShSrecExploitNandDumper_v2(size=MB(256)),
     }, payload_base=0x64000000, fatal_err=0x64606890, usb_interrupt=0x64601000, usb_getch=0x6460380c, usb_send=0x64603a80, usb_send_commit=0x6460339c,
        nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),
+
+    Device("f705i", 0x04c5, 0x112c, {"dump_java": FujitsuJavaDumper()}),
 
     Device("f906i", 0x04c5, 0x115d, {
         "dump_java": FujitsuJavaDumper(),
