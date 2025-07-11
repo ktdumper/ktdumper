@@ -1214,6 +1214,7 @@ DEVICES = [
     Device("f901i", 0x04c5, 0x109d, {"dump_java": FujitsuJavaDumperAlternative()}),
     Device("f901ic", 0x04c5, 0x109d, {"dump_java": FujitsuJavaDumperAlternative()}),
     Device("f901is", 0x04c5, 0x10d6, {"dump_java": FujitsuJavaDumperAlternative()}),
+    Device("f801i", 0x04c5, 0x115c, {"dump_java": FujitsuJavaDumper()}),
     Device("f902i", 0x04c5, 0x10ce, {"dump_java": FujitsuJavaDumper()}),
     Device("f902is", 0x04c5, 0x10db, {"dump_java": FujitsuJavaDumper()}),
     Device("f702id", 0x04c5, 0x10d9, {"dump_java": FujitsuJavaDumper()}),
@@ -1253,8 +1254,14 @@ DEVICES = [
         "dump_nand": ShG1OnenandDumper(),
     }, reboot=0xe0601968, usb_reset=0xe06032ec, usb_getch=0xe0602ccc, usb_send=0xe0602f88, usb_send_commit=0xe0602a20,
        onenand_addr=0x08000000),
-
-    Device("f904i", 0x04c5, 0x1122, {"dump_java": FujitsuJavaDumper()}),
+    
+    Device("f904i", 0x04c5, 0x1122, {
+        "dump_java": FujitsuJavaDumper(),
+        "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
+        "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
+        "nand_id": ShG1NandId(),
+        "dump_nand": ShG1NandDumper(size=MB(128)),
+    }, nand_data=0x08000000, nand_addr=0x08000010, nand_cmd=0x08000020),
 
     Device("f704i", 0x04c5, 0x1124, {
         "dump_java": FujitsuJavaDumper(),
