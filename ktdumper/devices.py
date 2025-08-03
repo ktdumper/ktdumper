@@ -1346,7 +1346,8 @@ DEVICES = [
         "dump_nand": ShG1OnenandDumper(),
     }, reboot=0xe0601938, usb_reset=0xe0603318, usb_getch=0xe0602c9c, usb_send=0xe0602f58, usb_send_commit=0xe06029f0,
        onenand_addr=0x08000000),
-    
+
+    Device("f-06a", 0x04c5, 0x1120, {"dump_java": FujitsuJavaDumper()}),
     Device("f-07a", 0x04c5, 0x115f, {"dump_java": FujitsuJavaDumper()}),
     Device("f-10a", 0x04c5, 0x1162, {"dump_java": FujitsuJavaDumper()}),
 
@@ -1393,6 +1394,12 @@ DEVICES = [
         "probe_onenand": ShSrecExploitProbeOnenand_v2(sweep_start=0x0),
     }, payload_base=0xE55B0000, fatal_err=0x60c04570, usb_interrupt=0x60C02000, usb_getch=0x60c03cb0, usb_send=0x60c03e88, usb_send_commit=0x60c03884,
        onenand_addr=0x30000000),
+
+    Device("f-02c", 0x04c5, 0x11e9, {
+        "dump_nand": ShSrecExploitMlbaDumper_v2(),
+        "nand_id": ShSrecExploitNandId_v2(),
+    }, payload_base=0xE55B0000, fatal_err=0x60c04570, usb_interrupt=0x60C02000, usb_getch=0x60c03cb0, usb_send=0x60c03e88, usb_send_commit=0x60c03884,
+       nand_data=0x16000040, nand_addr=0x16000050, nand_cmd=0x16000060),
 
     Device("f-03c", 0x04c5, 0x11ea, {
         "dump_nand": ShSrecExploitMlbaDumper_v2(),
