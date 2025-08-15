@@ -167,8 +167,13 @@ DEVICES = [
     }, payload_base=0x80000000, onenand_addr=0x06000000, quirks=SLOW_READ),
 
     Device("n703id", 0x0409, 0x01aa, {
-        "dump_nor": NecMemoryDumper(base=0x0, size=MB(128)),
-    }, payload_base=0x30000000, quirks=SLOW_READ),
+        "probe_nor": NecNorProbe(base=0x0),
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
+        "nand_id": NecNandId(),
+        "dump_nand": NecNandDumperLp(size=MB(128)),
+    }, payload_base=0x30000000, nand_data=0x08000000, nand_cmd=0x0c000000, nand_addr=0x0a000000,
+       usb_command=0x33f4b7a8, usb_data=0x33f5b7f2, usb_datasz=0x33f5b7ec, usb_respfunc=0x60f4,
+       quirks=SLOW_READ),
 
     Device("n904i", 0x0409, 0x0200, {
         "dump_rom": NecMemoryDumper(base=0x0, size=0x8000),
