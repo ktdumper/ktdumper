@@ -1324,7 +1324,14 @@ DEVICES = [
     }, payload_base=0x64000000, fatal_err=0x64606890, usb_interrupt=0x64601000, usb_getch=0x6460380c, usb_send=0x64603a80, usb_send_commit=0x6460339c,
        nand_data=0x10000000, nand_addr=0x10000010, nand_cmd=0x10000020),
 
-    Device("f705i", 0x04c5, 0x112c, {"dump_java": FujitsuJavaDumper()}),
+    Device("f705i", 0x04c5, 0x112c, {
+        "dump_java": FujitsuJavaDumper(),
+        "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
+        "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
+        "onenand_id": ShG1OnenandId(),
+        "dump_nand": ShG1OnenandDumper(),
+    }, reboot=0xe0601938, usb_reset=0xe0603318, usb_getch=0xe0602c9c, usb_send=0xe0602f58, usb_send_commit=0xe06029f0,
+       onenand_addr=0x08000000),
 
     Device("f906i", 0x04c5, 0x115d, {
         "dump_java": FujitsuJavaDumper(),
@@ -1348,7 +1355,11 @@ DEVICES = [
     }, payload_base=0xE55B0000, fatal_err=0x60c06d64, usb_interrupt=0x60C02000, usb_getch=0x60c06428, usb_send=0x60c0662c, usb_send_commit=0x60c05fa8,
         onenand_addr=0x30000000),
 
-    Device("f-02a", 0x04c5, 0x1168, {"dump_java": FujitsuJavaDumper()}),
+    Device("f-02a", 0x04c5, 0x1168, {
+        "onenand_id": ShSrecExploitOnenandId_v2(),
+        "dump_nand": ShSrecExploitOnenandFast_v2(),
+    }, payload_base=0x64000000, fatal_err=0x64c0756c, usb_interrupt=0x64C02000, usb_getch=0x64c044b4, usb_send=0x64c0472c, usb_send_commit=0x64c04040,
+        onenand_addr=0x30000000),
 
     Device("f-03a", 0x04c5, 0x1166, {
         "onenand_id": ShSrecExploitOnenandId_v2(),
