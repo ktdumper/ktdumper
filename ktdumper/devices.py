@@ -8,6 +8,7 @@ from dump.nec.nec_onenand_dumper import NecOnenandDumper
 from dump.nec.nec_memory_dumper_payload import NecMemoryDumperPayload
 from dump.nec.nec_nand_id import NecNandId
 from dump.nec.nec_nand_dumper_lp import NecNandDumperLp
+from dump.nec.nec_nand_dumper_sp import NecNandDumperSp
 from dump.nec.nec_nand_dumper_lp_via_poke import NecNandDumperLpViaPoke
 from dump.nec.nec_onenand_id import NecOnenandId
 from dump.nec.nec_onenand_id_v2 import NecOnenandId_v2
@@ -142,10 +143,14 @@ DEVICES = [
         "onenand_id": NecOnenandId(),
         "dump_nand": NecOnenandDumper(quirks=SLOW_READ),
     }, payload_base=0x10000000, onenand_addr=0x06000000),
-
+    
     Device("n902i", 0x0409, 0x014c, {
-        "dump_nor": NecMemoryDumper(base=0x08000000, size=MB(96)),
-    }, payload_base=0x80000000, quirks=SLOW_READ),
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(64)),
+        "nand_id": NecNandId(),
+        "dump_nand": NecNandDumperSp(size=MB(64)),
+    }, payload_base=0x80000000, nand_data=0x04000000, nand_cmd=0x04000400, nand_addr=0x04000200,
+       usb_command=0x83ee5391, usb_data=0x83ef53da, usb_datasz=0x83ef53d5, usb_respfunc=0x08005ad0,
+       quirks=SLOW_READ),
 
     Device("n902is", 0x0409, 0x0181, {
         "dump_nor": NecMemoryDumper(base=0x08000000, size=MB(96)),
