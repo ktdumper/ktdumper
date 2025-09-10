@@ -4,7 +4,7 @@ import struct
 from dump.nec.nec_direct_usb import NecDirectUsb
 
 
-class NecNandDumperLp(NecDirectUsb):
+class NecNandDumperSp(NecDirectUsb):
 
     def parse_opts(self, opts):
         super().parse_opts(opts)
@@ -35,7 +35,7 @@ class NecNandDumperLp(NecDirectUsb):
     def execute(self, dev, output):
         super().execute(dev, output)
 
-        self.insert_payload("dump_nand_lp_and_send.c",
+        self.insert_payload("dump_nand_sp_and_send.c",
             nand_data=self.nand_data,
             nand_cmd=self.nand_cmd,
             nand_addr=self.nand_addr)
