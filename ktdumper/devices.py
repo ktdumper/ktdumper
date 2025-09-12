@@ -153,8 +153,12 @@ DEVICES = [
        quirks=SLOW_READ),
 
     Device("n902is", 0x0409, 0x0181, {
-        "dump_nor": NecMemoryDumper(base=0x08000000, size=MB(96)),
-    }, payload_base=0x80000000, quirks=SLOW_READ),
+        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
+        "nand_id": NecNandId(),
+        "dump_nand": NecNandDumperSp(size=MB(64)),
+    }, payload_base=0x80000000, nand_data=0x04000000, nand_cmd=0x04000400, nand_addr=0x04000200,
+       usb_command=0x83ee5395, usb_data=0x83ef53de, usb_datasz=0x83ef53d9, usb_respfunc=0x080064b8,
+       quirks=SLOW_READ),
 
     Device("n702id", 0x0409, 0x0168, {
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(128)),
