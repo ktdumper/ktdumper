@@ -469,6 +469,11 @@ DEVICES = [
 
     # SOFTBANK
 
+    Device("802n", 0x0409, 0x012b, {
+        "dump_nor": NecMemoryDumper(base=0x0, size=MB(64)),
+        "dump_nand": NecNandDumper(size=MB(32), quirks=SLOW_READ),
+    }, payload_base=0x10000000, nand_data=0x04000000, nand_cmd=0x04000800, nand_addr=0x04000400),
+
     Device("820n", 0x0409, 0x0250, {
         "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
         "onenand_id": NecOnenandId_v2(),
