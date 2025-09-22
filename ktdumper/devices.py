@@ -1383,7 +1383,13 @@ DEVICES = [
     }, payload_base=0xE55B0000, fatal_err=0x60c06d64, usb_interrupt=0x60C02000, usb_getch=0x60c06428, usb_send=0x60c0662c, usb_send_commit=0x60c05fa8,
        onenand_addr=0x30000000),
 
-    Device("f-04a", 0x04c5, 0x115e, {"dump_java": FujitsuJavaDumper()}),
+    Device("f-04a", 0x04c5, 0x115e, {
+        "dump_java": FujitsuJavaDumper()}),
+        "dump_mdoc": ShSrecExploitMdocDumper_v2(),
+        "dump_memory": ShSrecExploitMemoryDumper_v2(base=0x01000000, size=MB(16)),
+        "probe_mdoc": ShSrecExploitProbeMdoc_v2(sweep_start=0x0),
+    }, payload_base=0x64000000, fatal_err=0x64c076d0, usb_interrupt=0x64C02000, usb_getch=0x64c04618, usb_send=0x64c04890, usb_send_commit=0x64c041a4,
+       mdoc_base=0x20000000),
     
     Device("f-05a", 0x04c5, 0x1167, {
         "dump_java": FujitsuJavaDumper(),
