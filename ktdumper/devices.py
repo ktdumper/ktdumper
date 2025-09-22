@@ -1384,7 +1384,7 @@ DEVICES = [
        onenand_addr=0x30000000),
 
     Device("f-04a", 0x04c5, 0x115e, {
-        "dump_java": FujitsuJavaDumper()}),
+        "dump_java": FujitsuJavaDumper(),
         "dump_mdoc": ShSrecExploitMdocDumper_v2(),
         "dump_memory": ShSrecExploitMemoryDumper_v2(base=0x01000000, size=MB(16)),
         "probe_mdoc": ShSrecExploitProbeMdoc_v2(sweep_start=0x0),
