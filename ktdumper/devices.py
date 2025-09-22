@@ -43,6 +43,8 @@ from dump.sh.sh_srec_exploit_probe_nand_v2 import ShSrecExploitProbeNand_v2
 from dump.sh.sh_srec_exploit_onenand_fast_v2 import ShSrecExploitOnenandFast_v2
 from dump.sh.sh_srec_exploit_mlc_check_v2 import ShSrecExploitMlcCheck_v2
 from dump.sh.sh_srec_exploit_probe_onenand_v2 import ShSrecExploitProbeOnenand_v2
+from dump.sh.sh_srec_exploit_mdoc_probe_v2 import ShSrecExploitProbeMdoc_v2
+from dump.sh.sh_srec_exploit_mdoc_dumper_v2 import ShSrecExploitMdocDumper_v2
 
 from dump.sony.sony_memory_dumper_v2 import SonyMemoryDumper_v2
 from dump.sony.sony_probe_nor_v2 import SonyProbeNor_v2
