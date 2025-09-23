@@ -1410,6 +1410,12 @@ DEVICES = [
     
     Device("f-07a", 0x04c5, 0x115f, {"dump_java": FujitsuJavaDumper()}),
 
+    Device("f-08a", 0x04c5, 0x1164, {
+        "onenand_id": ShSrecExploitOnenandId_v2(),
+        "dump_nand": ShSrecExploitOnenandFast_v2(),
+    }, payload_base=0xE55B0000, fatal_err=0x60c06cf4, usb_interrupt=0x60C02000, usb_getch=0x60c063b8, usb_send=0x60c065bc, usb_send_commit=0x60c05f38,
+        onenand_addr=0x30000000),
+
     Device("f-09a", 0x04c5, 0x1163, {
         "dump_mdoc": ShSrecExploitMdocDumper_v2(),
         "dump_memory": ShSrecExploitMemoryDumper_v2(base=0x01000000, size=MB(16)),
