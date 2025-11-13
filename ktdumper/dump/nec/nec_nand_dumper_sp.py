@@ -15,6 +15,8 @@ class NecNandDumperSp(NecDirectUsb):
         self.nand_data = opts["nand_data"]
         self.nand_cmd = opts["nand_cmd"]
         self.nand_addr = opts["nand_addr"]
+        
+        self.bitshift = int(opts.get("bitshift", 0))
 
     def nand_read_page_and_oob(self, page):
         # perform nand page readout
@@ -28,7 +30,10 @@ class NecNandDumperSp(NecDirectUsb):
             self.comm(3, variable_payload=struct.pack("<BBIH", 1, 1, addr, chunk))
             data = self.read_resp()
             assert len(data) == chunk + 10
-            nand += data[8:-2]
+            if self.bitshift == 1:
+                nand += data[8:-2]
+            else:
+                nand += data[9:-1]
 
         return nand[0:0x210]
 

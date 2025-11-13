@@ -151,21 +151,29 @@ DEVICES = [
         "dump_nand": NecOnenandDumper(quirks=SLOW_READ),
     }, payload_base=0x10000000, onenand_addr=0x06000000),
     
+    Device("n601i", 0x0409, 0x01a8, {
+        "dump_nor": NecMemoryDumper(base=0x0, size=MB(1)),
+        "nand_id": NecNandId(),
+        "dump_nand": NecNandDumperSp(size=MB(64)),
+    }, payload_base=0x30000000, nand_data=0x08000000, nand_cmd=0x0c000000, nand_addr=0x0a000000,
+       usb_command=0x33f4b7a4, usb_data=0x33f5b7ee, usb_datasz=0x33f5b7e8, usb_respfunc=0x6048,
+       quirks=SLOW_READ),
+    
     Device("n902i", 0x0409, 0x014c, {
         "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(64)),
         "nand_id": NecNandId(),
         "dump_nand": NecNandDumperSp(size=MB(64)),
     }, payload_base=0x80000000, nand_data=0x04000000, nand_cmd=0x04000400, nand_addr=0x04000200,
        usb_command=0x83ee5391, usb_data=0x83ef53da, usb_datasz=0x83ef53d5, usb_respfunc=0x08005ad0,
-       quirks=SLOW_READ),
-
+       quirks=SLOW_READ, bitshift=1),
+       
     Device("n902il", 0x0409, 0x017a, {
         "dump_nor": NecMemoryDumper(base=0x08000000, size=MB(128)),
         "nand_id": NecNandId(),
         "dump_nand": NecNandDumperSp(size=MB(64)),
     }, payload_base=0x80000000, nand_data=0x04000000, nand_cmd=0x04000400, nand_addr=0x04000200,
        usb_command=0x83edacb5, usb_data=0x83eeacfe, usb_datasz=0x83eeacf9, usb_respfunc=0x080057d0,
-       quirks=SLOW_READ),
+       quirks=SLOW_READ, bitshift=1),
 
     Device("n902is", 0x0409, 0x0181, {
         "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
@@ -173,7 +181,7 @@ DEVICES = [
         "dump_nand": NecNandDumperSp(size=MB(64)),
     }, payload_base=0x80000000, nand_data=0x04000000, nand_cmd=0x04000400, nand_addr=0x04000200,
        usb_command=0x83ee5395, usb_data=0x83ef53de, usb_datasz=0x83ef53d9, usb_respfunc=0x080064b8,
-       quirks=SLOW_READ),
+       quirks=SLOW_READ, bitshift=1),
 
     Device("n702id", 0x0409, 0x0168, {
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(128)),
