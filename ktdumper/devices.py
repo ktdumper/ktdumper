@@ -531,6 +531,14 @@ DEVICES = [
     }, payload_base=0x30000000, usb_receive=0x00004e0c, usb_send=0x00005764,
        onenand_addr=0x10000000),
 
+    Device("840n", 0x0409, 0x02c4, {
+        "onenand_id": NecOnenandId_v2(),
+        "dump_nand": NecOnenandFast_v2(fully_slc=True),
+        "mlc_check": NecMlcCheck(),
+    }, secret="472cb1b63a55e140f3ca7916b36968ea125597f2",
+       payload_base=0x30000000, usb_receive=0x39846e1c, usb_send=0x39847780,
+       onenand_addr=0x0),
+
     Device("841n", 0x0409, 0x0264, {
         "probe_nor": NecNorProbe(base=0x0),
         "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
