@@ -152,7 +152,7 @@ DEVICES = [
     }, payload_base=0x10000000, onenand_addr=0x06000000),
     
     Device("n601i", 0x0409, 0x01a8, {
-        "dump_nor": NecMemoryDumper(base=0x0, size=MB(1)),
+        "dump_nor": NecMemoryDumper(base=0x0, size=MB(64)),
         "nand_id": NecNandId(),
         "dump_nand": NecNandDumperSp(size=MB(64)),
     }, payload_base=0x30000000, nand_data=0x08000000, nand_cmd=0x0c000000, nand_addr=0x0a000000,
@@ -160,7 +160,7 @@ DEVICES = [
        quirks=SLOW_READ),
     
     Device("n902i", 0x0409, 0x014c, {
-        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(64)),
+        "dump_nor": NecMemoryDumper(base=0x08000000, size=MB(128)),
         "nand_id": NecNandId(),
         "dump_nand": NecNandDumperSp(size=MB(64)),
     }, payload_base=0x80000000, nand_data=0x04000000, nand_cmd=0x04000400, nand_addr=0x04000200,
@@ -176,7 +176,7 @@ DEVICES = [
        quirks=SLOW_READ, bitshift=1),
 
     Device("n902is", 0x0409, 0x0181, {
-        "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
+        "dump_nor": NecMemoryDumper(base=0x08000000, size=MB(128)),
         "nand_id": NecNandId(),
         "dump_nand": NecNandDumperSp(size=MB(64)),
     }, payload_base=0x80000000, nand_data=0x04000000, nand_cmd=0x04000400, nand_addr=0x04000200,
