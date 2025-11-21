@@ -183,6 +183,14 @@ DEVICES = [
        usb_command=0x83ee5395, usb_data=0x83ef53de, usb_datasz=0x83ef53d9, usb_respfunc=0x080064b8,
        quirks=SLOW_READ, bitshift=1),
 
+    Device("n902ix", 0x0409, 0x0176, {
+        "dump_nor": NecMemoryDumper(base=0x08000000, size=MB(128)),
+        "nand_id": NecNandId(),
+        "dump_nand": NecNandDumperSp(size=MB(64)),
+    }, payload_base=0x80000000, nand_data=0x04000000, nand_cmd=0x04000400, nand_addr=0x04000200,
+       usb_command=0x83ee5395, usb_data=0x83ef53de, usb_datasz=0x83ef53d9, usb_respfunc=0x08005ae4,
+       quirks=SLOW_READ, bitshift=1),
+
     Device("n702id", 0x0409, 0x0168, {
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(128)),
         "dump_nand": NecOnenandDumper(quirks=SLOW_READ),
@@ -493,6 +501,11 @@ DEVICES = [
     # SOFTBANK
 
     Device("802n", 0x0409, 0x012b, {
+        "dump_nor": NecMemoryDumper(base=0x0, size=MB(64)),
+        "dump_nand": NecNandDumper(size=MB(32), quirks=SLOW_READ),
+    }, payload_base=0x10000000, nand_data=0x04000000, nand_cmd=0x04000800, nand_addr=0x04000400),
+
+    Device("703n", 0x0409, 0x016c, {
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(64)),
         "dump_nand": NecNandDumper(size=MB(32), quirks=SLOW_READ),
     }, payload_base=0x10000000, nand_data=0x04000000, nand_cmd=0x04000800, nand_addr=0x04000400),
