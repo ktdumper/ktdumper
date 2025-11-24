@@ -18,3 +18,6 @@ Run `./ktdumper.sh` to show the list of supported devices. Afterwards, run the s
 sudo ./ktdumper.sh p321ab dump_nor
 sudo ./ktdumper.sh p321ab dump_nand
 ```
+
+## Supported Devices
+See the list here: https://ktdumper.github.io/ktdumper/
