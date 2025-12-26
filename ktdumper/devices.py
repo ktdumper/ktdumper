@@ -108,6 +108,12 @@ DEVICES = [
         "dump_nand": NecNandDumper(size=MB(32)),
     }, payload_base=0x0c100000, nand_data=0x04000000, nand_cmd=0x04000800, nand_addr=0x04000400, quirks=SLOW_READ, legacy_masking=True),
 
+    Device("n2701", 0x0a3c, 0x000d, {
+        "dump_nor": NecMemoryDumper(base=0x0, size=MB(32)),
+        "nand_id": NecNandId(),
+        "dump_nand": NecNandDumper(size=MB(32)),
+    }, payload_base=0x0c100000, nand_data=0x04000000, nand_cmd=0x04000800, nand_addr=0x04000400, quirks=SLOW_READ, legacy_masking=True),
+
     Device("n2102v", 0x0409, 0x00f4, {
         "probe_nor": NecNorProbe(base=0x0),
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(32)),
