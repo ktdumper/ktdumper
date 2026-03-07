@@ -32,6 +32,7 @@ from dump.pipl.pipl_probe_onenand import PiplProbeOnenand
 from dump.sh.sh_exploit import ShExploit
 from dump.fujitsu.fujitsu_java_dumper import FujitsuJavaDumper
 from dump.fujitsu.fujitsu_java_dumper_alternative import FujitsuJavaDumperAlternative
+from dump.fujitsu.fujitsu_charaden_dumper import FujitsuCharadenDumper
 
 from dump.sh.sh_srec_exploit_mlba_dumper_v2 import ShSrecExploitMlbaDumper_v2
 from dump.sh.sh_srec_exploit_memory_dumper_v2 import ShSrecExploitMemoryDumper_v2
@@ -1315,15 +1316,47 @@ DEVICES = [
 
     Device("f2051", 0x0a3c, 0x0010, {"dump_java": FujitsuJavaDumperAlternative()}),
     Device("f2102v", 0x04c5, 0x1077, {"dump_java": FujitsuJavaDumperAlternative()}),
-    Device("f900i", 0x04c5, 0x108e, {"dump_java": FujitsuJavaDumperAlternative()}),
-    Device("f900ic", 0x04c5, 0x109b, {"dump_java": FujitsuJavaDumperAlternative()}),
-    Device("f900it", 0x04c5, 0x108f, {"dump_java": FujitsuJavaDumperAlternative()}),
-    Device("f700i", 0x04c5, 0x10cb, {"dump_java": FujitsuJavaDumperAlternative()}),
-    Device("f700is", 0x04c5, 0x10ed, {"dump_java": FujitsuJavaDumperAlternative()}),
-    Device("f901i", 0x04c5, 0x109d, {"dump_java": FujitsuJavaDumperAlternative()}),
-    Device("f901ic", 0x04c5, 0x109d, {"dump_java": FujitsuJavaDumperAlternative()}),
-    Device("f901is", 0x04c5, 0x10d6, {"dump_java": FujitsuJavaDumperAlternative()}),
     
+    Device("f900i", 0x04c5, 0x108e, {
+        "dump_java": FujitsuJavaDumperAlternative(),
+        "dump_charaden": FujitsuCharadenDumper(),
+        }),
+    
+    Device("f900ic", 0x04c5, 0x109b, {
+        "dump_java": FujitsuJavaDumperAlternative(),
+        "dump_charaden": FujitsuCharadenDumper(),
+        }),
+    
+    Device("f900it", 0x04c5, 0x108f, {
+        "dump_java": FujitsuJavaDumperAlternative(),
+        "dump_charaden": FujitsuCharadenDumper(),
+        }),
+    
+    Device("f700i", 0x04c5, 0x10cb, {
+        "dump_java": FujitsuJavaDumperAlternative(),
+        "dump_charaden": FujitsuCharadenDumper(),
+        }),
+    
+    Device("f700is", 0x04c5, 0x10ed, {
+        "dump_java": FujitsuJavaDumperAlternative(),
+        "dump_charaden": FujitsuCharadenDumper(),
+        }),
+    
+    Device("f901i", 0x04c5, 0x109d, {
+        "dump_java": FujitsuJavaDumperAlternative(),
+        "dump_charaden": FujitsuCharadenDumper(),
+        }),
+    
+    Device("f901ic", 0x04c5, 0x109d, {
+        "dump_java": FujitsuJavaDumperAlternative(),
+        "dump_charaden": FujitsuCharadenDumper(),
+        }),
+    
+    Device("f901is", 0x04c5, 0x10d6, {
+        "dump_java": FujitsuJavaDumperAlternative(),
+        "dump_charaden": FujitsuCharadenDumper(),
+        }),
+
     Device("f801i", 0x04c5, 0x115c, {
         "dump_java": FujitsuJavaDumper(),
         "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
