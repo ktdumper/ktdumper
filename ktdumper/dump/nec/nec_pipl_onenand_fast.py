@@ -51,7 +51,7 @@ class NecPiplOnenandFast:
                     assert first == second
                     assert first == third
                 return first
-            except usb.core.USBTimeoutError:
+            except usb.core.USBError:
                 print("_onenand_read(page=0x{:X}) failed, retrying {} times".format(page, x+1))
                 self.dev.reset()
                 validation = True

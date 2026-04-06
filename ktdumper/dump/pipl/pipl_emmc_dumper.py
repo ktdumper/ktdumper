@@ -48,7 +48,7 @@ class PiplEmmcDumper(PiplExploit):
                     assert first == second
                     assert first == third
                 return first
-            except usb.core.USBTimeoutError:
+            except usb.core.USBError:
                 print("_emmc_read_page(page=0x{:X}) failed, retrying {} times".format(page, x+1))
                 self.dev.reset()
                 self.dev = usb.core.find(idVendor=self.dev.idVendor, idProduct=self.dev.idProduct)
