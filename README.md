@@ -7,7 +7,8 @@
 On Ubuntu you can install the dependencies with:
 
 ```
-sudo apt install python3-usb python3-tqdm gcc-arm-none-eabi python3-fusepy
+sudo apt install gcc-arm-none-eabi
+pip install -r requirements.txt
 ```
 
 ## Usage
