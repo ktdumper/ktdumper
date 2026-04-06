@@ -6,7 +6,10 @@ import math
 from dump.pipl.pipl_exploit import PiplExploit
 from util.payload_builder import PayloadBuilder
 
-from fusepy import FUSE, FuseOSError, Operations
+try:
+    from fusepy import FUSE, FuseOSError, Operations
+except ModuleNotFoundError:
+    from fuse import FUSE, FuseOSError, Operations
 
 PATH = "/tmp/ktdumper_fuse"
 
