@@ -5,7 +5,7 @@ void start() {
     uint8_t *command = (void*)%usb_command%;
     uint8_t *data = (void*)%usb_data%; // comes from cmd_read
     uint8_t *datasz = (void*)%usb_datasz%; // also from cmd_read
-    void (*respfunc)() = (void*)%usb_respfunc%;
+    void (*respfunc)(int, int) = (void*)%usb_respfunc%;
     uint16_t *scratchbuf16 = (void*)(%base%+0x1000);
 
     volatile uint16_t *nand_cmd = (void*)%nand_cmd%;

@@ -8,7 +8,7 @@ void start() {
     uint8_t *data = (void*)KT_usb_data; // comes from cmd_read
     uint16_t *data16 = (void*)KT_usb_data;
     uint8_t *datasz = (void*)KT_usb_datasz; // also from cmd_read
-    void (*respfunc)() = (void*)KT_usb_respfunc;
+    void (*respfunc)(int, int) = (void*)KT_usb_respfunc;
 
     volatile uint16_t *onenand_REG_START_ADDRESS1 = (volatile uint16_t *)(ONENAND + 2*0xF100);
     volatile uint16_t *onenand_REG_START_ADDRESS2 = (volatile uint16_t *)(ONENAND + 2*0xF101);
