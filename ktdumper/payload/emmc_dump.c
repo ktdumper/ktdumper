@@ -8,9 +8,9 @@ void start() {
     uint8_t *data = (void*)%usb_data%; // comes from cmd_read
     uint8_t *datasz = (void*)%usb_datasz%; // also from cmd_read
     uint8_t *tmpbuf = (void*)(%base%+0x800);
-    void (*respfunc)() = (void*)%usb_respfunc%;
+    void (*respfunc)(int, int) = (void*)%usb_respfunc%;
 
-    int (*emmc_read_and_dcache)() = (void*)(%emmc_read_and_dcache%);
+    int (*emmc_read_and_dcache)(uint32_t, uint32_t, uint32_t, uint8_t*) = (void*)(%emmc_read_and_dcache%);
 
     uint32_t page = (command[10] << 0) | (command[11] << 8) | (command[12] << 16) | (command[13] << 24);
     if (emmc_read_and_dcache(0, page * PAGES_PER_CMD, PAGES_PER_CMD, tmpbuf) != 0)
