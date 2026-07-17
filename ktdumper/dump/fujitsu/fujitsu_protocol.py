@@ -93,6 +93,46 @@ class FujitsuProtocol(Dumper):
             pkt = mask_packet(b"\x55\x56\x42" + len(payload).to_bytes(2, byteorder="big") + payload)
             self.dev.write(3, pkt)
         return output
+        
+    def ls(self, dir_path):
+        cmd_bytes = b"\xC6\x13\x31"
+        if dir_path[-1] != "\\":
+            dir_path += "\\"
+
+        payload = cmd_bytes + dir_path.encode("ascii")
+
+        pkt = mask_packet(b"\x55\x56\x42" + len(payload).to_bytes(2, byteorder="big") + payload)
+        self.dev.write(3, pkt)
+        
+        response_buf = bytearray()
+        
+        while True:
+            resp = unmask_resp(bytearray(self.dev.read(0x82, 4096)))
+            response_buf += resp[8:]
+
+            if resp[7] == 0x91:
+                ls_str = response_buf.decode("cp932", errors="replace")
+                return ls_str.split(",")[:-1]
+
+            payload = b"\xC6\x13\x20"
+            pkt = mask_packet(b"\x55\x56\x42" + len(payload).to_bytes(2, byteorder="big") + payload)
+            self.dev.write(3, pkt)
+
+    def get_file_paths_deep(self, dir_path):
+        file_paths = []
+        
+        def recursive(_dir):
+            for p in self.ls(_dir):
+                abs_path = _dir + p
+                if p[-1] == "\\":
+                    recursive(abs_path)
+                else:
+                    file_paths.append(abs_path)
+
+        recursive(dir_path)
+        
+        return file_paths
+
 
     def execute(self, dev, output):
         self.dev = dev
