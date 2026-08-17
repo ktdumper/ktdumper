@@ -33,6 +33,7 @@ from dump.sh.sh_exploit import ShExploit
 from dump.fujitsu.fujitsu_java_dumper import FujitsuJavaDumper
 from dump.fujitsu.fujitsu_java_dumper_alternative import FujitsuJavaDumperAlternative
 from dump.fujitsu.fujitsu_charaden_dumper import FujitsuCharadenDumper
+from dump.fujitsu.fujitsu_fs_dumper import FujitsuFsDumper
 
 from dump.sh.sh_srec_exploit_mlba_dumper_v2 import ShSrecExploitMlbaDumper_v2
 from dump.sh.sh_srec_exploit_memory_dumper_v2 import ShSrecExploitMemoryDumper_v2
@@ -1320,51 +1321,67 @@ DEVICES = [
     # FUJITSU
     ################################################################################################
 
-    Device("f2051", 0x0a3c, 0x0010, {"dump_java": FujitsuJavaDumperAlternative()}),
-    Device("f2102v", 0x04c5, 0x1077, {"dump_java": FujitsuJavaDumperAlternative()}),
+    Device("f2051", 0x0a3c, 0x0010, {
+        "dump_java": FujitsuJavaDumperAlternative(),
+        "dump_fs": FujitsuFsDumper(),
+    }),
+    
+    Device("f2102v", 0x04c5, 0x1077, {
+        "dump_java": FujitsuJavaDumperAlternative(),
+        "dump_fs": FujitsuFsDumper(),
+    }),
     
     Device("f900i", 0x04c5, 0x108e, {
         "dump_java": FujitsuJavaDumperAlternative(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_charaden": FujitsuCharadenDumper(),
         }),
     
     Device("f900ic", 0x04c5, 0x109b, {
         "dump_java": FujitsuJavaDumperAlternative(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_charaden": FujitsuCharadenDumper(),
         }),
     
     Device("f900it", 0x04c5, 0x108f, {
         "dump_java": FujitsuJavaDumperAlternative(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_charaden": FujitsuCharadenDumper(),
         }),
     
     Device("f700i", 0x04c5, 0x10cb, {
         "dump_java": FujitsuJavaDumperAlternative(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_charaden": FujitsuCharadenDumper(),
         }),
     
     Device("f700is", 0x04c5, 0x10ed, {
         "dump_java": FujitsuJavaDumperAlternative(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_charaden": FujitsuCharadenDumper(),
         }),
     
     Device("f901i", 0x04c5, 0x109d, {
         "dump_java": FujitsuJavaDumperAlternative(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_charaden": FujitsuCharadenDumper(),
         }),
     
     Device("f901ic", 0x04c5, 0x109d, {
         "dump_java": FujitsuJavaDumperAlternative(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_charaden": FujitsuCharadenDumper(),
         }),
     
     Device("f901is", 0x04c5, 0x10d6, {
         "dump_java": FujitsuJavaDumperAlternative(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_charaden": FujitsuCharadenDumper(),
         }),
 
     Device("f801i", 0x04c5, 0x115c, {
         "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
         "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
         "onenand_id": ShG1OnenandId(),
@@ -1372,12 +1389,35 @@ DEVICES = [
     }, reboot=0xe0601938, usb_reset=0xe0603318, usb_getch=0xe0602c9c, usb_send=0xe0602f58, usb_send_commit=0xe06029f0,
        onenand_addr=0x08000000),
     
-    Device("f902i", 0x04c5, 0x10ce, {"dump_java": FujitsuJavaDumper()}),
-    Device("f902is", 0x04c5, 0x10db, {"dump_java": FujitsuJavaDumper()}),
-    Device("f702id", 0x04c5, 0x10d9, {"dump_java": FujitsuJavaDumper()}),
-    Device("f903i", 0x04c5, 0x110c, {"dump_java": FujitsuJavaDumper()}),
-    Device("f903ix", 0x04c5, 0x113f, {"dump_java": FujitsuJavaDumper()}),
-    Device("f883ies", 0x04c5, 0x1126, {"dump_java": FujitsuJavaDumper()}),
+    Device("f902i", 0x04c5, 0x10ce, {
+        "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
+    }),
+    
+    Device("f902is", 0x04c5, 0x10db, {
+        "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
+    }),
+    
+    Device("f702id", 0x04c5, 0x10d9, {
+        "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
+    }),
+    
+    Device("f903i", 0x04c5, 0x110c, {
+        "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
+    }),
+    
+    Device("f903ix", 0x04c5, 0x113f, {
+        "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
+    }),
+    
+    Device("f883ies", 0x04c5, 0x1126, {
+        "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
+    }),
 
     Device("f883iess", 0x04c5, 0x1196, {
         "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
@@ -1388,6 +1428,7 @@ DEVICES = [
     
     Device("f703i", 0x04c5, 0x111c, {
         "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
         "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
         "nand_id": ShG1NandId(),
@@ -1396,6 +1437,7 @@ DEVICES = [
 
     Device("f884i", 0x04c5, 0x112a, {
         "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
         "probe_nor": ShSrecExploitProbeNor_v2(base=0x30000000),
         "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
         "nand_id": ShSrecExploitNandId_v2(),
@@ -1405,6 +1447,7 @@ DEVICES = [
 
     Device("f884ies", 0x04c5, 0x1199, {
         "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
         "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
         "onenand_id": ShG1OnenandId(),
@@ -1414,6 +1457,7 @@ DEVICES = [
     
     Device("f904i", 0x04c5, 0x1122, {
         "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
         "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
         "nand_id": ShG1NandId(),
@@ -1422,6 +1466,7 @@ DEVICES = [
 
     Device("f704i", 0x04c5, 0x1124, {
         "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
         "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
         "nand_id": ShG1NandId(),
@@ -1430,6 +1475,7 @@ DEVICES = [
     
     Device("f905itw", 0x04c5, 0x1198, {
         "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
         "nand_id": ShSrecExploitNandId_v2(),
         "dump_nand": ShSrecExploitNandDumper_v2(size=MB(256)),
@@ -1438,6 +1484,7 @@ DEVICES = [
 
     Device("f905i", 0x04c5, 0x1128, {
         "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
         "nand_id": ShSrecExploitNandId_v2(),
         "dump_nand": ShSrecExploitNandDumper_v2(size=MB(256)),
@@ -1446,6 +1493,7 @@ DEVICES = [
 
     Device("f705i", 0x04c5, 0x112c, {
         "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
         "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
         "onenand_id": ShG1OnenandId(),
@@ -1455,6 +1503,7 @@ DEVICES = [
 
     Device("f906i", 0x04c5, 0x115d, {
         "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
         "onenand_id": ShSrecExploitOnenandId_v2(),
         "dump_nand": ShSrecExploitOnenandFast_v2(),
@@ -1463,6 +1512,7 @@ DEVICES = [
 
     Device("f706i", 0x04c5, 0x1161, {
         "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
         "onenand_id": ShSrecExploitOnenandId_v2(),
         "dump_nand": ShSrecExploitOnenandFast_v2(),
@@ -1489,6 +1539,7 @@ DEVICES = [
 
     Device("f-04a", 0x04c5, 0x115e, {
         "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_mdoc": ShSrecExploitMdocDumper_v2(),
         "dump_memory": ShSrecExploitMemoryDumper_v2(base=0x01000000, size=MB(16)),
         "probe_mdoc": ShSrecExploitProbeMdoc_v2(sweep_start=0x0),
@@ -1497,6 +1548,7 @@ DEVICES = [
     
     Device("f-05a", 0x04c5, 0x1167, {
         "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
         "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
         "onenand_id": ShG1OnenandId(),
@@ -1506,13 +1558,17 @@ DEVICES = [
 
     Device("f-06a", 0x04c5, 0x1120, {
         "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
         "onenand_id": ShSrecExploitOnenandId_v2(),
         "dump_nand": ShSrecExploitOnenandFast_v2(),
     }, payload_base=0x64000000, fatal_err=0x64606700, usb_interrupt=0x64601000, usb_getch=0x646036cc, usb_send=0x64603940, usb_send_commit=0x6460325c,
        onenand_addr=0x10000000),
     
-    Device("f-07a", 0x04c5, 0x115f, {"dump_java": FujitsuJavaDumper()}),
+    Device("f-07a", 0x04c5, 0x115f, {
+        "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
+    }),
 
     Device("f-08a", 0x04c5, 0x1164, {
         "onenand_id": ShSrecExploitOnenandId_v2(),
@@ -1527,7 +1583,10 @@ DEVICES = [
     }, payload_base=0xE55B0000, fatal_err=0x60c051d4, usb_interrupt=0x60C02000, usb_getch=0x60c04898, usb_send=0x60c04a9c, usb_send_commit=0x60c04418,
        mdoc_base=0x20000000),
     
-    Device("f-10a", 0x04c5, 0x1162, {"dump_java": FujitsuJavaDumper()}),
+    Device("f-10a", 0x04c5, 0x1162, {
+        "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
+    }),
 
     Device("f-01b", 0x04c5, 0x11c2, {
         "dump_mdoc": ShSrecExploitMdocDumper_v2(),
@@ -1627,19 +1686,59 @@ DEVICES = [
     # MITSUBISHI
     ################################################################################################
    
-    Device("d800ids", 0x06d3, 0x2180, {"dump_java": FujitsuJavaDumper()}),
-    Device("d901i", 0x06d3, 0x2090, {"dump_java": FujitsuJavaDumperAlternative()}),
-    Device("d901is", 0x06d3, 0x20a0, {"dump_java": FujitsuJavaDumperAlternative()}),
-    Device("d701i", 0x06d3, 0x20c0, {"dump_java": FujitsuJavaDumperAlternative()}),
-    Device("d701iwm", 0x06d3, 0x20d0, {"dump_java": FujitsuJavaDumperAlternative()}),
-    Device("d851iwm", 0x06d3, 0x20e0, {"dump_java": FujitsuJavaDumper()}),
-    Device("d902i", 0x06d3, 0x20b0, {"dump_java": FujitsuJavaDumper()}),
-    Device("d902is", 0x06d3, 0x2120, {"dump_java": FujitsuJavaDumper()}),
-    Device("d702i", 0x06d3, 0x2100, {"dump_java": FujitsuJavaDumper()}),
-    Device("d702if", 0x06d3, 0x2130, {"dump_java": FujitsuJavaDumper()}),
+    Device("d800ids", 0x06d3, 0x2180, {
+        "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
+    }),
+    
+    Device("d901i", 0x06d3, 0x2090, {
+        "dump_java": FujitsuJavaDumperAlternative(),
+        "dump_fs": FujitsuFsDumper(),
+    }),
+    
+    Device("d901is", 0x06d3, 0x20a0, {
+        "dump_java": FujitsuJavaDumperAlternative(),
+        "dump_fs": FujitsuFsDumper(),
+    }),
+    
+    Device("d701i", 0x06d3, 0x20c0, {
+        "dump_java": FujitsuJavaDumperAlternative(),
+        "dump_fs": FujitsuFsDumper(),
+    }),
+    
+    Device("d701iwm", 0x06d3, 0x20d0, {
+        "dump_java": FujitsuJavaDumperAlternative(),
+        "dump_fs": FujitsuFsDumper(),
+    }),
+    
+    Device("d851iwm", 0x06d3, 0x20e0, {
+        "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
+    }),
+    
+    Device("d902i", 0x06d3, 0x20b0, {
+        "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
+    }),
+    
+    Device("d902is", 0x06d3, 0x2120, {
+        "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
+    }),
+    
+    Device("d702i", 0x06d3, 0x2100, {
+        "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
+    }),
+    
+    Device("d702if", 0x06d3, 0x2130, {
+        "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
+    }),
     
     Device("d903i", 0x06d3, 0x2140, {
         "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
         "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
         "nand_id": ShG1NandId(),
@@ -1648,6 +1747,7 @@ DEVICES = [
     
     Device("d903itv", 0x06d3, 0x2170, {
         "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
         "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
         "nand_id": ShG1NandId(),
@@ -1656,6 +1756,7 @@ DEVICES = [
    
     Device("d703i", 0x06d3, 0x2160, {
         "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
         "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
         "nand_id": ShG1NandId(),
@@ -1664,6 +1765,7 @@ DEVICES = [
     
     Device("d904i", 0x06d3, 0x2190, {
         "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
         "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
         "nand_id": ShG1NandId(),
@@ -1672,6 +1774,7 @@ DEVICES = [
 
     Device("d704i", 0x06d3, 0x21a0, {
         "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
         "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
         "nand_id": ShG1NandId(),
@@ -1680,6 +1783,7 @@ DEVICES = [
 
     Device("d705i", 0x06d3, 0x21d0, {
         "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
         "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
         "onenand_id": ShG1OnenandId(),
@@ -1688,6 +1792,7 @@ DEVICES = [
 
     Device("d705iu", 0x06d3, 0x21c0, {
         "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
         "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
         "onenand_id": ShG1OnenandId(),
@@ -1696,6 +1801,7 @@ DEVICES = [
 
     Device("d905i", 0x06d3, 0x21b0, {
         "dump_java": FujitsuJavaDumper(),
+        "dump_fs": FujitsuFsDumper(),
         "dump_nor": ShSrecExploitMemoryDumper_v2(base=0x30000000, size=MB(128)),
         "nand_id": ShSrecExploitNandId_v2(),
         "dump_nand": ShSrecExploitNandDumper_v2(size=MB(256)),
