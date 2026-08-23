@@ -62,6 +62,8 @@ from dump.sh_g1.sh_g1_onenand_dumper import ShG1OnenandDumper
 from dump.sh_g1.sh_g1_nand_id import ShG1NandId
 from dump.sh_g1.sh_g1_nand_dumper import ShG1NandDumper
 
+from dump.infineon.infineon_memory_dumper_v2 import InfineonMemoryDumper_v2
+
 
 def MB(x):
     return x*1024*1024
@@ -959,7 +961,11 @@ DEVICES = [
        usb_command=0x8115a960, usb_data=0x8115a54a, usb_datasz=0x8115a544, usb_respfunc=0x80010a68),
 
     # SOFTBANK
-    
+
+    Device("705p", 0x058b, 0x0015, {
+        "dump_nor": InfineonMemoryDumper_v2(base=0xA0000000, size=MB(64)),
+    }, allow_no_device=True, payload_base=0x4000),
+
     Device("920p", 0x0a3c, 0x000d, {
         "onenand_id": NecOnenandId_v2(),
         "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
@@ -974,7 +980,7 @@ DEVICES = [
         "dump_nand": PiplOnenandDumper(),
     }, exploit_flavor="A2", payload_base=0x80005000,
        onenand_addr=0x0C000000),
-    
+
     Device('930p', 0x04da, 0x216b, {
         'dump_rom': PiplExploitMemoryDumper(base=0x0, size=0x8000),
         'dump_nand': PiplOnenandDumper(onenand_addr=0x0C000000),
