@@ -15,12 +15,12 @@ class Device:
 
     def execute(self, args):
         if args.module in self.commands:
+            dumper = self.commands[args.module]
             dev = usb.core.find(idVendor=self.vid, idProduct=self.pid)
-            if dev is None and not self.device_opts.get("allow_no_device"):
+            if dev is None and not self.device_opts.get("allow_no_device") and not dumper.dumper_opts.get("allow_no_device"):
                 raise RuntimeError("Cannot find '{}' (vid=0x{:04X} pid=0x{:04X}), is the phone connected?".format(self.name, self.vid, self.pid))
             directory = "KTdumper_{}_{}_{}".format(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S"), self.name, args.module)
             output = OutputManager(directory, args.module)
-            dumper = self.commands[args.module]
             dumper.target_vid, dumper.target_pid = self.vid, self.pid
             dumper.set_device_opts(self.device_opts)
             dumper.execute(dev, output)
