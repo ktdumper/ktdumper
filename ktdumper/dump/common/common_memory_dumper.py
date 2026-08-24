@@ -27,6 +27,7 @@ class CommonMemoryDumper:
                     if remainder < chunk:
                         chunk = remainder
                     data = self.read(addr, chunk)
+                    assert len(data) == chunk
                     outf.write(data)
 
                     bar.update(chunk)

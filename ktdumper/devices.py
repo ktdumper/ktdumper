@@ -64,6 +64,8 @@ from dump.sh_g1.sh_g1_nand_dumper import ShG1NandDumper
 
 from dump.infineon.infineon_memory_dumper_v2 import InfineonMemoryDumper_v2
 
+from dump.apoxi.apoxi_memory_dumper import ApoxiMemoryDumper
+
 
 def MB(x):
     return x*1024*1024
@@ -962,9 +964,23 @@ DEVICES = [
 
     # SOFTBANK
 
+    Device("831p", 0x04da, 0x2173, {
+        "dump_nor_a": ApoxiMemoryDumper(base=0x20000000, size=MB(64)),
+        "dump_nor_b": ApoxiMemoryDumper(base=0x60000000, size=MB(64)),
+    }),
+
+    Device("840p", 0x04da, 0x21a4, {
+        "dump_nor": ApoxiMemoryDumper(base=0x20000000, size=MB(128)),
+    }),
+
+    Device("002p", 0x04da, 0x21d0, {
+        "dump_nor": ApoxiMemoryDumper(base=0x20000000, size=MB(128)),
+    }),
+
     Device("705p", 0x058b, 0x0015, {
-        "dump_nor": InfineonMemoryDumper_v2(base=0xA0000000, size=MB(64)),
-    }, allow_no_device=True, payload_base=0x4000),
+        "infineon_dump_nor": InfineonMemoryDumper_v2(base=0xA0000000, size=MB(64), allow_no_device=True, payload_base=0x4000),
+        "dump_nor": ApoxiMemoryDumper(base=0xA0000000, size=MB(64)),
+    }),
 
     Device("920p", 0x0a3c, 0x000d, {
         "onenand_id": NecOnenandId_v2(),
