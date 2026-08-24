@@ -2,6 +2,10 @@ import zlib
 import struct
 
 
+def crc_valid(data):
+    return zlib.crc32(data[:-4]) == struct.unpack("<I", data[-4:])[0]
+
+
 class CommonChunkedProtocol:
 
     def mask_packet(self, pkt):
@@ -73,7 +77,19 @@ class CommonChunkedProtocol:
         # print("<= {}".format(data.hex()))
 
         # checksum is the last 4 bytes
-        crc = struct.unpack("<I", data[-4:])[0]
-        assert zlib.crc32(data[:-4]) == crc
+        if not crc_valid(data):
+            found = False
+            for idx in range(len(data)):
+                prev = data[idx]
+                for ch in range(256):
+                    data[idx] = ch
+                    if crc_valid(data):
+                        print("!! {} invalid CRC32, repaired ({:02X} => {:02X} error {:08b} at 0x{:X})".format(data.hex(), prev, ch, prev ^ ch, idx))
+                        found = True
+                        break
+                if found:
+                    break
+                data[idx] = prev
+        assert crc_valid(data)
 
         return data[:-4]

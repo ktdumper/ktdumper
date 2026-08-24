@@ -978,8 +978,7 @@ DEVICES = [
     }),
 
     Device("705p", 0x058b, 0x0015, {
-        "infineon_dump_nor": InfineonMemoryDumper_v2(base=0xA0000000, size=MB(64), allow_no_device=True, payload_base=0x4000),
-        "dump_nor": ApoxiMemoryDumper(base=0xA0000000, size=MB(64)),
+        "dump_nor": InfineonMemoryDumper_v2(base=0xA0000000, size=MB(64), allow_no_device=True, payload_base=0x4000),
     }),
 
     Device("920p", 0x0a3c, 0x000d, {
