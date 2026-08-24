@@ -66,6 +66,9 @@ from dump.infineon.infineon_memory_dumper_v2 import InfineonMemoryDumper_v2
 
 from dump.apoxi.apoxi_memory_dumper import ApoxiMemoryDumper
 
+from dump.sus.sus_memory_dumper_v2 import SusMemoryDumper_v2
+from dump.sus.sus_superand_dumper_v2 import SusSuperandDumper_v2
+
 
 APOXI_HELP_TEXT = """To dump this phone boot the phone with * + # + power key
 There should be 8 vertical stripes visible on the phone screen
@@ -1082,6 +1085,13 @@ DEVICES = [
     ################################################################################################
     # SHARP
     ################################################################################################
+
+    # WARNING careful about copy pasting this for more models as some of them get stuck/bricked in the updater mode
+    Device("sh902is", 0x04dd, 0x90fe, {
+        "dump_nor": SusMemoryDumper_v2(base=0x08000000, size=MB(64)),
+        "dump_nand": SusSuperandDumper_v2(size=MB(64)),
+    }, shared_base=0xA2600000,
+       nand_data=0x6800A0E4, nand_addr=0x6800A0E0, nand_cmd=0x6800A0DC),
 
     Device("sh903itv", 0x04dd, 0x916d, {
         "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),

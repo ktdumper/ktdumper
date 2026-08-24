@@ -12,6 +12,15 @@ uint8_t payload[0x100], resp[0x4000];
 
 #define XADDR(_arr, _off) ((_arr[_off]) | (_arr[_off+1] << 8) | (_arr[_off+2] << 16) | (_arr[_off+3] << 24))
 
+void *memcpy(void *dst, const void *src, size_t sz) {
+    uint8_t *cdst = dst;
+    const uint8_t *csrc = src;
+
+    for (size_t i = 0; i < sz; ++i)
+        cdst[i] = csrc[i];
+    return cdst;
+}
+
 void payload_main_loop(void) {
     static uint16_t onenand_buf[(4096+128)/2];
     uint8_t *scratch = (void*)onenand_buf;
@@ -84,10 +93,22 @@ void payload_main_loop(void) {
 
             scratch[0] = nand_read_lp(page, scratch + 1);
             send_msg(scratch, 1 + 0x420*2);
+        } else if (ch == 0x53) {
+            /* superand_read */
+            uint32_t page = XADDR(payload, 1);
+
+            scratch[0] = superand_read(page, scratch + 1);
+            send_msg(scratch, 1 + 0x400*2);
         } else if (ch == 0x60) {
             /* read 64 bytes */
             uint32_t addr = XADDR(payload, 1);
-            send_msg((void*)addr, 64);
+            memcpy(scratch, (void*)addr, 64);
+            send_msg(scratch, 64);
+        } else if (ch == 0x61) {
+            /* read 2048 bytes */
+            uint32_t addr = XADDR(payload, 1);
+            memcpy(scratch, (void*)addr, 2048);
+            send_msg(scratch, 2048);
         } else if (ch == 0x70) {
             /* read onenand 4096b page + 128b oob */
             uint32_t block = XADDR(payload, 1);

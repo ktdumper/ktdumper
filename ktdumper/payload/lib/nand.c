@@ -89,3 +89,28 @@ int nand_read_lp(uint32_t page, void *dst) {
 
     return ret;
 }
+
+int superand_read(uint32_t page, void *dst) {
+	uint8_t *cdst = dst;
+
+	*NAND_CMD = 0x0F;
+	*NAND_ADDR = 0x00;
+	*NAND_ADDR = 0x00;
+	*NAND_ADDR = page & 0xFF;
+	*NAND_ADDR = (page >> 8) & 0x7F;
+
+	int ret = nand_wait();
+
+	*NAND_CMD = 0x00;
+
+	for (int i = 0; i < 0x400; ++i) {
+		uint16_t data = *NAND_DATA;
+		cdst[2 * i] = data & 0xFF;
+		cdst[2 * i + 1] = data >> 8;
+	}
+
+	*NAND_CMD = 0xF0;
+	nand_wait();
+
+	return ret;
+}

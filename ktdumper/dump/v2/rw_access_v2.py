@@ -3,6 +3,8 @@ import struct
 
 class RwAccess_v2:
 
+    supports_2048 = False
+
     def readb(self, addr):
         self.usb_send(struct.pack("<BI", 0x10, addr))
         return struct.unpack("B", self.usb_receive())[0]
@@ -28,14 +30,29 @@ class RwAccess_v2:
         self.usb_send(struct.pack("<BI", 0x60, addr))
         return self.usb_receive()
 
-    def read(self, addr, size):
-        assert size % 64 == 0
+    def read2048(self, addr):
+        self.usb_send(struct.pack("<BI", 0x61, addr))
+        return self.usb_receive()
 
+    def read(self, addr, size):
         data = b""
-        while size > 0:
-            data += self.read64(addr)
-            addr += 64
-            size -= 64
+        orig_size = size
+
+        if size % 2048 == 0 and self.supports_2048:
+            assert size % 2048 == 0
+
+            while size > 0:
+                data += self.read2048(addr)
+                addr += 2048
+                size -= 2048
+        else:
+            assert size % 64 == 0
+
+            while size > 0:
+                data += self.read64(addr)
+                addr += 64
+                size -= 64
+        assert len(data) == orig_size
         return data
 
     def execute(self, dev, output):
