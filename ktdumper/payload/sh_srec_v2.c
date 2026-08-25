@@ -5,7 +5,7 @@
 void dis_int();
 
 int (*usb_getch)() = (void*)KT_usb_getch;
-int (*usb_send)() = (void*)KT_usb_send;
+int (*usb_send)(void*, size_t) = (void*)KT_usb_send;
 int (*usb_send_commit)() = (void*)KT_usb_send_commit;
 
 size_t resp_sz;
