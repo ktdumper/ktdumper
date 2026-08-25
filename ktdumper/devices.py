@@ -47,6 +47,7 @@ from dump.sh.sh_srec_exploit_mlc_check_v2 import ShSrecExploitMlcCheck_v2
 from dump.sh.sh_srec_exploit_probe_onenand_v2 import ShSrecExploitProbeOnenand_v2
 from dump.sh.sh_srec_exploit_mdoc_probe_v2 import ShSrecExploitProbeMdoc_v2
 from dump.sh.sh_srec_exploit_mdoc_dumper_slow_v2 import ShSrecExploitMdocDumperSlow_v2
+from dump.sh.sh_srec_exploit_mdoc_dumper_v2 import ShSrecExploitMdocDumper_v2
 
 from dump.sony.sony_memory_dumper_v2 import SonyMemoryDumper_v2
 from dump.sony.sony_probe_nor_v2 import SonyProbeNor_v2
@@ -1581,7 +1582,7 @@ DEVICES = [
     Device("f-04a", 0x04c5, 0x115e, {
         "dump_java": FujitsuJavaDumper(),
         "dump_fs": FujitsuFsDumper(),
-        "dump_mdoc": ShSrecExploitMdocDumperSlow_v2(),
+        "dump_mdoc": ShSrecExploitMdocDumper_v2(),
         "dump_memory": ShSrecExploitMemoryDumper_v2(base=0x01000000, size=MB(16)),
         "probe_mdoc": ShSrecExploitProbeMdoc_v2(sweep_start=0x0),
     }, payload_base=0x64000000, fatal_err=0x64c076d0, usb_interrupt=0x64C02000, usb_getch=0x64c04618, usb_send=0x64c04890, usb_send_commit=0x64c041a4,
@@ -1618,7 +1619,7 @@ DEVICES = [
         onenand_addr=0x30000000),
 
     Device("f-09a", 0x04c5, 0x1163, {
-        "dump_mdoc": ShSrecExploitMdocDumperSlow_v2(),
+        "dump_mdoc": ShSrecExploitMdocDumper_v2(),
         "dump_memory": ShSrecExploitMemoryDumper_v2(base=0x01000000, size=MB(16)),
         "probe_mdoc": ShSrecExploitProbeMdoc_v2(sweep_start=0x0),
     }, payload_base=0xE55B0000, fatal_err=0x60c051d4, usb_interrupt=0x60C02000, usb_getch=0x60c04898, usb_send=0x60c04a9c, usb_send_commit=0x60c04418,
@@ -1630,7 +1631,7 @@ DEVICES = [
     }),
 
     Device("f-01b", 0x04c5, 0x11c2, {
-        "dump_mdoc": ShSrecExploitMdocDumperSlow_v2(),
+        "dump_mdoc": ShSrecExploitMdocDumper_v2(),
         "dump_memory": ShSrecExploitMemoryDumper_v2(base=0x01000000, size=MB(16)),
     }, payload_base=0xE55B0000, fatal_err=0x60c04848, usb_interrupt=0x60C02000, usb_getch=0x60c03f14, usb_send=0x60c04118, usb_send_commit=0x60c03a94,
        mdoc_base=0x20000000),
