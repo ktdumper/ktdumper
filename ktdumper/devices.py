@@ -1582,7 +1582,7 @@ DEVICES = [
     Device("f-04a", 0x04c5, 0x115e, {
         "dump_java": FujitsuJavaDumper(),
         "dump_fs": FujitsuFsDumper(),
-        "dump_mdoc": ShSrecExploitMdocDumper_v2(),
+        "dump_nand": ShSrecExploitMdocDumper_v2(),
         "dump_memory": ShSrecExploitMemoryDumper_v2(base=0x01000000, size=MB(16)),
         "probe_mdoc": ShSrecExploitProbeMdoc_v2(sweep_start=0x0),
     }, payload_base=0x64000000, fatal_err=0x64c076d0, usb_interrupt=0x64C02000, usb_getch=0x64c04618, usb_send=0x64c04890, usb_send_commit=0x64c041a4,
@@ -1619,8 +1619,7 @@ DEVICES = [
         onenand_addr=0x30000000),
 
     Device("f-09a", 0x04c5, 0x1163, {
-        "dump_mdoc": ShSrecExploitMdocDumper_v2(),
-        "dump_memory": ShSrecExploitMemoryDumper_v2(base=0x01000000, size=MB(16)),
+        "dump_nand": ShSrecExploitMdocDumper_v2(),
         "probe_mdoc": ShSrecExploitProbeMdoc_v2(sweep_start=0x0),
     }, payload_base=0xE55B0000, fatal_err=0x60c051d4, usb_interrupt=0x60C02000, usb_getch=0x60c04898, usb_send=0x60c04a9c, usb_send_commit=0x60c04418,
        mdoc_base=0x20000000),
@@ -1631,8 +1630,7 @@ DEVICES = [
     }),
 
     Device("f-01b", 0x04c5, 0x11c2, {
-        "dump_mdoc": ShSrecExploitMdocDumper_v2(),
-        "dump_memory": ShSrecExploitMemoryDumper_v2(base=0x01000000, size=MB(16)),
+        "dump_nand": ShSrecExploitMdocDumper_v2(),
     }, payload_base=0xE55B0000, fatal_err=0x60c04848, usb_interrupt=0x60C02000, usb_getch=0x60c03f14, usb_send=0x60c04118, usb_send_commit=0x60c03a94,
        mdoc_base=0x20000000),
 
@@ -1894,6 +1892,13 @@ DEVICES = [
         "probe_nor": SonyProbeNor_v2(base=0x08000000),
         "dump_nand": SonyMdocDumper_v2(),
     }, recv_ch=0x0800e068, usb_send=0x0800f224, mdoc_base=0x0c000000),
+    
+    Device("so905i", 0x0fce, 0xd0a9, {
+        "dump_nand": ShSrecExploitMdocDumper_v2(),
+        "dump_nand_slow": ShSrecExploitMdocDumperSlow_v2(),
+        "probe_mdoc": ShSrecExploitProbeMdoc_v2(sweep_start=0x0),
+    }, payload_base=0x64000000, fatal_err=0x646067f8, usb_interrupt=0x64601000, usb_getch=0x64603770, usb_send=0x646039e8, usb_send_commit=0x646032c4,
+       mdoc_base=0x10000000),
 
     Device("so705i", 0x0fce, 0xd0c9, {
         "dump_nor": NecMemoryDumper_v2(base=0x0, size=MB(128)),
