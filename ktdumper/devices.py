@@ -1036,6 +1036,10 @@ DEVICES = [
         "dump_nor": ApoxiMemoryDumper(base=0x20000000, size=MB(128)),
     }, help=APOXI_HELP_TEXT),
 
+    Device("841p", 0x04da, 0x21b1, {
+        "dump_nor": ApoxiMemoryDumper(base=0x20000000, size=MB(128)),
+    }, help=APOXI_HELP_TEXT),
+
     Device("942p", 0x04da, 0x216b, {
         "dump_rom": PiplExploitMemoryDumper(base=0x0, size=0x8000),
         "dump_nand_a": PiplOnenandDumper(onenand_addr=0x0C000000),
