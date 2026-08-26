@@ -1,8 +1,8 @@
 #include <stdint.h>
 
-#define UsbPollEvent  ((int (*)(void))0xA071089Du)
-#define UsbReadBytes  ((int (*)(int, void *, int))0xA07109B7u)
-#define UsbWriteBytes ((int (*)(int, const void *, int))0xA0710A4Fu)
+#define UsbPollEvent  ((int (*)(void))KT_usb_poll)
+#define UsbReadBytes  ((int (*)(int, void *, int))KT_usb_read)
+#define UsbWriteBytes ((int (*)(int, const void *, int))KT_usb_write)
 
 static void send(uint8_t b)
 {

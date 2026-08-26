@@ -38,8 +38,13 @@ class PayloadBuilder:
 
         defs = []
         for arg, replacement in kwargs.items():
-            src = src.replace("%{}%".format(arg), str(replacement))
-            defs += ["-DKT_{}={}".format(arg, str(replacement))]
+            if isinstance(replacement, int) and replacement >= 0:
+                replacement = str(replacement) + "u"
+            else:
+                replacement = str(replacement)
+
+            src = src.replace("%{}%".format(arg), replacement)
+            defs += ["-DKT_{}={}".format(arg, replacement)]
 
         with tempfile.TemporaryDirectory() as tmp:
             p_linker_x = os.path.join(tmp, "linker.x")

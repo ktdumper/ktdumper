@@ -1091,7 +1091,7 @@ DEVICES = [
     Device("sh902is", 0x04dd, 0x90fe, {
         "dump_nor": SusMemoryDumper_v2(base=0x08000000, size=MB(64)),
         "dump_nand": SusSuperandDumper_v2(size=MB(64)),
-    }, shared_base=0xA2600000,
+    }, shared_base=0xA2600000, usb_poll=0xA071089D, usb_read=0xA07109B7, usb_write=0xA0710A4F,
        nand_data=0x6800A0E4, nand_addr=0x6800A0E0, nand_cmd=0x6800A0DC),
 
     Device("sh903itv", 0x04dd, 0x916d, {
