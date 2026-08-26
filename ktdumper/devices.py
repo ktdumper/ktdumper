@@ -1094,6 +1094,12 @@ DEVICES = [
     }, shared_base=0xA2600000, usb_poll=0xA071089D, usb_read=0xA07109B7, usb_write=0xA0710A4F,
        nand_data=0x6800A0E4, nand_addr=0x6800A0E0, nand_cmd=0x6800A0DC),
 
+    Device("sh702is", 0x04dd, 0x9116, {
+        "dump_nor": SusMemoryDumper_v2(base=0x08000000, size=MB(64)),
+        "dump_nand": SusSuperandDumper_v2(size=MB(64)),
+    }, shared_base=0xA2600000, usb_poll=0xA0710641, usb_read=0xA071075B, usb_write=0xA07107F3,
+       nand_data=0x6800A0E4, nand_addr=0x6800A0E0, nand_cmd=0x6800A0DC),
+
     Device("sh903itv", 0x04dd, 0x916d, {
         "dump_nor_a": ShG1MemoryDumper(base=0x02000000, size=MB(32)),
         "dump_nor_b": ShG1MemoryDumper(base=0x10000000, size=MB(64)),
