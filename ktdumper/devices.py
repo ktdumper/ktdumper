@@ -70,6 +70,10 @@ from dump.apoxi.apoxi_memory_dumper import ApoxiMemoryDumper
 from dump.sus.sus_memory_dumper_v2 import SusMemoryDumper_v2
 from dump.sus.sus_superand_dumper_v2 import SusSuperandDumper_v2
 
+from dump.serial_nec.serial_nec_memory_dumper import SerialNecMemoryDumper
+from dump.serial_nec.serial_nec_nand_dumper import SerialNecNandDumper
+from dump.serial_nec.serial_nec_exit_service_mode import SerialNecExitServiceMode
+
 
 APOXI_HELP_TEXT = """To dump this phone boot the phone with * + # + power key
 There should be 8 vertical stripes visible on the phone screen
@@ -116,6 +120,12 @@ DEVICES = [
 
     # DOCOMO
 
+    Device("n505is", "serial", {
+        "dump_nor": SerialNecMemoryDumper(base=0x01000000, size=MB(32)),
+        "dump_nand": SerialNecNandDumper(size=MB(32)),
+        "exit": SerialNecExitServiceMode(),
+    }),
+
     Device("n2051", (0x0a3c, 0x000d), {
         "probe_nor": NecNorProbe(base=0x0),
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(32)),
@@ -135,7 +145,7 @@ DEVICES = [
         "nand_id": NecNandId(),
         "dump_nand": NecNandDumper(size=MB(32), quirks=SLOW_READ),
     }, payload_base=0x0c100000, nand_data=0x04000000, nand_cmd=0x04000800, nand_addr=0x04000400),
-    
+
     Device("n900i", (0x0409, 0x0112), {
         "dump_nor": NecMemoryDumper(base=0x0, size=MB(32)),
         "dump_nand": NecNandDumper(size=MB(32), quirks=SLOW_READ),

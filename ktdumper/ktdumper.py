@@ -8,6 +8,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("phone")
     parser.add_argument("module")
+    parser.add_argument("--serial")
     args = parser.parse_args()
 
     for dev in DEVICES:

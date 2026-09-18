@@ -1,3 +1,4 @@
 fusepy
 pyusb
+pyserial
 tqdm
