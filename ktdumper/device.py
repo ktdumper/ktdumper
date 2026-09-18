@@ -6,7 +6,8 @@ from util.output_manager import OutputManager
 
 class Device:
 
-    def __init__(self, name, vid, pid, commands, **kwargs):
+    def __init__(self, name, target, commands, **kwargs):
+        vid, pid = target
         self.name = name
         self.vid = vid
         self.pid = pid
