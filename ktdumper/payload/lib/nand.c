@@ -90,6 +90,37 @@ int nand_read_lp(uint32_t page, void *dst) {
     return ret;
 }
 
+int ornand_read(uint32_t page, void *dst) {
+	uint8_t *cdst = dst;
+	volatile uint16_t *cmd = (void*)KT_nand_cmd;
+	volatile uint16_t *addr = (void*)KT_nand_addr;
+	uint32_t column = (page & 3) * (256 + 8);
+	uint32_t row = page >> 2;
+
+	*cmd = 0x00;
+	*addr = column & 0xFF;
+	*addr = (column >> 8) & 0xFF;
+	*addr = row & 0xFF;
+	*addr = (row >> 8) & 0xFF;
+	*cmd = 0x30;
+
+	int ret;
+	do {
+		*cmd = 0x70;
+		ret = *NAND_DATA;
+	} while (!(ret & 0x40));
+
+	*cmd = 0x00;
+
+	for (int i = 0; i < 256 + 8; ++i) {
+		uint16_t data = *NAND_DATA;
+		cdst[2 * i] = data & 0xFF;
+		cdst[2 * i + 1] = data >> 8;
+	}
+
+	return ret;
+}
+
 int superand_read(uint32_t page, void *dst) {
 	uint8_t *cdst = dst;
 
