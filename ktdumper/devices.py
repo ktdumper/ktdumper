@@ -77,6 +77,8 @@ from dump.serial_nec.serial_nec_exit_service_mode import SerialNecExitServiceMod
 from dump.serial_fujitsu.serial_fujitsu_memory_dumper import SerialFujitsuMemoryDumper
 from dump.serial_fujitsu.serial_fujitsu_nand_dumper import SerialFujitsuNandDumper
 
+from dump.serial_mitsubishi.serial_mitsubishi_memory_dumper import SerialMitsubishiMemoryDumper
+
 
 APOXI_HELP_TEXT = """To dump this phone boot the phone with * + # + power key
 There should be 8 vertical stripes visible on the phone screen
@@ -1754,7 +1756,11 @@ DEVICES = [
     ################################################################################################
     # MITSUBISHI
     ################################################################################################
-   
+
+    Device("d505i", "serial", {
+        "dump_nor": SerialMitsubishiMemoryDumper(base=0x01000000, size=MB(32)),
+    }),
+
     Device("d800ids", (0x06d3, 0x2180), {
         "dump_java": FujitsuJavaDumper(),
         "dump_fs": FujitsuFsDumper(),
