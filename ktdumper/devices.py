@@ -74,6 +74,9 @@ from dump.serial_nec.serial_nec_memory_dumper import SerialNecMemoryDumper
 from dump.serial_nec.serial_nec_nand_dumper import SerialNecNandDumper
 from dump.serial_nec.serial_nec_exit_service_mode import SerialNecExitServiceMode
 
+from dump.serial_fujitsu.serial_fujitsu_memory_dumper import SerialFujitsuMemoryDumper
+from dump.serial_fujitsu.serial_fujitsu_nand_dumper import SerialFujitsuNandDumper
+
 
 APOXI_HELP_TEXT = """To dump this phone boot the phone with * + # + power key
 There should be 8 vertical stripes visible on the phone screen
@@ -1382,6 +1385,12 @@ DEVICES = [
     ################################################################################################
     # FUJITSU
     ################################################################################################
+
+    Device("f505i", "serial", {
+        "dump_nor": SerialFujitsuMemoryDumper(base=0x14000000, size=MB(16)),
+        "dump_nand": SerialFujitsuNandDumper(size=MB(32)),
+    }, nand_data=0x12000000, nand_cmd=0x12001000, nand_addr=0x12002000,
+       nand_gate=0x79000014),
 
     Device("f2051", (0x0a3c, 0x0010), {
         "dump_java": FujitsuJavaDumperAlternative(),
