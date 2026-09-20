@@ -22,7 +22,7 @@ void *memcpy(void *dst, const void *src, size_t sz) {
 }
 
 void payload_main_loop(void) {
-    static uint16_t onenand_buf[(4096+128)/2];
+    static uint16_t onenand_buf[(1+4096+128+1)/2];
     uint8_t *scratch = (void*)onenand_buf;
 
     while (1) {
@@ -104,6 +104,10 @@ void payload_main_loop(void) {
 
             scratch[0] = ornand_read(page, scratch + 1);
             send_msg(scratch, 1 + 512 + 16);
+        } else if (ch == 0x55) {
+            uint32_t page = XADDR(payload, 1);
+            scratch[0] = nand_read_toshiba(page, scratch + 1);
+            send_msg(scratch, 1 + 4096 + 128);
         } else if (ch == 0x60) {
             /* read 64 bytes */
             uint32_t addr = XADDR(payload, 1);

@@ -145,3 +145,35 @@ int superand_read(uint32_t page, void *dst) {
 
 	return ret;
 }
+
+int nand_read_toshiba(uint32_t page, void *dst) {
+    uint8_t *cdst = dst;
+    volatile uint8_t *data = (void*)KT_nand_data;
+
+    *NAND_CMD = 0x00;
+    *NAND_ADDR = 0x00;
+    *NAND_ADDR = 0x00;
+    *NAND_ADDR = page & 0xFF;
+    *NAND_ADDR = (page >> 8) & 0xFF;
+    *NAND_ADDR = (page >> 16) & 0xFF;
+    *NAND_CMD = 0x30;
+    *NAND_CMD = 0x70;
+    __asm__ volatile ("nop\n\tnop");
+
+    int ret;
+    do {
+        ret = *data;
+    } while (!(ret & 0x40));
+
+    *NAND_CMD = 0x7A;
+    for (int i = 0; i < 8; ++i) {
+        if ((*data & 0x0F) > 8)
+            ret |= 1;
+    }
+    *NAND_CMD = 0x00;
+
+    for (int i = 0; i < 4096 + 128; ++i)
+        cdst[i] = *data;
+
+    return ret;
+}

@@ -17,6 +17,7 @@ from dump.nec.nec_onenand_fast_v2 import NecOnenandFast_v2
 from dump.nec.nec_mlc_check import NecMlcCheck
 from dump.nec.nec_nor_probe import NecNorProbe
 from dump.nec.nec_nand_dumper_lp_v2 import NecNandDumperLp_v2
+from dump.nec.nec_nand_dumper_toshiba_v2 import NecNandDumperToshiba_v2
 from dump.nec.nec_probe_onenand import NecProbeOnenand
 
 from dump.pipl.pipl_exploit_memory_dumper import PiplExploitMemoryDumper
@@ -524,6 +525,12 @@ DEVICES = [
     }, secret="ec0b6bf9edcb97ee1c9bb7f006507cf2ab68eb7f",
        payload_base=0x80000000, usb_receive=0x80b84c50, usb_send=0x80b844a4,
        onenand_addr=0x08000000),
+
+    Device("n-01g", 0x0409, 0x049c, {
+        "dump_nand": NecNandDumperToshiba_v2(size=MB(1024)),
+    }, secret="ca679bb630a09e419e3f6bb12e3d6098fe37b256",
+       payload_base=0x80000000, usb_receive=0x80b84be4, usb_send=0x80b84438,
+       nand_data=0x6e000084, nand_cmd=0x6e00007c, nand_addr=0x6e000080),
 
     # SOFTBANK
 

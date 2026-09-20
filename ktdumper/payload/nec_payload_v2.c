@@ -127,4 +127,5 @@ __asm__(
     "bic r0, r0, #0x4\n"
     "mcr p15, 0, r0, c1, c0, 0\n"
     "b main\n"
+".previous\n"
 );
