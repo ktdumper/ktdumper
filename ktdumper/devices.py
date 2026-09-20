@@ -69,6 +69,7 @@ from dump.infineon.infineon_memory_dumper_v2 import InfineonMemoryDumper_v2
 from dump.apoxi.apoxi_memory_dumper import ApoxiMemoryDumper
 
 from dump.sus.sus_memory_dumper_v2 import SusMemoryDumper_v2
+from dump.sus.sus_exit import SusExit
 from dump.sus.sus_superand_dumper_v2 import SusSuperandDumper_v2
 from dump.sus.sus_ornand_dumper_v2 import SusOrnandDumper_v2
 
@@ -1100,22 +1101,39 @@ DEVICES = [
     ################################################################################################
 
     # WARNING careful about copy pasting this for more models as some of them get stuck/bricked in the updater mode
+    Device("sh700i", 0x04dd, 0x90b1, {
+        "dump_nor": SusMemoryDumper_v2(base=0x00000000, size=MB(48)),
+        "exit": SusExit(),
+    }, bufsz=0x800, lroff=0x24, shared_base=0x12000000,
+       usb_poll=0x1001739f, usb_read=0x100174f9, usb_write=0x100175a1,
+       legacy_usb=True),
+
+    Device("sh900i", 0x04dd, 0x9041, {
+        "dump_nor": SusMemoryDumper_v2(base=0x00000000, size=MB(64)),
+        "exit": SusExit(),
+    }, bufsz=0x400, lroff=0x24, shared_base=0x10100000,
+       usb_poll=0x100173c1, usb_read=0x1001742d, usb_write=0x100174d3,
+       legacy_usb=True),
+
     Device("sh902is", 0x04dd, 0x90fe, {
         "dump_nor": SusMemoryDumper_v2(base=0x08000000, size=MB(64)),
         "dump_nand": SusSuperandDumper_v2(size=MB(64)),
-    }, bufsz=0x800, shared_base=0xA2600000, usb_poll=0xA071089D, usb_read=0xA07109B7, usb_write=0xA0710A4F,
+        "exit": SusExit(),
+    }, bufsz=0x800, lroff=0x1c, shared_base=0xA2600000, usb_poll=0xA071089D, usb_read=0xA07109B7, usb_write=0xA0710A4F,
        nand_data=0x6800A0E4, nand_addr=0x6800A0E0, nand_cmd=0x6800A0DC),
 
     Device("sh702is", 0x04dd, 0x9116, {
         "dump_nor": SusMemoryDumper_v2(base=0x08000000, size=MB(64)),
         "dump_nand": SusSuperandDumper_v2(size=MB(64)),
-    }, bufsz=0x800, shared_base=0xA2600000, usb_poll=0xA0710641, usb_read=0xA071075B, usb_write=0xA07107F3,
+        "exit": SusExit(),
+    }, bufsz=0x800, lroff=0x1c, shared_base=0xA2600000, usb_poll=0xA0710641, usb_read=0xA071075B, usb_write=0xA07107F3,
        nand_data=0x6800A0E4, nand_addr=0x6800A0E0, nand_cmd=0x6800A0DC),
 
     Device("sh903i", 0x04dd, 0x911b, {
         "dump_nor": SusMemoryDumper_v2(base=0x08000000, size=MB(64)),
         "dump_nand": SusOrnandDumper_v2(size=MB(128)),
-    }, bufsz=0x1000, shared_base=0x82600000, usb_poll=0x80710C7D, usb_read=0x80710D97, usb_write=0x80710E2F,
+        "exit": SusExit(),
+    }, bufsz=0x1000, lroff=0x1c, shared_base=0x82600000, usb_poll=0x80710C7D, usb_read=0x80710D97, usb_write=0x80710E2F,
        nand_data=0x6800A0E4, nand_addr=0x6800A0E0, nand_cmd=0x6800A0DC),
 
     Device("sh903itv", 0x04dd, 0x916d, {
