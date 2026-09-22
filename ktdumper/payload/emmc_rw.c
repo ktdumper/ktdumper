@@ -7,10 +7,10 @@ void start() {
     uint8_t *data = (void*)%usb_data%;
     uint8_t *datasz = (void*)%usb_datasz%;
     uint8_t *tmpbuf = (void*)(%base%+0x800);
-    void (*respfunc)() = (void*)%usb_respfunc%;
+    void (*respfunc)(int, int) = (void*)%usb_respfunc%;
 
-    int (*emmc_read_and_dcache)() = (void*)(%emmc_read_and_dcache%);
-    int (*emmc_inv_dcache_and_write)() = (void*)(%emmc_inv_dcache_and_write%);
+    int (*emmc_read_and_dcache)(uint32_t, uint32_t, uint32_t, uint8_t*) = (void*)(%emmc_read_and_dcache%);
+    int (*emmc_inv_dcache_and_write)(uint32_t, uint32_t, uint32_t, uint8_t*) = (void*)(%emmc_inv_dcache_and_write%);
 
     uint8_t direction = command[10]; /* 0=read, 1=write */
     uint32_t page = (command[11] << 0) | (command[12] << 8) | (command[13] << 16) | (command[14] << 24);

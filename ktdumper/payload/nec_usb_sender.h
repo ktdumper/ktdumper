@@ -3,7 +3,7 @@
 #define USB_SEND(addr, sz) { \
     uint8_t *_data = (void*)KT_usb_data; \
     uint8_t *_datasz = (void*)KT_usb_datasz; \
-    void (*respfunc)() = (void*)KT_usb_respfunc; \
+    void (*respfunc)(int, int) = (void*)KT_usb_respfunc; \
 \
     uint8_t *_inbuf = (void*)addr; \
 \

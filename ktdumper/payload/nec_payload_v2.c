@@ -3,8 +3,8 @@
 
 #include "lib/payload.c"
 
-int (*payload_receiver)() = (void*)KT_usb_receive;
-int (*respfunc_send_ep)() = (void*)KT_usb_send;
+int (*payload_receiver)(uint32_t*, uint8_t*) = (void*)KT_usb_receive;
+int (*respfunc_send_ep)(size_t, uint8_t*) = (void*)KT_usb_send;
 
 uint32_t payload_sz_pre, payload_sz, resp_sz;
 uint8_t payload_pre[0x100];

@@ -5,7 +5,7 @@
 void dis_int();
 
 int (*recv_ch)() = (void*)KT_recv_ch;
-int (*usb_send)() = (void*)KT_usb_send;
+int (*usb_send)(void*, size_t) = (void*)KT_usb_send;
 
 size_t resp_sz;
 
