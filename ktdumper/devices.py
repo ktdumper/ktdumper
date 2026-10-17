@@ -519,6 +519,13 @@ DEVICES = [
        payload_base=0x80000000, usb_receive=0x80b84bb8, usb_send=0x80b8440c,
        onenand_addr=0x08000000),
 
+    Device("n-07e", 0x0409, 0x041c, {
+        "onenand_id": NecOnenandId_v2(),
+        "dump_nand": NecOnenandFast_v2(),
+    }, secret="eb19a703284ecedd31726173a6b29431cf8f286f",
+       payload_base=0x80000000, usb_receive=0x80b84c50, usb_send=0x80b844a4,
+       onenand_addr=0x08000000),
+
     Device("n-01f", 0x0409, 0x047a, {
         "onenand_id": NecOnenandId_v2(),
         "dump_nand": NecOnenandFast_v2(),
@@ -982,6 +989,10 @@ DEVICES = [
     # SOFTBANK
 
     Device("705p", 0x058b, 0x0015, {
+        "dump_nor": InfineonMemoryDumper_v2(base=0xA0000000, size=MB(64), allow_no_device=True, payload_base=0x4000),
+    }),
+
+    Device("706p", 0x058b, 0x0015, {
         "dump_nor": InfineonMemoryDumper_v2(base=0xA0000000, size=MB(64), allow_no_device=True, payload_base=0x4000),
     }),
 
@@ -1918,6 +1929,13 @@ DEVICES = [
     }, recv_ch=0x0800e068, usb_send=0x0800f224, mdoc_base=0x0c000000),
     
     Device("so905i", 0x0fce, 0xd0a9, {
+        "dump_nand": ShSrecExploitMdocDumper_v2(),
+        "dump_nand_slow": ShSrecExploitMdocDumperSlow_v2(),
+        "probe_mdoc": ShSrecExploitProbeMdoc_v2(sweep_start=0x0),
+    }, payload_base=0x64000000, fatal_err=0x646067f8, usb_interrupt=0x64601000, usb_getch=0x64603770, usb_send=0x646039e8, usb_send_commit=0x646032c4,
+       mdoc_base=0x10000000),
+
+    Device("so905ics", 0x0fce, 0xd0bf, {
         "dump_nand": ShSrecExploitMdocDumper_v2(),
         "dump_nand_slow": ShSrecExploitMdocDumperSlow_v2(),
         "probe_mdoc": ShSrecExploitProbeMdoc_v2(sweep_start=0x0),
